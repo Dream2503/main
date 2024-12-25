@@ -1,19 +1,19 @@
 #include "13-Heap"
 
 template <class type>
-class Sort {
+class Sort {    // Class to implement various sorting algorithms
     public:
-        Sort() {}
-        void bubbleSort(type*, int);
-        void countSort(type*, int);
-        void descending(type*, int);
-        void insertionSort(type*, int);
-        void heapSort(type*, int);
-        void mergeSort(type*, int);
-        void quickSort(type*, int, int);
-        void radixSort(type*, int);
-        void selectionSort(type*, int);
-        void shellSort(type*, int);
+        Sort() = default;
+        void bubbleSort(type*, int);    // Function to sort an array using the Bubble Sort algorithm
+        void countSort(type*, int); // Function to sort an array using the Counting Sort algorithm
+        void descending(type*, int);    // Function to sort an array in descending order
+        void insertionSort(type*, int); // Function to sort an array using the Insertion Sort algorithm
+        void heapSort(type*, int);  // Function to sort an array using the Heap Sort algorithm
+        void mergeSort(type*, int); // Function to sort an array using the Merge Sort algorithm
+        void quickSort(type*, int, int);    // Function to sort an array using the Quick Sort algorithm
+        void radixSort(type*, int); // Function to sort an array using the Radix Sort algorithm
+        void selectionSort(type*, int); // Function to sort an array using the Selection Sort algorithm
+        void shellSort(type*, int); // Function to sort an array using the Shell Sort algorithm
 };
 
 template <class type>   // Bubble Sort
@@ -34,7 +34,7 @@ void Sort<type>::bubbleSort(type *array, int size) {    // Function to sort an a
         }
     }
 }
-template <class type>   // Count Sort
+template <class type>   // Counting Sort
 void Sort<type>::countSort(type *array, int size) {   // Function to sort an array using the Counting Sort algorithm
     type max, min;  // Variables to store the maximum and minimum elements in the array
     int i, j, range, *count;    // Variables to store the range of values and the frequency count of each element
@@ -66,14 +66,14 @@ void Sort<type>::countSort(type *array, int size) {   // Function to sort an arr
     }
     delete []count; // Clean up the dynamically allocated memory for the counting array
 }
-template <class type>
-void Sort<type>::descending(type *array, int size) {
+template <class type>   // Descending Order
+void Sort<type>::descending(type *array, int size) {    // Function to sort an array in descending order
     for (int i = 0; i < size / 2; i++) {    // Loop through the array up to the middle element
         std::swap(array[i], array[size - i - 1]);   // Swap the current element with the element at the symmetric position from the end
     }
 }
-template <class type>
-void Sort<type>::insertionSort(type *array, int size) {
+template <class type>   // Insertion Sort
+void Sort<type>::insertionSort(type *array, int size) {  // Function to sort an array using the Insertion Sort algorithm
     type temp;  // Temporary variable to hold the current element during insertion
 
     for (int i = 1, j; i < size; i++) { // Loop through each element of the array starting from the second element
@@ -87,42 +87,42 @@ void Sort<type>::insertionSort(type *array, int size) {
         array[j + 1] = temp;    // Insert the stored 'temp' element into its correct position
     }
 }
-template <class type>
-void Sort<type>::heapSort(type *array, int size) {
+template <class type>   // Heap Sort
+void Sort<type>::heapSort(type *array, int size) {  // Function to sort an array using the Heap Sort algorithm
     Heap<type> heap(array, size, "min");    // Create a heap from the array, using a "min" heap structure
 
     for (int i = 0; i < size; i++) {    // Loop to remove the root element from the heap and place it in the sorted array
         array[i] = heap.remove();   // Remove the smallest element from the heap (root of the min-heap) and place it in the correct position in the array
     }
 }
-template <class type>
-void Sort<type>::mergeSort(type *array, int size) {
+template <class type>   // Merge Sort
+void Sort<type>::mergeSort(type *array, int size) {   // Function to sort an array using the Merge Sort algorithm
     auto merge = [](type *array, int low, int mid, int high) -> void {  // Lambda function to merge two sorted halves of the array
         type *list = new type[high - low + 1];    // Create a temporary list to store the merged result
-        int i = low, j = mid + 1, k = 0;
+        int i = low, j = mid + 1, k = 0;    // Variables for array traversal and list index
 
-        while (i <= mid && j <= high) { // Merge the two sorted subarrays into 'list'
-            if (array[i] < array[j]) {
-                list[k++] = array[i++]; // If left element is smaller, place it in 'list'
-            } else if (array[j] < array[i]) {
+        while (i <= mid && j <= high) { // Compare elements from both halves and merge them in sorted order
+            if (array[i] < array[j]) {  // If left element is smaller
+                list[k++] = array[i++]; // Place it in 'list'
+            } else if (array[j] < array[i]) {   // Compare elements from the two halves  
                 list[k++] = array[j++]; // If right element is smaller, place it in 'list'
-            } else {
-                list[k++] = array[i++]; // If both elements are equal, place both in 'list'
-                list[k++] = array[j++];
+            } else {    // If both elements are equal
+                list[k++] = array[i++]; // Place the left element in 'list'
+                list[k++] = array[j++]; // Place the right element in 'list'
             }
         }
-        while (i <= mid) {
-            list[k++] = array[i++]; // If there are remaining elements in the left half, copy them to 'list'
+        while (i <= mid) {  // If there are remaining elements in the left half
+            list[k++] = array[i++]; // Copy them to 'list'
         }
-        while (j <= high) {
-            list[k++] = array[j++]; // If there are remaining elements in the right half, copy them to 'list'
+        while (j <= high) { // If there are remaining elements in the right half
+            list[k++] = array[j++]; // Copy them to 'list'
         }
-        for (i = low, k = 0; i <= high; i++, k++) {
-            array[i] = list[k]; // Copy the merged elements from 'list' back to the original array
+        for (i = low, k = 0; i <= high; i++, k++) {   // Copy the merged elements from 'list' back to the original array
+            array[i] = list[k]; // Copy the element from 'list' to the array
         }
         delete []list;  // Clean up the temporary list
     };
-    int k, low, mid, high;
+    int k, low, mid, high;  // Variables for array traversal and subarray indices
 
     for (k = 2; k <= size; k *= 2) {    // Outer loop to control the size of the subarrays being merged (2, 4, 8, ..., size)
         for (int i = 0; i + k - 1 < size; i += k) { // Inner loop to iterate through subarrays and merge them
@@ -139,23 +139,23 @@ void Sort<type>::mergeSort(type *array, int size) {
         merge(array, 0, k - 1, size - 1);   // Finally, merge the whole array from the beginning (index 0) to the last index (size - 1)
     }
 }
-template <class type>
-void Sort<type>::quickSort(type *array, int low, int high) {
+template <class type>   // Quick Sort
+void Sort<type>::quickSort(type *array, int low, int high) {    // Function to sort an array using the Quick Sort algorithm
     /*
     -> for first element as a pivot
-        -> O(nlogn) [best case] [partitioning in the middle] 
+        -> O(nlogn) [best case] [partitioning in the middle]
         -> O(nlogn) [average case]
         -> O(n^2) [worst case] [already sorted / partitioning at any end]
     
     -> for middle element as pivot
         -> O(nlogn) [best case] [already sorted / partitioning in the middle]
         -> O(nlogn) [average case]
-        -> O(n^2) [woest case] [partitioning at any end]
+        -> O(n^2) [worst case] [partitioning at any end]
 
     -> in selection sort we select the position and find out the element for that position
     -> in quick sort we select the element and find out the postion for that element
 
-    -> differnt names of quick sort
+    -> different names of quick sort
         -> selection exchange sort
         -> partition exchange sort
         -> quick sort
@@ -184,76 +184,76 @@ void Sort<type>::quickSort(type *array, int low, int high) {
         this->quickSort(array, temp + 1, high); // Recursively sort the right subarray (elements greater than the pivot)
     }
 }
-template <class type>
-void Sort<type>::radixSort(type *array, int size) {
-    struct Node {
-        type data = 0;
-        Node *next = nullptr;
-        Node(type data) {this->data = data;}
+template <class type>   // Radix Sort
+void Sort<type>::radixSort(type *array, int size) { // Function to sort an array using the Radix Sort algorithm
+    struct Node {   // Node structure for linked list
+        type data = 0;  // Data value
+        Node *next = nullptr;   // Pointer to the next node
+        Node(type data) {this->data = data;}    // Constructor to initialize the node with data
     };
-    Node **list = new Node*[10], *current;
-    int max = array[0], i, j, div;
+    Node **list = new Node*[10], *current;  // Array of linked lists to store elements based on digits (0-9) and a pointer to the current node
+    int max = array[0], i, j, div;  // Variables to store the maximum element, array traversal, and division result
 
-    for (i = 1; i < size; i++) {
-        if (array[i] > max) {
-            max = array[i];
+    for (i = 1; i < size; i++) {    // Find the maximum element in the array
+        if (array[i] > max) {   // Compare the current element with max
+            max = array[i]; // Update max if the current element is larger
         }
     }
-    for (int k = 1; k <= max; k *= 10) {
-        for (i = 0; i < 10; i++) {
-            list[i] = nullptr;
+    for (int k = 1; k <= max; k *= 10) {    // Loop to control the digit position (ones, tens, hundreds, ...)
+        for (i = 0; i < 10; i++) {  // Initialize the linked list array
+            list[i] = nullptr;  // Set each element to null
         }
-        for (i = 0; i < size; i++) {
-            div = (array[i] / k) % 10;
+        for (i = 0; i < size; i++) {    // Distribute elements into the linked list based on the current digit
+            div = (array[i] / k) % 10;  // Calculate the digit at the current position
 
-            if (not list[div]) {
-                list[div] = new Node(array[i]);
-            } else {
-                current = list[div];
+            if (!list[div]) {    // If the list is empty
+                list[div] = new Node(array[i]); // Create a new node with the current element
+            } else {    // Otherwise, add the element to the end of the list
+                current = list[div];    // Set the current node to the head of the list
 
-                while (current->next) {
-                    current = current->next;
+                while (current->next) { // Traverse the list to find the last node
+                    current = current->next;    // Move to the next node
                 }
-                current->next = new Node(array[i]);
+                current->next = new Node(array[i]); // Add the current element to the end of the list
             }
         }
-        for (i = j = 0; i < 10; i++) {
-            current = list[i];
+        for (i = j = 0; i < 10; i++) {  // Merge the linked lists back into the array
+            current = list[i];  // Set the current node to the head of the list
 
-            while (current) {
-                array[j++] = current->data;
-                current = current->next;
+            while (current) {   // Traverse the list
+                array[j++] = current->data; // Copy the data value to the array
+                current = current->next;    // Move to the next node
             }
         }
     }
 }
-template <class type>
-void Sort<type>::selectionSort(type *array, int size) {
-    int i, j, k;
+template <class type>   // Selection Sort
+void Sort<type>::selectionSort(type *array, int size) {   // Function to sort an array using the Selection Sort algorithm
+    int i, j, k;    // Variables for array traversal and finding the minimum element
 
-    for (i = 0; i < size - 1; i++) {
-        for (j = i + 1, k = i; j < size; j++) {
-            if (array[j] < array[k]) {
-                k = j;
+    for (i = 0; i < size - 1; i++) {    // Loop to traverse the array
+        for (j = i + 1, k = i; j < size; j++) {   // Loop to find the index of the minimum element in the unsorted part of the array
+            if (array[j] < array[k]) {  // Compare the current element with the minimum element found so far
+                k = j;  // Update the index of the minimum element
             }
         }
-        swap(array[i], array[k]);
+        swap(array[i], array[k]);   // Swap the minimum element with the first element of the unsorted part of the array
     }
 }
-template <class type>
-void Sort<type>::shellSort(type *array, int size) {
-    type temp;
+template <class type>   // Shell Sort
+void Sort<type>::shellSort(type *array, int size) { // Function to sort an array using the Shell Sort algorithm
+    type temp;  // Temporary variable to hold the current element during insertion
 
-    for (int gap = size / 2, i, j; gap >= 1; gap /= 2) {
-        for (i = gap; i < size; i++) {
-            temp = array[i];
-            j = i - gap;
+    for (int gap = size / 2, i, j; gap >= 1; gap /= 2) {    // Loop to control the gap sequence
+        for (i = gap; i < size; i++) {  // Loop to traverse the array from the gap index to the end
+            temp = array[i];    // Store the current element to be inserted
+            j = i - gap;    // Set 'j' to the index of the element at the gap distance
 
-            while (j > -1 && array[j] > temp) {
-                array[j+gap] = array[j];
-                j -= gap;
+            while (j > -1 && array[j] > temp) { // Move elements that are greater than 'temp' by the gap distance to the right
+                array[j+gap] = array[j];    // Shift the element to the right by the gap distance
+                j -= gap;   // Move the index 'j' by the gap distance to the left
             }
-            array[j+gap] = temp;
+            array[j+gap] = temp;    // Insert the stored 'temp' element into its correct position
         }
     }
 }
