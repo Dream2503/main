@@ -16,38 +16,38 @@ class Sort {
         void shellSort(type*, int);
 };
 
-template <class type>
-void Sort<type>::bubbleSort(type *array, int size) {
-    bool flag;  // Flag to check if any swap was made in the inner loop
+template <class type>   // Bubble Sort
+void Sort<type>::bubbleSort(type *array, int size) {    // Function to sort an array using the Bubble Sort algorithm
+    bool flag;  // Flag to check if any swaps were made in the current pass
 
-    for (int i = 0; i < size - 1; i++) {    // Outer loop to iterate over the array
-        flag = false;   // Reset flag to false at the start of each iteration
+    for (int i = 0; i < size - 1; i++) {    // Outer loop to control the number of passes
+        flag = false;   // Reset the flag at the beginning of each pass
 
-        for (int j = 0; j < size - i - 1; j++) {    // Inner loop to compare adjacent elements
-            if (array[j] > array[j + 1]) {  // If the current element is greater than the next, swap them
+        for (int j = 0; j < size - i - 1; j++) {    // Inner loop to compare adjacent elements and swap them if necessary
+            if (array[j] > array[j + 1]) {  // Compare adjacent elements and swap them if they are in the wrong order
                 std::swap(array[j], array[j + 1]);  // Swap the elements
-                flag = true;    // Set flag to true to indicate a swap has occurred
-            }
-        }
-        if (!flag) {    // If no swaps were made in this pass, the array is already sorted, so break out of the loop
-            return;
+                flag = true;    // Set the flag to true if a swap was made in this pass
+            }   
+        }   
+        if (!flag) {    // If no swaps were made in the current pass, the array is already sorted
+            return; // Return early
         }
     }
 }
-template <class type>
-void Sort<type>::countSort(type *array, int size) {
-    type max, min;  // Variables to store the maximum and minimum values in the array
-    int i, j, range, *count; // Loop variables and an array to count occurrences
+template <class type>   // Count Sort
+void Sort<type>::countSort(type *array, int size) {   // Function to sort an array using the Counting Sort algorithm
+    type max, min;  // Variables to store the maximum and minimum elements in the array
+    int i, j, range, *count;    // Variables to store the range of values and the frequency count of each element
 
-    if (size < 1) { // Return early if the array size is less than 1
-        return;
+    if (size < 1) { // If the array is empty or has only one element, it is already sorted
+        return; // Return early
     }
     max = array[0], min = array[0]; // Initialize max and min with the first element of the array
 
     for (int i = 1; i < size; i++) {    // Find the maximum and minimum elements in the array
-        if (array[i] > max) {
+        if (array[i] > max) {   // Compare the current element with max
             max = array[i]; // Update max if the current element is larger
-        } else if (array[i] < min) {
+        } else if (array[i] < min) {    // Compare the current element with min
             min = array[i]; // Update min if the current element is smaller
         }
     }

@@ -1,12 +1,11 @@
 from collections import namedtuple
-
 from equation import Polynomial, Variable
 from fractions import Fraction
 from math import gcd, lcm, sqrt
 from typing import Callable, Literal, Generic, TypeVar, Iterator
 
 Type = TypeVar("Type")
-Order = TypeVar("Order")
+Order = namedtuple("Order", ["row", "column"])
 
 
 class MatrixError(Exception): ...
@@ -189,7 +188,7 @@ class Matrix(Generic[Type]):
     >>> m.inverse()
     Matrix(rows=3, columns=3, matrix=[[Fraction(4, 1), Fraction(3, 1), Fraction(-1, 1)], [Fraction(-2, 1), Fraction(-2, 1), Fraction(1, 1)], [Fraction(5, 1), Fraction(4, 1), Fraction(-1, 1)]])
 
-# CHECKING IF THE SET OF ROW VECTORS ARE LINEARLY DEPENEDENT OR INDEPENDENT
+# CHECKING IF THE SET OF ROW VECTORS ARE LINEARLY DEPENDENT OR INDEPENDENT
     >>> m: Matrix[Fraction] = Matrix(matrix=[[1, 2, 3, 4], [2, 3, 4, 5], [3, 4, 5, 6], [4, 5, 6, 7]])
     >>> m.is_linearly_independent()
     False
@@ -204,7 +203,7 @@ class Matrix(Generic[Type]):
     >>> m.is_orthonormal_system()
     True
 
-# CHECKING IF A MATRIX IS POSTIVE DEFINITE MATRIX
+# CHECKING IF A MATRIX IS POSITIVE DEFINITE MATRIX
     >>> m: Matrix[Fraction] = Matrix(matrix=[[3, -1, 1], [-1, 5, -1], [1, -1, 3]])
     >>> m.is_positive_definite()
     True
@@ -284,7 +283,7 @@ class Matrix(Generic[Type]):
             rows: int = len(matrix)
             columns: int = len(matrix[0])
 
-        self._order: Order = namedtuple("Order", ["row", "column"])(rows, columns)
+        self._order: Order = Order(rows, columns)
 
         if rows <= 0 or columns <= 0:
             raise MatrixError("Row or column of a matrix cannot be negative or null")
@@ -309,7 +308,7 @@ class Matrix(Generic[Type]):
 
     @property
     def column(self) -> int:
-        return self._order.row
+        return self._order.column
 
     @property
     def order(self) -> Order:
@@ -752,9 +751,9 @@ class Matrix(Generic[Type]):
 
     def gauss_elimination(self) -> dict[str, Fraction] | tuple[int, str]:
         """Solves the system of linear equations (assuming the "self" matrix as the augmented matrix) by gauss elimination method"""
-        if self.row < self.column:
+        if self.row != self.column - 1:
             matrix: list[list[Fraction]] = [row for idx, row in enumerate(self.matrix) if idx < self.column - 1]
-            order: tuple[int, int] = (len(matrix), len(matrix[0]))
+            order: Order = Order(len(matrix), len(matrix[0]))
 
         else:
             matrix: list[list[Fraction]] = self.matrix
@@ -766,16 +765,16 @@ class Matrix(Generic[Type]):
             return 0, "The set of linear equations has no solutions"
 
         else:
-            for i in range(order[0]):
+            for i in range(order.row):
                 result.matrix[i][-1] = -result.matrix[i][-1]
 
-            matrix: list[list[Polynomial]] = [[Polynomial(f"x{i}")] for i in range(1, order[1] + 1)]
-            matrix[-1][0] = Fraction(1)
+            matrix: list[list[Polynomial]] = [[Polynomial(f"x{i}")] for i in range(1, order.row + 1)]
+            matrix.append([Fraction(1)])
             var_mat: Matrix[Polynomial] = Matrix(matrix=matrix)
             poly_mat: Matrix[Polynomial] = result * var_mat
 
             res: list[Fraction] = [1 if val is None else val for val in poly_mat._back_substitution()]
-            return {f"x{i + 1}": val for i, val in enumerate(self._simplify_row(res))}
+            return {f"x{i + 1}": val for i, val in enumerate(res)}
 
     def inverse(self) -> "Matrix[Fraction]":
         """Computes the inverse of a non-singular matrix using Gauss Jordan Elimination"""

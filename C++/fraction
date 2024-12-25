@@ -2,34 +2,34 @@
 #include <numeric>
 
 class Fraction {
-    int num = 0, den = 1;
+    int numerator = 0, denominator = 1;
+    void validate();
     
     public:
-    Fraction() {}
-    Fraction(int, int);
+    Fraction() = default;
+    Fraction(int = 0, int = 1);
     Fraction(std::string);
-    operator int() {return this->num / this->den;}
-    operator double() {return static_cast<double>(this->num) / this->den;}
-    operator float() {return static_cast<float>(this->num) / this->den;}
-    Fraction operator+(Fraction frac) {return Fraction(this->num * frac.den + frac.num * this->den, this->den * frac.den);}
-    Fraction gcd(Fraction frac) {Fraction(std::gcd(this->num, frac.num), std::lcm(this->den, frac.den));}
-    void operator+=(Fraction);
-    Fraction operator-(Fraction frac) {return Fraction(this->num * frac.den - frac.num * this->den, this->den * frac.den);}
-    void operator-=(Fraction);
-    Fraction operator*(Fraction frac) {return Fraction(this->num * frac.num, this->den * frac.den);}
-    void operator*=(Fraction);
-    Fraction operator/(Fraction);
-    void operator/=(Fraction);
-    bool operator==(Fraction frac) {return this->num == frac.num and this->den == frac.den;}
-    bool operator!=(Fraction frac) {return not this->operator==(frac);}
+    Fraction(const Fraction&) = default;
+    operator int();
+    operator double();
+    operator float();
+    Fraction operator+(Fraction&);
+    Fraction gcd(Fraction&);
+    void operator+=(Fraction&);
+    Fraction operator-(Fraction&);
+    void operator-=(Fraction&);
+    Fraction operator*(Fraction&);
+    void operator*=(Fraction&);
+    Fraction operator/(Fraction&);
+    void operator/=(Fraction&);
+    bool operator==(Fraction&);
+    bool operator!=(Fraction&);
     friend std::ostream &operator<<(std::ostream&, Fraction&);
     void simplify();
 };
-Fraction::Fraction(int numerator, int denominator = 1) {
-    this->num = numerator;
-    if (not denominator) throw std::invalid_argument("Division by zero fraction");
-    this->den = denominator;
-    this->simplify();
+Fraction::Fraction(int num, int den): numerator(num), denominator(den) {
+    validate();
+    simplify();
 }
 Fraction::Fraction(std::string num) {
     int decimal = num.find('.'), size = num.size(), res;
@@ -37,51 +37,81 @@ Fraction::Fraction(std::string num) {
     if (decimal != -1) {
         while (decimal != size-1) {
             std::swap(num[decimal], num[decimal+1]);
-            this->den *= 10;
+            denominator *= 10;
             decimal++;
         }
         num.pop_back();
     }
-    this->num = stoi(num);
-    this->simplify();
+    num = std::stoi(num);
+    simplify();
 }
-void Fraction::operator+=(Fraction frac) {
-    this->num = this->num * frac.den + frac.num * this->den;
-    this->den *= frac.den;
-    this->simplify();
+void Fraction::validate() {
+    if (denominator == 0) throw std::invalid_argument("Division by zero fraction");
 }
-void Fraction::operator-=(Fraction frac) {
-    this->num = this->num * frac.den - frac.num * this->den;
-    this->den *= frac.den;
-    this->simplify();
+Fraction::operator int() {
+    return numerator / denominator;
 }
-void Fraction::operator*=(Fraction frac) {
-    this->num *= frac.num;
-    this->den *= frac.den;
-    this->simplify();
+Fraction::operator double() {
+    return static_cast<double>(numerator) / denominator;
 }
-Fraction Fraction::operator/(Fraction frac) {
-    if (not frac.num) throw std::invalid_argument("Division by zero fraction");
-    return Fraction(this->num * frac.den, this->den * frac.num);
+Fraction::operator float() {
+    return static_cast<float>(numerator) / denominator;
 }
-void Fraction::operator/=(Fraction frac) {
-    if (not frac.num) throw std::invalid_argument("Division by zero fraction");
-    this->num *= frac.den;
-    this->den *= frac.num;
-    this->simplify();
+Fraction Fraction::gcd(Fraction &frac) {
+    return Fraction(std::gcd(numerator, frac.numerator), std::lcm(denominator, frac.denominator));
+}
+Fraction Fraction::operator+(Fraction &frac) {
+    return Fraction(numerator * frac.denominator + frac.numerator * denominator, denominator * frac.denominator);
+}
+void Fraction::operator+=(Fraction &frac) {
+    numerator = numerator * frac.denominator + frac.numerator * denominator;
+    denominator *= frac.denominator;
+    simplify();
+}
+Fraction Fraction::operator-(Fraction &frac) {
+    return Fraction(numerator * frac.denominator - frac.numerator * denominator, denominator * frac.denominator);
+}
+void Fraction::operator-=(Fraction &frac) {
+    numerator = numerator * frac.denominator - frac.numerator * denominator;
+    denominator *= frac.denominator;
+    simplify();
+}
+Fraction Fraction::operator*(Fraction &frac) {
+    return Fraction(numerator * frac.numerator, denominator * frac.denominator);
+}
+void Fraction::operator*=(Fraction &frac) {
+    numerator *= frac.numerator;
+    denominator *= frac.denominator;
+    simplify();
+}
+Fraction Fraction::operator/(Fraction &frac) {
+    validate();
+    return Fraction(numerator * frac.denominator, denominator * frac.numerator);
+}
+void Fraction::operator/=(Fraction &frac) {
+    validate();
+    numerator *= frac.denominator;
+    denominator *= frac.numerator;
+    simplify();
+}
+bool Fraction::operator==(Fraction &frac) {
+    return numerator == frac.numerator and denominator == frac.denominator;
+}
+bool Fraction::operator!=(Fraction &frac) {
+    return numerator != frac.numerator or denominator != frac.denominator;
 }
 std::ostream &operator<<(std::ostream &os, Fraction &frac) {
-    if (frac.den == 1) os << frac.num;
-    else os << frac.num << '/' << frac.den;
+    if (frac.denominator == 1) os << frac.numerator;
+    else os << frac.numerator << '/' << frac.denominator;
     return os;
 }
 void Fraction::simplify() {
-    int factor = std::gcd(this->num, this->den);
-    this->num /= factor;
-    this->den /= factor;
+    int factor = std::gcd(numerator, denominator);
+    numerator /= factor;
+    denominator /= factor;
     
-    if (this->den < 0) {
-        this->num = -this->num;
-        this->den = -this->den;
+    if (denominator < 0) {
+        numerator = -numerator;
+        denominator = -denominator;
     }
 }
