@@ -1,5 +1,5 @@
 from collections import namedtuple
-from equation import Polynomial, Variable
+from .equation import Polynomial, Variable
 from fractions import Fraction
 from math import gcd, lcm, sqrt
 from typing import Callable, Literal, Generic, TypeVar, Iterator

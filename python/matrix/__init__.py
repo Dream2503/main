@@ -1,3 +1,1 @@
-from .matrix import Matrix
-from .equation import Variable, Polynomial, PolynomialError
-from .number import Number
+from .main import Matrix, MatrixError
