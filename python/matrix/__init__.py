@@ -1,1 +1,2 @@
-from .main import Matrix, MatrixError
+from .matrix import *
+from .equation import *

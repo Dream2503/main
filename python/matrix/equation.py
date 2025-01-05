@@ -1,7 +1,7 @@
 from cmath import sqrt as sqrtc
 from fractions import Fraction
 from math import gcd, lcm, cos, acos, pi, sqrt as sqrtf
-from typing import Callable, Generator
+from typing import Generator, Any
 
 
 class PolynomialError(Exception): ...
@@ -89,7 +89,7 @@ class Variable:
             >>> v1
             Variable(coefficient=25, variables={'x': Fraction(2, 1)})
 
-# OTHER BULIT-IN OPERATORS
+# OTHER BUILT-IN OPERATORS
     -> checking equality between variables
         >>> v1 == v2
         False
@@ -117,12 +117,12 @@ class Variable:
     Variable(coefficient=9, variables={'x': Fraction(2, 1)})
     """
 
-    def __init__(self, expression: str = "0", *, coefficient: Fraction = None,
-                 variables_dict: dict[str, Fraction] = None) -> None:
+    def __init__(self, expression: str = "0", *, coefficient: Fraction | None = None,
+                 variables_dict: dict[str, Fraction] | None = None) -> None:
         """Initialization function for Variable class"""
-        self._coefficient: Fraction = coefficient
-        self._variables: dict[str, Fraction] = variables_dict.copy() if variables_dict is not None else None
-        expression: str = str(expression)
+        self._coefficient: Fraction = coefficient if coefficient is not None else Fraction(1)
+        self._variables: dict[str, Fraction] = variables_dict.copy() if variables_dict is not None else {}
+        expression = str(expression)
 
         if coefficient is None:
             on_coef: bool = True
@@ -136,8 +136,8 @@ class Variable:
 
             while i < size:
                 if on_coef and expression[i].isalpha():
-                    self._coefficient: Fraction = Fraction(1)
-                    on_coef: bool = False
+                    self._coefficient = Fraction(1)
+                    on_coef = False
                     i -= 1
 
                 elif on_coef and not expression[i].isalpha():
@@ -145,10 +145,10 @@ class Variable:
                         frac += expression[i]
                         i += 1
 
-                    self._coefficient: Fraction = Fraction(frac)
-                    frac: str = ""
+                    self._coefficient = Fraction(frac)
+                    frac = ""
                     i -= 1
-                    on_coef: bool = False
+                    on_coef = False
 
                 elif on_var and expression[i].isalpha():
                     while i < size and expression[i] != '^':
@@ -156,9 +156,9 @@ class Variable:
                         i += 1
 
                     var.append(variable)
-                    on_var: bool = False
-                    on_order: bool = True
-                    variable: str = ""
+                    on_var = False
+                    on_order = True
+                    variable = ""
                     i -= 1
 
                 elif on_var and not expression[i].isalpha():
@@ -175,18 +175,18 @@ class Variable:
                         i += 1
 
                     var.append(frac)
-                    frac: str = ""
-                    on_order: bool = False
-                    on_var: bool = True
+                    frac = ""
+                    on_order = False
+                    on_var = True
                     i -= 1
 
                 i += 1
 
-            var.append(Fraction(1)) if len(var) % 2 != 0 else var
-            self._variables: dict[str, Fraction] = {var[i - 1]: Fraction(var[i]) for i in range(1, len(var), 2)}
+            # var.append(Fraction(1)) if len(var) % 2 != 0 else var
+            self._variables = {var[i - 1]: Fraction(var[i]) for i in range(1, len(var), 2)}
 
-        self._variables: dict[str, Fraction] = dict(sorted({key: value for key, value in self.variables.items()
-                                                            if value != Fraction(0)}.items()))
+        self._variables = dict(sorted({key: value for key, value in self.variables.items()
+                                       if value != Fraction(0)}.items()))
 
     @property
     def coefficient(self) -> Fraction:
@@ -214,7 +214,7 @@ class Variable:
                 res += f"({self._coefficient})"
 
         if len(self._variables) > 1:
-            is_brace: bool = True
+            is_brace = True
 
         for variable, order in self._variables.items():
             if order != 0:
@@ -237,6 +237,9 @@ class Variable:
                         res += ')'
         return res
 
+    def __repr__(self) -> str:
+        return f"Variable(coefficient={self._coefficient}, variables={self._variables})"
+
     def __add__(self, other: "Variable") -> "Variable":
         """Operator+ overloaded function"""
         if isinstance(other, Variable) and self.variables == other.variables:
@@ -253,7 +256,7 @@ class Variable:
         else:
             return NotImplemented
 
-    def __mul__(self, other: "Variable | Fraction") -> "Variable":
+    def __mul__(self, other: "Variable | int | Fraction") -> "Variable":
         """Operator* overloaded function"""
         if isinstance(other, Variable):
             coefficient: Fraction = self.coefficient * other.coefficient
@@ -272,7 +275,7 @@ class Variable:
             except ValueError:
                 return NotImplemented
 
-    def __truediv__(self, other: "Variable | Fraction") -> "Variable":
+    def __truediv__(self, other: "Variable | int | Fraction") -> "Variable":
         """Operator/ overloaded function"""
         if isinstance(other, Variable):
             coefficient: Fraction = self.coefficient / other.coefficient
@@ -320,7 +323,7 @@ class Variable:
         else:
             return NotImplemented
 
-    def __imul__(self, other: "Variable | Fraction") -> "Variable":
+    def __imul__(self, other: "Variable | int | Fraction") -> "Variable":
         """Operator*= overloaded function"""
         if isinstance(other, Variable):
             self._coefficient *= other.coefficient
@@ -338,7 +341,7 @@ class Variable:
             except ValueError:
                 return NotImplemented
 
-    def __itruediv__(self, other: "Variable | Fraction") -> "Variable":
+    def __itruediv__(self, other: "Variable | int | Fraction") -> "Variable":
         """Operator/= overload function"""
         if isinstance(other, Variable):
             self._coefficient /= other.coefficient
@@ -366,7 +369,7 @@ class Variable:
         except ValueError:
             return NotImplemented
 
-    def __eq__(self, other: "Variable | Fraction") -> bool:
+    def __eq__(self, other: Any) -> bool:
         """Operator== overloaded function"""
         if isinstance(other, Variable):
             return self.coefficient == other.coefficient and self.variables == other.variables
@@ -378,43 +381,39 @@ class Variable:
             except ValueError:
                 return NotImplemented
 
-    __rmul__: Callable[["Variable | Fraction"], "Variable"] = lambda self, other: self.__mul__(other)
-    __rtruediv__: Callable[["Variable | Fraction"], "Variable"] = lambda self, other: Variable(
+    __rmul__ = lambda self, other: self.__mul__(other)
+    __rtruediv__ = lambda self, other: Variable(
         coefficient=other / self.coefficient, variables_dict={key: value * -1 for key, value in self.variables.items()})
-    __abs__: Callable[[], "Variable"] = lambda self: Variable(coefficient=abs(self.coefficient),
-                                                              variables_dict=self.variables.copy())
-    __bool__: Callable[[], bool] = lambda self: bool(self.coefficient)
-    __neg__: Callable[[], "Variable"] = lambda self: self * -1
-    __pos__: Callable[[], "Variable"] = lambda self: self
-    __len__: Callable[[], int] = lambda self: len(self.variables)
-    __repr__: Callable[[], str] = lambda self: f"Variable(coefficient={self._coefficient}, variables={self._variables})"
+    __abs__ = lambda self: Variable(coefficient=abs(self.coefficient), variables_dict=self.variables.copy())
+    __bool__ = lambda self: bool(self.coefficient)
+    __neg__ = lambda self: self * -1
+    __pos__ = lambda self: self
+    __len__ = lambda self: len(self.variables)
 
     def substitute(self, variable: str, value: "Variable | Fraction") -> "Variable":
         """Substitutes a value of a variable with a number or another variable and returns a new variable"""
         if self.variables.get(variable, None) is not None:
-            try:
-                return Variable(coefficient=self.coefficient * Fraction(value) ** self.variables[variable],
+            if isinstance(value, Variable):
+                if len(value) == 1:
+                    variables: dict[str, Fraction] = {}
+
+                    for key, val in self.variables.items():
+                        if key == variable:
+                            first, second = tuple(value.variables.items())[0]
+                            variables[first] = variables.get(first, 0) + second * val
+
+                        else:
+                            variables[key] = variables.get(key, 0) + val
+
+                    return Variable(coefficient=self.coefficient * value.coefficient, variables_dict=variables)
+
+            else:
+                return Variable(coefficient=self.coefficient * Fraction(Fraction(value) ** self.variables[variable]),
                                 variables_dict={key: value for key, value in self.variables.items() if key != variable})
-
-            except TypeError:
-                if isinstance(value, Variable):
-                    if len(value) == 1:
-                        variables: dict[str, Fraction] = {}
-
-                        for key, val in self.variables.items():
-                            if key == variable:
-                                first, second = tuple(value.variables.items())[0]
-                                variables[first] = variables.get(first, 0) + second * val
-
-                            else:
-                                variables[key] = variables.get(key, 0) + val
-
-                        return Variable(coefficient=self.coefficient * value.coefficient, variables_dict=variables)
 
         return self.copy()
 
-    copy: Callable[["Variable"], "Variable"] = lambda self: Variable(coefficient=self.coefficient,
-                                                                     variables_dict=self.variables.copy())
+    copy = lambda self: Variable(coefficient=self.coefficient, variables_dict=self.variables.copy())
 
 
 class Polynomial:
@@ -459,7 +458,7 @@ class Polynomial:
             >>> print(poly1 / poly2)
             (3x^3 - 5x^2 + 2x + 7) / (4x^4 + 6x^2 - x + 9)
             >>> print(poly1 / num)
-            V3x^3 - 5x^2 + 2x + 7                            # simplifies the polynomial after division
+            3x^3 - 5x^2 + 2x + 7                            # simplifies the polynomial after division
 
 # USING IN-PLACE OPERATOR
     -> consider the following two polynomials and one integer throughout the section
@@ -500,7 +499,7 @@ class Polynomial:
             >>> print(poly1)
             V3x^3 - 5x^2 + 2x + 7                            # simplifies the polynomial after division
 
-# OTHER BULIT-IN OPERATORS
+# OTHER BUILT-IN OPERATORS
     -> checking equality between polynomials
         >>> poly1 == poly2
         False
@@ -522,12 +521,12 @@ class Polynomial:
     >>> print(poly.copy())
     3x^3 - 5x^2 + 2x + 7
 
-# FINDIND THE ROOTS OF A POLYNOMIAL
+# FINDING THE ROOTS OF A POLYNOMIAL
     >>> poly: Polynomial = Polynomial("3x^3 -5x^2 2x 7")
     >>> poly.roots()
     (-0.841, (1.254+1.097j), (1.254-1.097j))
 
-# CONVERTING A QUADRATIC POLYNOMAIL TO ITS RESPECTIVE PRINCIPAL AXES FORM
+# CONVERTING A QUADRATIC POLYNOMIAL TO ITS RESPECTIVE PRINCIPAL AXES FORM
     >>> poly: Polynomial = Polynomial("-11x1^2 84x1^1x2^1 24x2^2 -156")
     >>> poly.to_principal_axes()
     {'x1': [Polynomial(numerator=[Variable(coefficient=601000, variables={'y1': Fraction(1, 1)}), Variable(coefficient=-901500, variables={'y2': Fraction(1, 1)})], denominator=[Variable(coefficient=1083603, variables={})]], 'x2': [Polynomial(numerator=[Variable(coefficient=901500, variables={'y1': Fraction(1, 1)}), Variable(coefficient=601000, variables={'y2': Fraction(1, 1)})], denominator=[Variable(coefficient=1083603, variables={})]], 'conic_section': 'Hyperbola'}
@@ -542,9 +541,9 @@ class Polynomial:
             self._denominator: list[Variable] = poly_obj.denominator.copy()
 
         else:
-            self._numerator: list[Variable] = numerator_variables if numerator_variables \
+            self._numerator = numerator_variables if numerator_variables \
                 else [Variable(element) for element in numerator.split()]
-            self._denominator: list[Variable] = denominator_variables if denominator_variables \
+            self._denominator = denominator_variables if denominator_variables \
                 else [Variable(element) for element in denominator.split()]
 
         self._pre_simplify()
@@ -568,7 +567,7 @@ class Polynomial:
 
             for element in term:
                 if begin:
-                    begin: bool = False
+                    begin = False
                     current += str(element)
 
                 elif element.coefficient > 0:
@@ -587,6 +586,9 @@ class Polynomial:
         else:
             return f"({res[0]}) / ({res[1]})"
 
+    def __repr__(self) -> str:
+        return f"Polynomial(numerator={self.numerator}, denominator={self.denominator})"
+
     def __add__(self, other: "Polynomial | Variable | Fraction") -> "Polynomial":
         """Operator+ overloaded function"""
         if isinstance(other, Polynomial):
@@ -595,15 +597,15 @@ class Polynomial:
             denominator: list[Variable] = [var1 * var2 for var1 in self.denominator for var2 in other.denominator]
 
         elif isinstance(other, Variable):
-            numerator: list[Variable] = self.numerator + [var * other for var in self.denominator]
-            denominator: list[Variable] = self.denominator
+            numerator = self.numerator + [var * other for var in self.denominator]
+            denominator = self.denominator
 
         else:
             try:
-                other: Fraction = Fraction(other)
-                numerator: list[Variable] = ([var * other.denominator for var in self.numerator] +
-                                             [var * other.numerator for var in self.denominator])
-                denominator: list[Variable] = [var * other.denominator for var in self.denominator]
+                other = Fraction(other)
+                numerator = ([var * other.denominator for var in self.numerator] + [var * other.numerator for var in
+                                                                                    self.denominator])
+                denominator = [var * other.denominator for var in self.denominator]
 
             except ValueError:
                 return NotImplemented
@@ -618,15 +620,15 @@ class Polynomial:
             denominator: list[Variable] = [var1 * var2 for var1 in self.denominator for var2 in other.denominator]
 
         elif isinstance(other, Variable):
-            numerator: list[Variable] = self.numerator + [var * -other for var in self.denominator]
-            denominator: list[Variable] = self.denominator
+            numerator = self.numerator + [var * -other for var in self.denominator]
+            denominator = self.denominator
 
         else:
             try:
-                other: Fraction = Fraction(other)
-                numerator: list[Variable] = ([var * other.denominator for var in self.numerator] +
-                                             [var * -other.numerator for var in self.denominator])
-                denominator: list[Variable] = [var * other.denominator for var in self.denominator]
+                other = Fraction(other)
+                numerator = ([var * other.denominator for var in self.numerator] +
+                             [var * -other.numerator for var in self.denominator])
+                denominator = [var * other.denominator for var in self.denominator]
 
             except ValueError:
                 return NotImplemented
@@ -642,14 +644,14 @@ class Polynomial:
                                            other.denominator]
 
         elif isinstance(other, Variable):
-            numerator: list[Variable] = [element * other for element in self.numerator]
-            denominator: list[Variable] = self.denominator
+            numerator = [element * other for element in self.numerator]
+            denominator = self.denominator
 
         else:
             try:
-                other: Fraction = Fraction(other)
-                numerator: list[Variable] = [element * other.numerator for element in self.numerator]
-                denominator: list[Variable] = [element * other.denominator for element in self.denominator]
+                other = Fraction(other)
+                numerator = [element * other.numerator for element in self.numerator]
+                denominator = [element * other.denominator for element in self.denominator]
 
             except ValueError:
                 return NotImplemented
@@ -665,14 +667,14 @@ class Polynomial:
                                            other.numerator]
 
         elif isinstance(other, Variable):
-            numerator: list[Variable] = self.numerator
-            denominator: list[Variable] = [element * other for element in self.denominator]
+            numerator = self.numerator
+            denominator = [element * other for element in self.denominator]
 
         else:
             try:
-                other: Fraction = Fraction(other)
-                numerator: list[Variable] = [element * other.numerator for element in self.numerator]
-                denominator: list[Variable] = [element * other.denominator for element in self.denominator]
+                other = Fraction(other)
+                numerator = [element * other.numerator for element in self.numerator]
+                denominator = [element * other.denominator for element in self.denominator]
 
             except ValueError:
                 return NotImplemented
@@ -707,7 +709,7 @@ class Polynomial:
         self._denominator = result.denominator
         return self
 
-    def __eq__(self, other: "Polynomial | Variable| Fraction") -> bool:
+    def __eq__(self, other: Any) -> bool:
         """Operator== overloaded function"""
         if isinstance(other, Polynomial):
             return self.numerator == other.numerator and self.denominator == other.denominator
@@ -723,24 +725,22 @@ class Polynomial:
             except ValueError:
                 return NotImplemented
 
-    __radd__: Callable[["Polynomial | Variable | Fraction"], "Polynomial"] = lambda self, other: self.__add__(other)
-    __rsub__: Callable[["Polynomial | Variable | Fraction"], "Polynomial"] = lambda self, other: (-self).__add__(other)
-    __rmul__: Callable[["Polynomial | Variable | Fraction"], "Polynomial"] = lambda self, other: self.__mul__(other)
-    __rtruediv__: Callable[["Polynomial | Variable | Fraction"], "Polynomial"] = \
-        lambda self, other: Polynomial(numerator_variables=self.denominator,
-                                       denominator_variables=self.numerator) * other
-    __neg__: Callable[[], "Polynomial"] = lambda self: self * -1
-    __pos__: Callable[[], "Polynomial"] = lambda self: self
-    __repr__: Callable[[], str] = lambda self: f"Polynomial(numerator={self.numerator}, denominator={self.denominator}"
-    __bool__: Callable[[], bool] = lambda self: self.numerator[0].coefficient != 0
+    __radd__ = lambda self, other: self.__add__(other)
+    __rsub__ = lambda self, other: (-self).__add__(other)
+    __rmul__ = lambda self, other: self.__mul__(other)
+    __rtruediv__ = lambda self, other: Polynomial(numerator_variables=self.denominator,
+                                                  denominator_variables=self.numerator) * other
+    __neg__ = lambda self: self * -1
+    __pos__ = lambda self: self
+    __bool__ = lambda self: self.numerator[0].coefficient != 0
 
     def _post_simplify(self) -> None:
         """Simplifies the polynomial object after performing some mathematical operations"""
         try:
-            factor: list[str, Fraction] = list(tuple(self.numerator[0].variables.items())[0])
+            factor: list[str | Fraction] | None = list(tuple(self.numerator[0].variables.items())[0])
 
         except IndexError:
-            factor: list[str, Fraction] = None
+            factor = None
 
         if len(self.denominator) == 1 and not self.denominator[0].variables and self.denominator[0].coefficient < 0:
             self.denominator[0] = abs(self.denominator[0])
@@ -753,17 +753,17 @@ class Polynomial:
             coef: Fraction = self.numerator[0].coefficient
 
         except IndexError:
-            coef: Fraction = Fraction(1)
+            coef = Fraction(1)
 
         for element in self.numerator[1:]:
             if factor is not None and factor[0] in element.variables:
-                factor[1] = min(factor[1], element.variables[factor[0]])
+                factor[1] = min(Fraction(factor[1]), element.variables[str(factor[0])])
 
             else:
-                factor: list[str, Fraction] = None
+                factor = None
 
-            coef: Fraction = Fraction(gcd(coef.numerator, element.coefficient.numerator),
-                                      lcm(coef.denominator, element.coefficient.denominator))
+            coef = Fraction(gcd(coef.numerator, element.coefficient.numerator),
+                            lcm(coef.denominator, element.coefficient.denominator))
 
         if coef != Fraction(1):
             for i in range(len(self.numerator)):
@@ -771,13 +771,13 @@ class Polynomial:
 
         for element in self.denominator:
             if factor is not None and factor[0] in element.variables:
-                factor[1] = min(factor[1], element.variables[factor[0]])
+                factor[1] = min(Fraction(factor[1]), element.variables[str(factor[0])])
 
             else:
-                factor: list[str, Fraction] = None
+                factor = None
 
-            coef: Fraction = Fraction(gcd(coef.numerator, element.coefficient.numerator),
-                                      lcm(coef.denominator, element.coefficient.denominator))
+            coef = Fraction(gcd(coef.numerator, element.coefficient.numerator),
+                            lcm(coef.denominator, element.coefficient.denominator))
 
         if coef != Fraction(1):
             for i in range(len(self.denominator)):
@@ -786,12 +786,12 @@ class Polynomial:
         if factor:
             for term in (self.numerator, self.denominator):
                 for element in term:
-                    element.variables[factor[0]] -= factor[1]
+                    element.variables[str(factor[0])] -= Fraction(factor[1])
 
     def _pre_simplify(self) -> None:
         """Simplifies the polynomial object after initializing a new polynomial instance"""
         factor: Variable | None = None
-        check: Variable | None = None
+        check: str | None = None
         main_var: Variable | None = None
         broke: bool = False
 
@@ -803,35 +803,35 @@ class Polynomial:
             for var, exp in variable.variables.items():
                 if exp == 0:
                     variable.variables.pop(var)
-                    broke: bool = True
+                    broke = True
                     break
 
                 elif exp < 0:
                     variable.variables[var] = abs(variable.variables[var])
-                    factor: Variable = Variable(coefficient=Fraction(1), variables_dict={var: variable.variables[var]})
+                    factor = Variable(coefficient=Fraction(1), variables_dict={var: variable.variables[var]})
                     self.numerator.pop(idx)
-                    check: Variable = var
-                    main_var: Variable = variable
-                    broke: bool = True
+                    check = var
+                    main_var = variable
+                    broke = True
                     break
 
             if broke and factor is None:
                 self._pre_simplify()
                 return
 
-        if factor is not None:
-            self._numerator: list[Variable] = [factor * element for element in self.numerator]
-            self._denominator: list[Variable] = [factor * element for element in self.denominator]
+        if factor is not None and main_var is not None:
+            self._numerator = [factor * element for element in self.numerator]
+            self._denominator = [factor * element for element in self.denominator]
             self.numerator.append(Variable(coefficient=main_var.coefficient,
                                            variables_dict={key: value for key, value in main_var.variables.items()
                                                            if key != check}))
             self._pre_simplify()
             return
 
-        factor: Variable | None = None
-        check: Variable | None = None
-        main_var: Variable | None = None
-        broke: bool = False
+        factor = None
+        check = None
+        main_var = None
+        broke = False
 
         for idx, variable in enumerate(self.denominator):
             if variable.coefficient == 0:
@@ -841,16 +841,16 @@ class Polynomial:
             for var, exp in variable.variables.items():
                 if exp == 0:
                     variable.variables.pop(var)
-                    broke: bool = True
+                    broke = True
                     break
 
                 elif exp < 0:
                     variable.variables[var] = abs(variable.variables[var])
-                    factor: Variable = Variable(coefficient=Fraction(1), variables_dict={var: variable.variables[var]})
+                    factor = Variable(coefficient=Fraction(1), variables_dict={var: variable.variables[var]})
                     self.denominator.pop(idx)
-                    check: Variable = var
-                    main_var: Variable = variable
-                    broke: bool = True
+                    check = var
+                    main_var = variable
+                    broke = True
                     break
 
             if broke and factor is None:
@@ -860,9 +860,9 @@ class Polynomial:
         if len(self.denominator) == 1 and self.denominator[0].coefficient == 0:
             raise ZeroDivisionError
 
-        if factor is not None:
-            self._numerator: list[Variable] = [factor * element for element in self.numerator]
-            self._denominator: list[Variable] = [factor * element for element in self.denominator]
+        if main_var is not None and factor is not None:
+            self._numerator = [factor * element for element in self.numerator]
+            self._denominator = [factor * element for element in self.denominator]
             self.denominator.append(Variable(coefficient=main_var.coefficient,
                                              variables_dict={key: value for key, value in main_var.variables.items()
                                                              if key != check}))
@@ -872,8 +872,7 @@ class Polynomial:
         self.numerator.sort(key=lambda value: tuple(value.variables.values()), reverse=True)
         self.denominator.sort(key=lambda value: tuple(value.variables.keys()))
         self.denominator.sort(key=lambda value: tuple(value.variables.values()), reverse=True)
-
-        change: bool = False
+        change = False
 
         while not change:
             res: list[Variable] = []
@@ -881,62 +880,62 @@ class Polynomial:
             i: int = 0
 
             while i < size:
-                var: Variable = None
+                temp: Variable | None = None
 
                 try:
-                    if var:
-                        var += self.numerator[i] + self.numerator[i + 1]
+                    if temp:
+                        temp += self.numerator[i] + self.numerator[i + 1]
                     else:
-                        var: Variable = self.numerator[i] + self.numerator[i + 1]
-                        change: bool = True
+                        temp = self.numerator[i] + self.numerator[i + 1]
+                        change = True
                         i += 1
 
                 except (TypeError, IndexError):
                     pass
 
-                res.append(var) if var is not None else res.append(self.numerator[i])
+                res.append(temp) if temp is not None else res.append(self.numerator[i])
                 i += 1
 
             if change:
-                self._numerator: list[Variable] = res
-                change: bool = False
+                self._numerator = res
+                change = False
 
             else:
-                change: bool = True
+                change = True
 
-        change: bool = False
+        change = False
 
         while not change:
-            res: list[Variable] = []
-            size: int = len(self.denominator)
-            i: int = 0
+            res = []
+            size = len(self.denominator)
+            i = 0
 
             while i < size:
-                var: Variable = None
+                temp = None
 
                 try:
-                    if var:
-                        var += self.denominator[i] + self.denominator[i + 1]
+                    if temp:
+                        temp += self.denominator[i] + self.denominator[i + 1]
                     else:
-                        var: Variable = self.denominator[i] + self.denominator[i + 1]
-                        change: bool = True
+                        temp = self.denominator[i] + self.denominator[i + 1]
+                        change = True
                         i += 1
 
                 except (TypeError, IndexError):
                     pass
 
-                res.append(var) if var else res.append(self.denominator[i])
+                res.append(temp) if temp else res.append(self.denominator[i])
                 i += 1
 
             if change:
                 self._denominator = res
-                change: bool = False
+                change = False
 
             else:
-                change: bool = True
+                change = True
 
     @staticmethod
-    def _conic_section(eigen_values: dict[str, Fraction], determinant: Fraction) -> str:
+    def _conic_section(eigen_values: dict[str, Fraction | float], determinant: Fraction) -> str:
         """Determines which type of conic section does the eigen vector represents"""
         are_positive: list[bool | None] = []
         is_zero_determinant: bool = True if determinant == Fraction(0) else False
@@ -968,10 +967,12 @@ class Polynomial:
             if (are_positive[0] is None or are_positive[1] is None) and is_zero_determinant:
                 return "Parabola"
 
-    def roots(self) -> tuple[float]:
+        return "Unexpected Error"
+
+    def roots(self) -> tuple[float | complex, ...]:
         """Computes the roots of the polynomial"""
 
-        def quadratic_roots(b: Fraction, c: Fraction) -> tuple[float | complex]:
+        def quadratic_roots(b: Fraction, c: Fraction) -> tuple[float | complex, float | complex]:
             """Computes the quadratic roots of a second degree polynomial"""
             determinant: Fraction = (b * b) - (4 * c)
 
@@ -982,14 +983,14 @@ class Polynomial:
                     root2: float = (-b - sqrtf(determinant)) / 2
 
                 else:
-                    root2: float = root1
+                    root2 = root1
+
+                return round(root1, 14), round(root2, 14)
 
             else:
                 return (-b + sqrtc(determinant)) / 2, (-b - sqrtc(determinant)) / 2
 
-            return round(root1, 14), round(root2, 14)
-
-        def cubic_roots(b: Fraction, c: Fraction, d: Fraction) -> tuple[float | complex]:
+        def cubic_roots(b: Fraction, c: Fraction, d: Fraction) -> tuple[float | complex, ...]:
             """Computes the cubic roots of a 3rd degree polynomial"""
             q: Fraction = (c / 3) - (b ** 2 / 9)
             r: Fraction = ((c * b - 3 * d) / 6) - (b ** 3 / 27)
@@ -1002,11 +1003,11 @@ class Polynomial:
                     t1: complex = a - (q / a)
 
                 else:
-                    t1: complex = (q / a) - a
+                    t1 = (q / a) - a
 
                 x2: complex = -t1 / 2 - b / 3
                 y2: complex = sqrtc(3) / 2 * (a + (q / a))
-                res: tuple[complex] = (t1 - b / 3, complex(x2, y2.real), complex(x2, -y2.real))
+                res: tuple[complex, complex, complex] = (t1 - b / 3, complex(x2, y2.real), complex(x2, -y2.real))
                 return tuple(round(element.real, 3) if element.imag == 0
                              else complex(round(element.real, 3), round(element.imag, 3)) for element in res)
 
@@ -1029,10 +1030,11 @@ class Polynomial:
                 coef[self.numerator[i].variables[var[0]]] = self.numerator[i].coefficient / factor
 
         if var[1] == 2:
-            return quadratic_roots(coef.get(1, 0), constant / factor)
+            return quadratic_roots(coef.get(Fraction(1), Fraction(0)), constant / factor)
 
         elif var[1] == 3:
-            return cubic_roots(coef.get(2, 0), coef.get(1, 0), constant / factor)
+            return cubic_roots(coef.get(Fraction(2), Fraction(0)), coef.get(Fraction(1), Fraction(0)),
+                               constant / factor)
 
         else:
             return NotImplemented
@@ -1044,13 +1046,13 @@ class Polynomial:
         if tuple(self.numerator[0].variables.values())[0] > Fraction(2):
             raise PolynomialError("Quadratic polynomials can be transformed into its corresponding principal axes")
 
-        res: Matrix[Fraction] = Matrix(2, 2, "null")
+        res: Matrix = Matrix(2, 2, "null")
 
         for var in self.numerator:
             if var.variables:
                 power: Fraction = tuple(var.variables.values())[0]
             else:
-                power: Fraction = Fraction(0)
+                power = Fraction(0)
 
             if power == Fraction(2):
                 position: int = int(tuple(var.variables.keys())[0][1]) - 1
@@ -1062,20 +1064,20 @@ class Polynomial:
                 res[pos1][pos2] = var.coefficient / 2
                 res[pos2][pos1] = var.coefficient / 2
 
-        eigen_val: dict[str, Fraction] = res.eigen_values()
-        numerator: list[Variable] = [Variable(coefficient=value, variables_dict={f"y{idx + 1}": 2}) for idx, value in
-                                     enumerate(eigen_val.values())]
+        eigen_val: dict[str, Fraction | float] = res.eigen_values()
+        numerator: list[Variable] = [Variable(coefficient=Fraction(value), variables_dict={f"y{idx + 1}": Fraction(2)})
+                                     for idx, value in enumerate(eigen_val.values())]
         numerator.append(self.numerator[-1])
         q = Polynomial(numerator_variables=numerator)
         conic_sec: str = self._conic_section(eigen_val, q.numerator[-1].coefficient)
-        eigen_vec: tuple[tuple[Fraction]] = res.eigen_vectors()
-        eigen_vec: tuple[tuple[Fraction]] = tuple(Matrix.normalize(vec) for vec in eigen_vec)
-        x: Matrix[Fraction] = Matrix(2, 2, matrix=[list(vec) for vec in eigen_vec]).transpose()
-        y: Matrix[Polynomial] = Matrix(2, 1, matrix=[[Polynomial("y1")], [Polynomial("y2")]])
-        res: Matrix[Polynomial] = x * y
+        eigen_vec: tuple[tuple[Fraction, ...], ...] = res.eigen_vectors()
+        eigen_vec = tuple(Matrix.normalize(vec) for vec in eigen_vec)
+        x: Matrix = Matrix(2, 2, matrix=[list(vec) for vec in eigen_vec]).transpose()
+        y: Matrix = Matrix(2, 1, matrix=[[Polynomial("y1")], [Polynomial("y2")]])
+        res = x * y
         return {"x1": res[0], "x2": res[1], "conic_section": conic_sec}
 
-    copy: Callable[[], "Polynomial"] = lambda self: Polynomial(poly_obj=self)
-    substitute: Callable[[str, Variable | Fraction], "Polynomial"] = lambda self, variable, value: (
+    copy = lambda self: Polynomial(poly_obj=self)
+    substitute = lambda self, variable, value: (
         Polynomial(numerator_variables=[var.substitute(variable, value) for var in self.numerator],
                    denominator_variables=[var.substitute(variable, value) for var in self.denominator]))
