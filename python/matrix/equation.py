@@ -182,7 +182,7 @@ class Variable:
 
                 i += 1
 
-            # var.append(Fraction(1)) if len(var) % 2 != 0 else var
+            var.append("1") if len(var) % 2 != 0 else var
             self._variables = {var[i - 1]: Fraction(var[i]) for i in range(1, len(var), 2)}
 
         self._variables = dict(sorted({key: value for key, value in self.variables.items()

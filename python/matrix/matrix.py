@@ -6,6 +6,15 @@ from .equation import Polynomial, Variable
 
 Order = namedtuple("Order", ["row", "column"])
 
+ROW: str = "row"
+COLUMN: str = "column"
+SQUARE: str = "square"
+RECTANGULAR: str = "rectangular"
+NULL: str = "null"
+SCALAR: str = "scalar"
+IDENTITY: str = "identity"
+DIAGONAL: str = "diagonal"
+
 
 class MatrixError(Exception): ...
 
@@ -609,7 +618,7 @@ class Matrix:
         for i in range(self.row):
             for j in range(self.column):
                 try:
-                    self.matrix[i][j] = Fraction(f"{self.matrix[i][j]}")
+                    self.matrix[i][j] = Fraction(str(self.matrix[i][j]))
 
                 except (TypeError, ValueError):
                     pass
@@ -964,7 +973,7 @@ class Matrix:
                             is_identity = False
 
                     else:
-                        if self.matrix[i][j] != Fraction():
+                        if self.matrix[i][j] != Fraction(0):
                             is_scalar = False
                             is_identity = False
                             is_diagonal = False

@@ -18,6 +18,18 @@ class Sort {    // Class to implement various sorting algorithms
 
 template <class type>   // Bubble Sort
 void Sort<type>::bubbleSort(type *array, int size) {    // Function to sort an array using the Bubble Sort algorithm
+    /*
+    -> O(n) [best case] [already sorted]
+    -> O(n^2) [average case]
+    -> O(n^2) [worst case] [always divide in the middle]
+
+    -> in bubble sort we compare the adjacent elements and swap them if they are in the wrong order
+    -> in insertion sort we select the element and find out the postion for that element
+
+    -> different names of bubble sort
+        -> exchange sort
+        -> bubble sort
+    */
     bool flag;  // Flag to check if any swaps were made in the current pass
 
     for (int i = 0; i < size - 1; i++) {    // Outer loop to control the number of passes
@@ -36,6 +48,18 @@ void Sort<type>::bubbleSort(type *array, int size) {    // Function to sort an a
 }
 template <class type>   // Counting Sort
 void Sort<type>::countSort(type *array, int size) {   // Function to sort an array using the Counting Sort algorithm
+    /*
+    -> O(n) [best case] [all elements are same]
+    -> O(n) [average case]
+    -> O(n) [worst case] [all elements are different]
+
+    -> in counting sort we count the frequency of elements and sort them
+    -> in radix sort we divide the number into digits and sort them
+
+    -> different names of counting sort
+        -> frequency sort
+        -> counting sort
+    */
     type max, min;  // Variables to store the maximum and minimum elements in the array
     int i, j, range, *count;    // Variables to store the range of values and the frequency count of each element
 
@@ -74,6 +98,18 @@ void Sort<type>::descending(type *array, int size) {    // Function to sort an a
 }
 template <class type>   // Insertion Sort
 void Sort<type>::insertionSort(type *array, int size) {  // Function to sort an array using the Insertion Sort algorithm
+    /*
+    -> O(n) [best case] [already sorted]
+    -> O(n^2) [average case]
+    -> O(n^2) [worst case] [always divide in the middle]
+
+    -> in insertion sort we select the element and find out the postion for that element
+    -> in selection sort we select the position and find out the element for that position
+
+    -> different names of insertion sort
+        -> insertion sort
+        -> library sort
+    */
     type temp;  // Temporary variable to hold the current element during insertion
 
     for (int i = 1, j; i < size; i++) { // Loop through each element of the array starting from the second element
@@ -89,6 +125,18 @@ void Sort<type>::insertionSort(type *array, int size) {  // Function to sort an 
 }
 template <class type>   // Heap Sort
 void Sort<type>::heapSort(type *array, int size) {  // Function to sort an array using the Heap Sort algorithm
+    /*
+    -> O(nlogn) [best case] [always divide in the middle]
+    -> O(nlogn) [average case]
+    -> O(nlogn) [worst case] [always divide in the middle]
+
+    -> in heap sort we create the heap and remove the root element and place it in the sorted array
+    -> in selection sort we select the position and find out the element for that position
+
+    -> different names of heap sort
+        -> tournament sort
+        -> heap sort
+    */
     Heap<type> heap(array, size, "min");    // Create a heap from the array, using a "min" heap structure
 
     for (int i = 0; i < size; i++) {    // Loop to remove the root element from the heap and place it in the sorted array
@@ -97,6 +145,18 @@ void Sort<type>::heapSort(type *array, int size) {  // Function to sort an array
 }
 template <class type>   // Merge Sort
 void Sort<type>::mergeSort(type *array, int size) {   // Function to sort an array using the Merge Sort algorithm
+    /*
+    -> O(nlogn) [best case] [always divide in the middle]
+    -> O(nlogn) [average case]
+    -> O(nlogn) [worst case] [always divide in the middle]
+
+    -> in merge sort we divide the array into two halves and sort them and then merge them
+    -> in quick sort we select the element and find out the postion for that element
+
+    -> different names of merge sort
+        -> divide and conquer sort
+        -> merge sort
+    */
     auto merge = [](type *array, int low, int mid, int high) -> void {  // Lambda function to merge two sorted halves of the array
         type *list = new type[high - low + 1];    // Create a temporary list to store the merged result
         int i = low, j = mid + 1, k = 0;    // Variables for array traversal and list index
@@ -186,6 +246,19 @@ void Sort<type>::quickSort(type *array, int low, int high) {    // Function to s
 }
 template <class type>   // Radix Sort
 void Sort<type>::radixSort(type *array, int size) { // Function to sort an array using the Radix Sort algorithm
+    /*
+    -> O(nk) [best case] [k is the number of digits in the largest number]
+    -> O(nk) [average case]
+    -> O(nk) [worst case]
+
+    -> in radix sort we divide the number into digits and sort them
+    -> in counting sort we count the frequency of elements and sort them
+
+    -> different names of radix sort
+        -> bucket sort
+        -> radix exchange sort
+        -> radix sort
+    */
     struct Node {   // Node structure for linked list
         type data = 0;  // Data value
         Node *next = nullptr;   // Pointer to the next node
@@ -229,6 +302,18 @@ void Sort<type>::radixSort(type *array, int size) { // Function to sort an array
 }
 template <class type>   // Selection Sort
 void Sort<type>::selectionSort(type *array, int size) {   // Function to sort an array using the Selection Sort algorithm
+    /*
+    -> O(n^2) [best case] [always divide in the middle]
+    -> O(n^2) [average case]
+    -> O(n^2) [worst case] [always divide in the middle]
+
+    -> in selection sort we select the position and find out the element for that position
+    -> in quick sort we select the element and find out the postion for that element
+
+    -> different names of selection sort
+        -> exchange sort
+        -> selection sort
+    */
     int i, j, k;    // Variables for array traversal and finding the minimum element
 
     for (i = 0; i < size - 1; i++) {    // Loop to traverse the array
@@ -242,6 +327,18 @@ void Sort<type>::selectionSort(type *array, int size) {   // Function to sort an
 }
 template <class type>   // Shell Sort
 void Sort<type>::shellSort(type *array, int size) { // Function to sort an array using the Shell Sort algorithm
+    /*
+    -> O(n^1.25) [best case] [always divide in the middle]
+    -> O(n^1.25) [average case]
+    -> O(n^1.25) [worst case] [always divide in the middle] 
+
+    -> in shell sort we divide the array into subarrays and sort them
+    -> in insertion sort we select the element and find out the postion for that element
+
+    -> different names of shell sort
+        -> diminishing increment sort
+        -> shell sort
+    */
     type temp;  // Temporary variable to hold the current element during insertion
 
     for (int gap = size / 2, i, j; gap >= 1; gap /= 2) {    // Loop to control the gap sequence
