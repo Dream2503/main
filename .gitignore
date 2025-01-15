@@ -1,2 +1,5 @@
 /.vscode
+/C++/.vscode
+/python/.idea
+/python/.mypy_cache
 btech.py
