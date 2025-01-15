@@ -298,7 +298,6 @@ class Matrix:
 
         if method == "input":
             self._input()
-            self._validate()
 
         elif method == "null":
             self._null()
@@ -576,6 +575,8 @@ class Matrix:
 
             else:
                 raise MatrixError("Invalid matrix elements")
+
+        self._validate()
 
     def _null(self) -> None:
         """Initializes a null matrix"""
@@ -952,10 +953,10 @@ class Matrix:
 
     def type(self) -> str:
         if self.row == 1 and self.column != 1:
-            res = "row"
+            res = ROW
 
         elif self.column == 1 and self.row != 1:
-            res = "column"
+            res = COLUMN
 
         elif self.row == self.column:
             res = "square"
@@ -982,16 +983,16 @@ class Matrix:
                     break
 
             if is_identity:
-                res = "identity"
+                res = IDENTITY
 
             elif is_scalar:
-                res = "scalar"
+                res = SCALAR
 
             elif is_diagonal:
-                res = "diagonal"
+                res = DIAGONAL
 
         elif self.row != self.column:
-            res = "rectangular"
+            res = RECTANGULAR
 
         else:
             res = ""
@@ -1008,7 +1009,7 @@ class Matrix:
                 break
 
         if is_null:
-            res = "null"
+            res = NULL
 
         return res
 
