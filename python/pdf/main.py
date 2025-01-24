@@ -2,68 +2,13 @@ try:
     from functions import *
 
 except ModuleNotFoundError:
-    from subprocess import  run
-    run(f'start cmd /k "pip install PyPDF2 pdfminer.six pymupdf && exit"', shell=True)
-    del run
+    from os import system
+
+    system("pip install PyPDF2 pdfminer.six pymupdf")
+    del system
 
 finally:
     from functions import *
-
-"""
-Basic Features:
-Merge PDFs: Combine multiple PDFs into a single document.
-Split PDFs: Extract specific pages or ranges into separate files.
-Extract Text: Retrieve text from PDFs for further processing.
-Extract Images: Save embedded images from PDFs.
-Rotate Pages: Rotate individual or all pages in a PDF.
-Delete Pages: Remove unwanted pages from a document.
-
-Annotation and Editing:
-Add Text/Annotations: Insert text, comments, or annotations.
-Highlight Text: Apply highlights to selected text.
-Draw Shapes: Insert shapes like lines, rectangles, or circles.
-Redact Information: Black out sensitive text or images.
-
-Advanced Features:
-Password Protection: Add, remove, or modify passwords for PDFs.
-Encryption/Decryption: Encrypt or decrypt PDF files for security.
-Form Filling: Populate interactive PDF forms programmatically.
-Watermarking: Add text or image watermarks to pages.
-Optimize Size: Compress PDFs by reducing image resolutions and removing metadata.
-
-Interactive Features:
-Search Text: Search for specific text across pages.
-Rearrange Pages: Change the order of pages within a document.
-Hyperlink Management: Add, modify, or remove hyperlinks.
-Interactive Forms: Add interactive form elements like checkboxes, text inputs, or radio buttons.
-
-Extraction and Conversion:
-Convert to Images: Export PDF pages as image files (e.g., JPEG, PNG).
-Convert to Word/Excel: Export PDF content into editable formats.
-OCR (Optical Character Recognition): Extract text from scanned PDFs.
-Metadata Extraction: Retrieve author, title, and other document metadata.
-
-Batch Operations:
-Batch Processing: Perform operations like merging, splitting, or rotating across multiple files.
-
-Integration Features:
-Cloud Integration: Upload and manage PDFs on platforms like Google Drive or Dropbox.
-API Access: Provide RESTful APIs for third-party integration.
-
-User Interface:
-Drag-and-Drop Functionality: Simplify input selection for desktop GUI apps.
-Preview PDFs: Display thumbnails or full pages for user reference.
-
-Collaboration Features:
-Comment Sharing: Allow adding comments for collaborative review.
-Version Control: Maintain a history of edits for rollback.
-
-Tools and Utilities:
-Bookmark Management: Add, edit, or remove bookmarks.
-Split by Bookmarks: Use bookmarks to split a PDF into multiple documents.
-Content Rearrangement: Reflow text and images dynamically.
-Accessibility Checks: Validate PDFs for accessibility compliance (e.g., WCAG).
-"""
 
 MAIN_MENU_1 = """
 Note: place all your files that need to be processed in the "input" folder and access the processed files from the "output" folder
@@ -82,6 +27,7 @@ Choose any one the functionality mentioned below:
     9. Exit
     
 """
+
 
 def main() -> None:
     current_menu: int = 1
@@ -147,11 +93,13 @@ def main() -> None:
                     case 4:
                         output = input("Enter the output folder name to store all the images: ")
                         extract_image(path_list[0], output)
-                        input("Images from the pdf has been successfully extracted. Check the output folder for the result.")
+                        input(
+                            "Images from the pdf has been successfully extracted. Check the output folder for the result.")
 
                     case 5:
                         while True:
-                            values = input("OPTIONAL: Enter the specific page numbers to rotate (space separated): ").split()
+                            values = input(
+                                "OPTIONAL: Enter the specific page numbers to rotate (space separated): ").split()
 
                             if values:
                                 try:
@@ -201,6 +149,7 @@ def main() -> None:
                     case 0:
                         clear_directory(r".\output")
                         input("Output directory was successfully cleared.")
+
 
 if __name__ == "__main__":
     main()
