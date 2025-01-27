@@ -816,8 +816,7 @@ class Matrix:
             raise MatrixError("Inverse of singular matrix is not defined")
 
         identity_mat: Matrix = Matrix(self.row, self.column, "identity")
-        aug_matrix: Matrix = Matrix(matrix=[self.matrix[i] + identity_mat.matrix[i] for i in
-                                            range(self.row)])
+        aug_matrix: Matrix = Matrix(matrix=[self.matrix[i] + identity_mat.matrix[i] for i in range(self.row)])
         aug_matrix = aug_matrix.echelon_form()
         aug_matrix._matrix = aug_matrix.matrix[::-1]
 
@@ -825,6 +824,8 @@ class Matrix:
             aug_matrix[i][:self.order[0]] = list(reversed(aug_matrix[i][:self.order[0]]))
 
         aug_matrix = aug_matrix.echelon_form()
+        # print(aug_matrix)
+        # exit(0)
         res: list[list[Fraction]] = []
 
         for i in range(self.row - 1, -1, -1):
@@ -897,9 +898,8 @@ class Matrix:
         sigma_plus: Matrix = svd["sigma"].transpose()
 
         for i in range(sigma_plus.row):
-            for j in range(sigma_plus.column):
-                if sigma_plus[i][j] != Fraction(0):
-                    sigma_plus[i][j] = Fraction(1) / sigma_plus[i][j]
+            if sigma_plus[i][i] != Fraction(0):
+                sigma_plus[i][i] = Fraction(1) / sigma_plus[i][i]
 
         a_plus: Matrix = svd["v"] * sigma_plus * svd["u"].transpose()
 
@@ -913,13 +913,10 @@ class Matrix:
         """Gives the rank of the matrix"""
         result: Matrix = self.echelon_form()
         rank: int = result.row
-        i: int = rank - 1
-        j: int = result.column - 1
 
-        while result.matrix[i][j] == 0 and i > 0 and j > 0:
-            rank -= 1
-            i -= 1
-            j -= 1
+        for i in range(self.row):
+            if result.matrix[i][i] == 0:
+                rank -= 1
 
         return rank
 
@@ -937,9 +934,9 @@ class Matrix:
 
         aTa: Matrix = self.transpose() * self
         ata_eigen_vec: tuple[tuple[Fraction, ...], ...] = aTa.eigen_vectors(is_absolute=True)
-        v: Matrix = Matrix(matrix=[list(self.normalize(vec)) for vec in ata_eigen_vec])
+        v: Matrix = Matrix(matrix=[list(self.normalize(vec)) for vec in ata_eigen_vec]).transpose()
 
-        return {"u": u, "sigma": sigma, "v": v.transpose()}
+        return {"u": u, "sigma": sigma, "v": v}
 
     def transpose(self) -> "Matrix":
         """Gives the transpose of the matrix"""

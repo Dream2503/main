@@ -6,11 +6,12 @@ import keyboard
 
 toggle_half_life: bool = True
 toggle_skill: bool = True
+skill_count: int = 1
 
 life_cooldown_threshold: float = 0.5
 mana_cooldown_threshold: float = 0.5
 half_life_cooldown_threshold: float = 6
-skill_cooldown_threshold: float = 7.5
+skill_cooldown_thresholds: tuple[float] = (7.5,)
 
 life_cords: tuple[int, int] = (150, 1035)
 mana_cords: tuple[int, int] = (1800, 1060)
@@ -23,7 +24,7 @@ half_life_colour: tuple[int, int, int] = (138, 25, 28)
 life_keys: tuple[str, str] = ('1', '4')
 mana_keys: tuple[str, str] = ('2', '5')
 half_life_key: str = '3'
-skill_key: str = 'A'
+skill_keys: tuple[str] = ("ctrl+r",)
 
 
 def get_screenshot_pixel_colour(region: tuple[int, int]) -> float | tuple[int, ...] | None:
@@ -38,7 +39,7 @@ def main() -> None:
     life_cooldown: float = 0
     mana_cooldown: float = 0
     half_life_cooldown: float = 0
-    skill_cooldown: float = 0
+    skill_cooldowns: list[float, float] = [0, 0]
 
     current_life_key: int = 0
     current_mana_key: int = 0
@@ -61,9 +62,10 @@ def main() -> None:
                 keyboard.send(half_life_key)
                 half_life_cooldown = perf_counter()
 
-        if toggle_skill and (not skill_cooldown or perf_counter() - skill_cooldown >= skill_cooldown_threshold):
-            keyboard.send(skill_key)
-            skill_cooldown = perf_counter()
+        for i in range(skill_count):
+            if toggle_skill and (not skill_cooldowns[i] or perf_counter() - skill_cooldowns[i] >= skill_cooldown_thresholds[i]):
+                keyboard.send(skill_keys[i])
+                skill_cooldowns[i] = perf_counter()
 
 
 if __name__ == "__main__":
@@ -75,4 +77,4 @@ if __name__ == "__main__":
     # sleep(2)
     # print(get_screenshot_pixel_colour(life_cords))
 
-#
+# 215245124451212454512451245124215424514512
