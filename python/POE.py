@@ -77,4 +77,4 @@ if __name__ == "__main__":
     # sleep(2)
     # print(get_screenshot_pixel_colour(life_cords))
 
-# 215245124451212454512451245124215424514512
+# 
