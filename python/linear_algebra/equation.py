@@ -1041,7 +1041,7 @@ class Polynomial:
 
     def to_principal_axes(self) -> dict[str, "Polynomial | str"]:
         """Converts a quadratic polynomial to its principal axes using matrix algebra"""
-        from matrix import Matrix
+        from linear_algebra import Matrix
 
         if tuple(self.numerator[0].variables.values())[0] > Fraction(2):
             raise PolynomialError("Quadratic polynomials can be transformed into its corresponding principal axes")

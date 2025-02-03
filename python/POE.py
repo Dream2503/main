@@ -13,11 +13,11 @@ mana_cooldown_threshold: float = 0.5
 half_life_cooldown_threshold: float = 6
 skill_cooldown_thresholds: tuple[float] = (7.5,)
 
-life_cords: tuple[int, int] = (150, 1035)
+life_cords: tuple[int, int] = (150, 1020)
 mana_cords: tuple[int, int] = (1800, 1060)
 half_life_cords: tuple[int, int] = (125, 975)
 
-life_colour: tuple[int, int, int] = (79, 15, 21)
+life_colour: tuple[int, int, int] = (89, 7, 15)
 mana_colour: tuple[int, int, int] = (19, 28, 55)
 half_life_colour: tuple[int, int, int] = (138, 25, 28)
 
@@ -39,7 +39,7 @@ def main() -> None:
     life_cooldown: float = 0
     mana_cooldown: float = 0
     half_life_cooldown: float = 0
-    skill_cooldowns: list[float, float] = [0, 0]
+    skill_cooldowns: list[float] = [0] * skill_count
 
     current_life_key: int = 0
     current_mana_key: int = 0
@@ -71,10 +71,9 @@ def main() -> None:
 if __name__ == "__main__":
     try:
         main()
+        # sleep(2)
+        # print(get_screenshot_pixel_colour(life_cords))
     except KeyboardInterrupt:
         pass
-
-    # sleep(2)
-    # print(get_screenshot_pixel_colour(life_cords))
 
 # 
