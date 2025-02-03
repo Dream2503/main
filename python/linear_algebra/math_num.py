@@ -173,20 +173,17 @@ class MathNum:
             res: str = ""
             is_complete: bool = self.value[0] != 0 and self.value[1] != 0
 
-            if is_complete:
-                res += "("
-
             if self.value[0] != 0:
                 res += str(self.value[0])
 
             if is_complete:
-                res += f" + "
+                res += " + "
 
             if self.value[1] != 0:
                 res += f"{self.value[1]}i"
 
             if is_complete:
-                res += ")"
+                res = f"({res})"
 
             return res
 
