@@ -1,4 +1,3 @@
-from fractions import Fraction
 from typing import Any, Literal
 import math, cmath
 
@@ -17,40 +16,67 @@ class MathNum:
     pi: str = "π"  # alt + 227
     e: str = "e"
 
-    def __init__(self, num: Any, domain: Literal["real", "complex"] = "real"):
-        if isinstance(num, MathNum):
-            self.value: tuple[Fraction, Fraction] | str = num.value
-            self.domain: str = num.domain
-            self.operations: list[tuple[str, MathNum | None]] = num.operations.copy()
+    def __init__(self, num: Any = 0, domain: Literal["real", "complex"] = "real", *,
+                 operations: list[tuple[str, "MathNum | None"]] | None = None):
+        # if domain not in ("real", "complex"):
+        #     raise ValueError("Invalid number domain")
+        #
+        # if isinstance(num, MathNum):
+        #     self._value: tuple[str | float, str | float] = num.value
+        #     self._domain: str = num.domain
+        #     self._operations: list[tuple[str, MathNum | None]] = num.operations.copy()
+        #
+        # else:
+        #     if domain == "complex" or isinstance(num, complex):
+        #         domain = "complex"
+        #
+        #         if isinstance(num, complex):
+        #             res: complex = complex(num)
+        #             self._value: tuple[str | float, str | float] = res.real, res.imag
+        #         try:
+        #             if num[0] in ("π", "e") and num[1] in ("π", "e"):
+        #                 self._value: tuple[str | float, str | float] = num[0], num[1]
+        #         except TypeError:
+        #             pass
+        #
+        #     elif isinstance(num, float):
+        #         self._value: tuple[str | float, str | float] = (num, 0)
+        #
+        #     elif isinstance(num, tuple):
+        #         self._value: tuple[str | float, str | float] = num[0], num[1]
+        #         domain = "real" if self.value[1] == 0 else "complex"
+        #
+        #     elif num in ("π", "e"):
+        #         self._value: tuple[str | float, str | float] = num
+        #
+        #     elif domain == "real":
+        #         self._value: tuple[str | float, str | float] = num, 0
+        #
+        #     from fractions import Fraction
+        #
+        #     if num[0] not in ("π", "e"):
+        #         num[0] = float(Fraction(num[0]))
+        #
+        #     if num[1] not in ("π", "e"):
+        #         num[1] = float(Fraction(num[1]))
+        #
+        #         if num[1] == 0:
+        #             Fraction(1, 0)
+        #
+        #     self._domain: str = domain
+        #     self._operations: list[tuple[str, MathNum | None]] = operations if operations is not None else []
 
-        else:
-            if isinstance(num, complex):
-                domain = "complex"
+    @property
+    def value(self) -> tuple[str | float, str | float]:
+        return self._value
 
-            if num in ("π", "e"):
-                self.value: tuple[Fraction, Fraction] | str = num
+    @property
+    def operations(self) -> list[tuple[str, "MathNum | None"]]:
+        return self._operations
 
-            elif isinstance(num, tuple):
-                self.value: tuple[Fraction, Fraction] | str = Fraction(num[0]), Fraction(num[1])
-                domain = "real" if self.value[1] == 0 else "complex"
-
-            elif domain == "real":
-                self.value: tuple[Fraction, Fraction] | str = Fraction(num), Fraction(0)
-
-            else:
-                res: complex = complex(num)
-                self.value: tuple[Fraction, Fraction] = Fraction(res.real), Fraction(res.imag)
-
-            self.domain: str = domain
-            self.operations: list[tuple[str, MathNum | None]] = []
-
-    def __repr__(self) -> str:
-        return f"MathNum(value={self.value}, operations={self.operations}, domain={self.domain})"
-
-    def __str__(self) -> str:
-        res: str = recur_str(self.value, self.operations)
-        res = optimize_braces(res)
-        return res
+    @property
+    def domain(self) -> str:
+        return self._domain
 
     def __add__(self, other: Any) -> "MathNum":
         res: MathNum = self.copy()
@@ -82,6 +108,8 @@ class MathNum:
     __rmul__ = lambda self, other: MathNum(other) * self
     __rtruediv__ = lambda self, other: MathNum(other) / self
     __rpow__ = lambda self, other: MathNum(other) ** self
+    __repr__ = lambda self: recur_str(self.value, self.operations)
+    __str__ = lambda self: optimize_braces(repr(self))
     expression = lambda self: str(self)
     copy = lambda self: MathNum(self)
 
@@ -180,19 +208,20 @@ class MathNum:
                 res += " + "
 
             if self.value[1] != 0:
-                res += f"{self.value[1]}i"
+                res += f"{self.value[1]}j"
 
             if is_complete:
                 res = f"({res})"
 
             return res
 
-    def evaluate(self, level: int = -1) -> float:
+    def evaluate(self, level: int = -1) -> "MathNum":
         number: list[float, float] = [0, 0]
 
         for i in range(2):
             try:
                 number[i] = float(self.value[i])
+
             except (IndexError, ValueError):
                 number[i] = eval(f"math.{self.value[0]}")
 
@@ -203,6 +232,9 @@ class MathNum:
             num: complex = complex(number[0], number[1])
 
         for idx, operation in enumerate(self.operations):
+            if idx == level:
+                return MathNum(num, operations=self.operations[idx:])
+
             if operation[1] is None:
                 if self.domain == "real":
                     num = eval(f"math.{operation[0]}({num})")
@@ -213,10 +245,10 @@ class MathNum:
             else:
                 num = eval(f"{num} {operation[0]} {operation[1].evaluate()}")
 
-        return num
+        return MathNum(num)
 
 
-def recur_str(value: tuple[Fraction, Fraction], operations: list[tuple[str, "MathNum | None"]]) -> str:
+def recur_str(value: tuple[str | float, str | float], operations: list[tuple[str, "MathNum | None"]]) -> str:
     if not operations:
         return MathNum(value).value_str()
 
@@ -224,61 +256,40 @@ def recur_str(value: tuple[Fraction, Fraction], operations: list[tuple[str, "Mat
         return f"{operations[-1][0]}({recur_str(value, operations[:-1])})"
 
     else:
-        return f"({recur_str(value, operations[:-1])} {operations[-1][0]} {operations[-1][1]})"
+        return f"({recur_str(value, operations[:-1])} {operations[-1][0]} {operations[-1][1].__repr__()})"
 
 
 def optimize_braces(expression: str) -> str:
     size: int = len(expression)
-    target_braces: dict[str, set[int]] = {"start": set(), "end": set()}
-    start_brace_cnt: int = 0
-    end_brace_cnt: int = 0
+    brace_pos: list[int] = []
+    brace_cnt: int = 0
+    i: int = 0
+    j: int = size - 1
 
-    for i in range(size - 1):
-        if expression[i] == "(":
-            start_brace_cnt += 1
+    while i < j:
+        while i < j:
+            if expression[i] == "(":
+                brace_cnt += 1
 
-            if expression[i + 1] == "(" and not expression[i - 1].isalpha():
-                target_braces["start"].add(start_brace_cnt)
+                if expression[i + 1] == "(":
+                    brace_pos.append(i)
+                    i += 2
+                    break
 
-    for i in range(size - 1):
-        if expression[i] == ")":
-            end_brace_cnt += 1
+            i += 1
 
-            if expression[i + 1] == ")":
-                target_braces["end"].add(end_brace_cnt)
+        while i < j:
+            if expression[j] == ")" and expression[j - 1] == ")":
+                brace_pos.append(j)
+                j -= 2
+                break
 
-    # for i in range(size - 1, 0, -1):
-    #     if expression[i] == ")":
-    #         end_brace_cnt += 1
-    #
-    #         if expression[i - 1] == ")":
-    #             target_braces["end"].add(end_brace_cnt)
+            j -= 1
 
-    to_remove: set[int] = target_braces["start"] & target_braces["end"]
-    target_braces["start"] = to_remove.copy()
-    target_braces["end"] = to_remove.copy()
-    total_brace_cnt: int = start_brace_cnt
-    start_brace_cnt = 0
-    end_brace_cnt = 0
-    i = 0
+    brace_pos.sort()
 
-    while to_remove and total_brace_cnt and i < size:
-        if expression[i] == "(":
-            start_brace_cnt += 1
-
-        elif expression[i] == ")":
-            end_brace_cnt += 1
-
-        if start_brace_cnt in target_braces["start"]:
-            expression = expression[:i] + expression[i + 1:]
-            size -= 1
-            target_braces["start"].remove(start_brace_cnt)
-
-        if (end_brace_cnt) in target_braces["end"]:
-            expression = expression[:i] + expression[i + 1:]
-            size -= 1
-            target_braces["end"].remove(end_brace_cnt)
-
-        i += 1
+    for idx, value in enumerate(brace_pos):
+        partition: int = value - idx
+        expression = expression[:partition] + expression[partition + 1:]
 
     return expression

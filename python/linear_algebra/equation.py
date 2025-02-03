@@ -1,5 +1,6 @@
 from cmath import sqrt as sqrtc
 from fractions import Fraction
+from .math_num import MathNum
 from math import gcd, lcm, cos, acos, pi, sqrt as sqrtf
 from typing import Generator, Any
 
@@ -117,11 +118,11 @@ class Variable:
     Variable(coefficient=9, variables={'x': Fraction(2, 1)})
     """
 
-    def __init__(self, expression: str = "0", *, coefficient: Fraction | None = None,
-                 variables_dict: dict[str, Fraction] | None = None) -> None:
+    def __init__(self, expression: str = "0", *, coefficient: MathNum | None = None,
+                 variables_dict: dict[str, MathNum] | None = None) -> None:
         """Initialization function for Variable class"""
-        self._coefficient: Fraction = coefficient if coefficient is not None else Fraction(1)
-        self._variables: dict[str, Fraction] = variables_dict.copy() if variables_dict is not None else {}
+        self._coefficient: MathNum = coefficient if coefficient is not None else MathNum(1)
+        self._variables: dict[str, MathNum] = variables_dict.copy() if variables_dict is not None else {}
         expression = str(expression)
 
         if coefficient is None:
@@ -136,7 +137,7 @@ class Variable:
 
             while i < size:
                 if on_coef and expression[i].isalpha():
-                    self._coefficient = Fraction(1)
+                    self._coefficient = MathNum(1)
                     on_coef = False
                     i -= 1
 
@@ -145,7 +146,7 @@ class Variable:
                         frac += expression[i]
                         i += 1
 
-                    self._coefficient = Fraction(frac)
+                    self._coefficient = MathNum(frac)
                     frac = ""
                     i -= 1
                     on_coef = False
@@ -183,17 +184,17 @@ class Variable:
                 i += 1
 
             var.append("1") if len(var) % 2 != 0 else var
-            self._variables = {var[i - 1]: Fraction(var[i]) for i in range(1, len(var), 2)}
+            self._variables = {var[i - 1]: MathNum(var[i]) for i in range(1, len(var), 2)}
 
         self._variables = dict(sorted({key: value for key, value in self.variables.items()
-                                       if value != Fraction(0)}.items()))
+                                       if value != MathNum()}.items()))
 
     @property
-    def coefficient(self) -> Fraction:
+    def coefficient(self) -> MathNum:
         return self._coefficient
 
     @property
-    def variables(self) -> dict[str, Fraction]:
+    def variables(self) -> dict[str, MathNum]:
         return self._variables
 
     def __str__(self) -> str:
@@ -208,10 +209,11 @@ class Variable:
             return str(self._coefficient)
 
         if self._coefficient != 1:
-            if self._coefficient.denominator == 1:
-                res += str(self._coefficient)
-            else:
+            if self._coefficient.operations:
                 res += f"({self._coefficient})"
+
+            else:
+                res += str(self._coefficient)
 
         if len(self._variables) > 1:
             is_brace = True
@@ -228,10 +230,10 @@ class Variable:
                     res += variable
 
                 if order != 1:
-                    if order.denominator == 1:
-                        res += f"^{str(order)}"
-                    else:
+                    if order.operations:
                         res += f"^({str(order)})"
+                    else:
+                        res += f"^{str(order)}"
 
                     if is_brace:
                         res += ')'
