@@ -1,17 +1,23 @@
-from linear_algebra import MathNum
+from fractions import Fraction
+
+from linear_algebra import MathNum, Variable
+
 
 def main():
-    # num = MathNum(3 + 5j, domain="complex")
-    # res = num * (4 + 3j)
-    # res = res.log() * res.sin()
+    # res = MathNum(5/2 + 5)
+    # res = res ** 2
+    # res = res.ln() * res.sin()
     # res = res.sqrt()
     # print(res)
-    MathNum()
-    var = Variable("1/0x")
-    print(var)
+    # print(res.evaluate())
+    res = MathNum()
+    print(res + 1)
+    # var1 = Variable("1/5x")
+    # res = var1 / Variable("1/10x")
+    print(res)
+
+
 if __name__ == "__main__":
     main()
 
 # sqrt((log(((3 + 5i) * (4 + 3i))) * sin(((3 + 5i) * (4 + 3i)))))
-
-

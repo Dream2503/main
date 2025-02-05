@@ -118,14 +118,15 @@ class Variable:
     Variable(coefficient=9, variables={'x': Fraction(2, 1)})
     """
 
-    def __init__(self, expression: str = "0", *, coefficient: MathNum | None = None,
-                 variables_dict: dict[str, MathNum] | None = None) -> None:
+    def __init__(self, expression: str = "0", *, coefficient: MathNum = MathNum(),
+                 variables_dict: dict[str, MathNum] | None = None, always_evaluate=True,
+                 datatype: type = Fraction) -> None:
         """Initialization function for Variable class"""
         self._coefficient: MathNum = coefficient if coefficient is not None else MathNum(1)
         self._variables: dict[str, MathNum] = variables_dict.copy() if variables_dict is not None else {}
         expression = str(expression)
 
-        if coefficient is None:
+        if not coefficient:
             on_coef: bool = True
             on_var: bool = True
             on_order: bool = False
@@ -137,7 +138,7 @@ class Variable:
 
             while i < size:
                 if on_coef and expression[i].isalpha():
-                    self._coefficient = MathNum(1)
+                    self._coefficient = MathNum(1, datatype=datatype)
                     on_coef = False
                     i -= 1
 
@@ -146,7 +147,7 @@ class Variable:
                         frac += expression[i]
                         i += 1
 
-                    self._coefficient = MathNum(frac)
+                    self._coefficient = MathNum(frac, datatype=datatype)
                     frac = ""
                     i -= 1
                     on_coef = False
@@ -186,8 +187,11 @@ class Variable:
             var.append("1") if len(var) % 2 != 0 else var
             self._variables = {var[i - 1]: MathNum(var[i]) for i in range(1, len(var), 2)}
 
-        self._variables = dict(sorted({key: value for key, value in self.variables.items()
-                                       if value != MathNum()}.items()))
+        self._coefficient = self._coefficient.evaluate(return_type=datatype) if always_evaluate else self._coefficient
+
+        temp: dict[str, MathNum] = {key: value.evaluate(return_type=datatype) if always_evaluate else value
+                                    for key, value in self._variables.items() if value != MathNum()}
+        self._variables = dict(sorted(temp.items()))
 
     @property
     def coefficient(self) -> MathNum:
@@ -202,7 +206,7 @@ class Variable:
         res: str = ""
         is_brace: bool = False
 
-        if self._coefficient == 0:
+        if self._coefficient == MathNum():
             return '0'
 
         if self._variables == {}:
@@ -284,10 +288,10 @@ class Variable:
             variables: dict[str, Fraction] = {}
 
             for var, order in self.variables.items():
-                variables[var] = variables.get(var, 0) + order
+                variables[var] = variables.get(var, MathNum(0)) + order
 
             for var, order in other.variables.items():
-                variables[var] = variables.get(var, 0) - order
+                variables[var] = variables.get(var, MathNum(0)) - order
 
             return Variable(coefficient=coefficient, variables_dict=variables)
 
