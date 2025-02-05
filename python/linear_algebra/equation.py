@@ -125,6 +125,7 @@ class Variable:
         self._coefficient: MathNum = coefficient if coefficient is not None else MathNum(1)
         self._variables: dict[str, MathNum] = variables_dict.copy() if variables_dict is not None else {}
         expression = str(expression)
+        self._datatype = datatype
 
         if not coefficient:
             on_coef: bool = True
@@ -244,12 +245,12 @@ class Variable:
         return res
 
     def __repr__(self) -> str:
-        return f"Variable(coefficient={self._coefficient}, variables={self._variables})"
+        return f"Variable(coefficient={self._coefficient}, variables={self._variables}, datatype={self._datatype})"
 
     def __add__(self, other: "Variable") -> "Variable":
         """Operator+ overloaded function"""
         if isinstance(other, Variable) and self.variables == other.variables:
-            return Variable(coefficient=self.coefficient + other.coefficient, variables_dict=self.variables)
+            return Variable(coefficient=self.coefficient + other.coefficient, variables_dict=self.variables, datatype=self._datatype)
 
         else:
             return NotImplemented
@@ -257,7 +258,7 @@ class Variable:
     def __sub__(self, other: "Variable") -> "Variable":
         """Operator- overloaded function"""
         if isinstance(other, Variable) and self.variables == other.variables:
-            return Variable(coefficient=self.coefficient - other.coefficient, variables_dict=self.variables)
+            return Variable(coefficient=self.coefficient - other.coefficient, variables_dict=self.variables, datatype=self._datatype)
 
         else:
             return NotImplemented
@@ -272,11 +273,11 @@ class Variable:
                 for var, order in element.items():
                     variables[var] = variables.get(var, 0) + order
 
-            return Variable(coefficient=coefficient, variables_dict=variables)
+            return Variable(coefficient=coefficient, variables_dict=variables, datatype=self._datatype)
 
         else:
             try:
-                return Variable(coefficient=self.coefficient * Fraction(other), variables_dict=self.variables)
+                return Variable(coefficient=self.coefficient * MathNum(other), variables_dict=self.variables, datatype=self._datatype)
 
             except ValueError:
                 return NotImplemented
@@ -288,25 +289,26 @@ class Variable:
             variables: dict[str, Fraction] = {}
 
             for var, order in self.variables.items():
-                variables[var] = variables.get(var, MathNum(0)) + order
+                variables[var] = variables.get(var, 0) + order
 
             for var, order in other.variables.items():
-                variables[var] = variables.get(var, MathNum(0)) - order
+                variables[var] = variables.get(var, 0) - order
 
-            return Variable(coefficient=coefficient, variables_dict=variables)
+            return Variable(coefficient=coefficient, variables_dict=variables, datatype=self._datatype)
 
         else:
             try:
-                return Variable(coefficient=self.coefficient / Fraction(other), variables_dict=self.variables)
+                return Variable(coefficient=self.coefficient / MathNum(other), variables_dict=self.variables, datatype=self._datatype)
 
             except ValueError:
                 return NotImplemented
 
-    def __pow__(self, power) -> "Variable":
+    def __pow__(self, value: Any) -> "Variable":
         """Operator** overloaded function"""
         try:
+            power: MathNum = MathNum(value)
             return Variable(coefficient=self.coefficient ** power,
-                            variables_dict={key: value * power for key, value in self.variables.items()})
+                            variables_dict={key: value * power for key, value in self.variables.items()}, datatype=self._datatype)
 
         except ValueError:
             return NotImplemented
