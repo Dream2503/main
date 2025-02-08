@@ -7,17 +7,13 @@ def main():
     # res = MathNum(5/2 + 5)
     # res = res ** 2
     # res = res.ln() * res.sin()
-    # res = res.sqrt()
+    # # res = res.sqrt()
     # print(res)
     # print(res.evaluate())
-    res = MathNum()
-    print(res + 1)
-    # var1 = Variable("1/5x")
-    # res = var1 / Variable("1/10x")
+    res = Variable("1/5x")
+    res = res / Variable("1/19x")
     print(res)
 
 
 if __name__ == "__main__":
     main()
-
-# sqrt((log(((3 + 5i) * (4 + 3i))) * sin(((3 + 5i) * (4 + 3i)))))

@@ -2,6 +2,8 @@ from typing import Any, Literal
 import math, cmath
 from fractions import Fraction
 
+from pywin.Demos.cmdserver import flags
+
 str_equivalent: dict[float, str] = {3.141592653589793: "π", 2.718281828459045: "e"}
 FUNCTIONS: set[str] = {"sqrt", "cbrt", "log", "ln", "sin", "cos", "tan", "asin", "acos", "atan", "sinh", "cosh", "tanh",
                        "asinh", "acosh", "atanh", "+", "-", "*", "/", "**"}
@@ -105,7 +107,9 @@ class MathNum:
 
     def __eq__(self, other: Any) -> bool:
         if isinstance(other, MathNum):
-            return self.value == other.value and self.operations == other.operations and self.domain == other.domain
+            return ((self.value == other.value and self.operations == other.operations) or
+                    (self.evaluate(return_type=Fraction).value == other.evaluate(return_type=Fraction).value) and
+                    self.domain == other.domain)
 
         else:
             try:
@@ -145,6 +149,9 @@ class MathNum:
     __bool__ = lambda self: self.value[0] != 0 or self.value[1] != 0
     __repr__ = lambda self: recur_str(self.value, self.operations, self.datatype)
     __str__ = lambda self: optimize_braces(repr(self))
+    __neg__ = lambda self: MathNum(tuple(-value for value in self.value), datatype=self.datatype)
+    __pos__ = lambda self: self
+    __float__ = lambda self: float(self.value[0])
     expression = lambda self: str(self)
     copy = lambda self: MathNum(self, datatype=self.datatype)
 
@@ -255,13 +262,13 @@ class MathNum:
         return res if res else "0"
 
     def evaluate(self, level: int = -1, *, return_type: type = float) -> "MathNum":
-        number: list[float, float] = [float(self.value[i]) for i in range(2)]
+        number: list[return_type, return_type] = [return_type(self.value[i]) for i in range(2)]
 
         if self.domain == "real":
-            num: float = float(number[0])
+            num: return_type = return_type(number[0])
 
         else:
-            num: complex = complex(number[0], number[1])
+            num: complex = complex(float(number[0]), float(number[1]))
 
         for idx, operation in enumerate(self.operations):
             if idx == level:
@@ -269,15 +276,21 @@ class MathNum:
 
             if operation[1] is None:
                 if self.domain == "real":
-                    num = eval(f"math.{operation[0]}({num})")
+                    num = eval(f"math.{operation[0]}({float(num)})")
 
                 else:
-                    num = eval(f"cmath.{operation[0]}({num})")
+                    num = eval(f"cmath.{operation[0]}({float(num)})")
 
             else:
-                num = eval(f"{num} {operation[0]} {operation[1].evaluate()}")
+                num = perform_operation(num, operation[0], operation[1].evaluate(return_type=return_type).to_value())
 
         return MathNum(return_type(str(num)), datatype=return_type)
+
+    def to_value(self) -> Any:
+        if self.value[1] != 0:
+            return complex(float(self.value[0]), float(self.value[1]))
+        else:
+            return self.datatype(self.value[0])
 
 
 MathNum._pi = MathNum((math.pi, 0), "real", datatype=float)
@@ -340,3 +353,21 @@ def num_str(num: Any) -> str:
             return f"({num.numerator}/{num.denominator})"
 
     return str(num)
+
+
+def perform_operation(num1: Any, operator: str, num2: Any) -> Any:
+    match operator:
+        case "+":
+            return num1 + num2
+
+        case "-":
+            return num1 - num2
+
+        case "*":
+            return num1 * num2
+
+        case "/":
+            return num1 / num2
+
+        case "**":
+            return num1 ** num2
