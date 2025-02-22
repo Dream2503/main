@@ -3,54 +3,59 @@ Name:- Swapnaraj Mohanty
 SIC :- 24BCSH93
 Sec :- C2
 
-Q. Write a user defined function to search for the element in the array by using binary search algorithm. Call it in main() to display the position of
-    the element, if it is found, otherwise display suitable error message if it is not found.
+Q. 
 */
 
 #include <stdio.h>
 
-void merge(int[], int, int[], int, int[], int*);
+void insertion_sort(int[], int);
 
 int main() {
-    int array1[20], array2[20], array[40], n1, n2, n, i;
-    printf("Enter the no. of elements of the array1: ");
-    scanf("%d", &n1);
+    int array[20], n, i;
+    printf("Enter the no. of elements of the array: ");
+    scanf("%d", &n);
 
-    printf("Enter the array1 elements: ");
-    for (i = 0; i < n1; i++) {
-        scanf("%d", &array1[i]);
+    printf("Enter the array elements: ");
+    for (i = 0; i < n; i++) {
+        scanf("%d", &array[i]);
     }
-    printf("Enter the no. of elements of the array2: ");
-    scanf("%d", &n2);
+    insertion_sort(array, n);
 
-    printf("Enter the array2 elements: ");
-    for (i = 0; i < n2; i++) {
-        scanf("%d", &array2[i]);
-    }
-    merge(array1, n1, array2, n2, array, &n);
-
-    printf("The array elements after merging are: ");
+    printf("The array elements after sorting are: ");
     for (i = 0; i < n; i++) {
         printf("%d ", array[i]);
     }
     return 0;
 }
 
-void merge(int array1[], int n1, int array2[], int n2, int array[], int *n) {
-    int i = 0, j = 0, k = 0;
-    *n = n1 + n2;
+void insertion_sort(int array[], int n) {
+    int i, j, temp;
 
-    while (i < n1 && i < n2) {
-        if (array1[i] < array2[j]) {
-            array[k++] = array1[i++];
-        } else {
-            array[k++] = array2[j++];
+    for (i = 1; i < n; i++) {
+        temp = array[i];
+        j = i - 1;
+
+        while (j >= 0 && array[j] > temp) {
+            array[j + 1] = array[j];
+            j--;
         }
-    }
-    while (i < n1) {
-        array[k++] = array1[i++];
-    }
-    while (j < n2) {
-        array[k++] = array2[j++];
+        array[j + 1] = temp;
     }
 }
+
+// #include <stdio.h>
+// #include <stdlib.h>
+
+// int* twoSum(int* nums, int numsSize, int target, int* returnSize) {
+//     int *res = (int*)malloc(2 * sizeof(int)), i, j;
+
+//     for (i = 0; i < numsSize; i++) {
+//         for (j = i + 1; j < numsSize; j++) {
+//             if (nums[i] + nums[j] == target) {
+//                 res[0] = i; res[1] = j;
+//                 return res;
+//             }
+//         }
+//     }
+//     return res;
+// }

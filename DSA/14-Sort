@@ -16,8 +16,8 @@ class Sort {    // Class to implement various sorting algorithms
         void shellSort(type*, int); // Function to sort an array using the Shell Sort algorithm
 };
 
-template <class type>   // Bubble Sort
-void Sort<type>::bubbleSort(type *array, int size) {    // Function to sort an array using the Bubble Sort algorithm
+template <class type>
+void Sort<type>::bubbleSort(type *array, int size) {
     /*
     -> O(n) [best case] [already sorted]
     -> O(n^2) [average case]
@@ -30,20 +30,12 @@ void Sort<type>::bubbleSort(type *array, int size) {    // Function to sort an a
         -> exchange sort
         -> bubble sort
     */
-    bool flag;  // Flag to check if any swaps were made in the current pass
-
-    for (int i = 0; i < size - 1; i++) {    // Outer loop to control the number of passes
-        flag = false;   // Reset the flag at the beginning of each pass
-
-        for (int j = 0; j < size - i - 1; j++) {    // Inner loop to compare adjacent elements and swap them if necessary
-            if (array[j] > array[j + 1]) {  // Compare adjacent elements and swap them if they are in the wrong order
-                std::swap(array[j], array[j + 1]);  // Swap the elements
-                flag = true;    // Set the flag to true if a swap was made in this pass
+    for (int i = 0; i < size - 1; i++) {                // Outer loop to control the number of passes
+        for (int j = 0; j < size - i - 1; j++) {        // Inner loop to compare adjacent elements and swap them if necessary
+            if (array[j] > array[j + 1]) {              // Compare adjacent elements and swap them if they are in the wrong order
+                std::swap(array[j], array[j + 1]);      // Swap the elements
             }   
         }   
-        if (!flag) {    // If no swaps were made in the current pass, the array is already sorted
-            return; // Return early
-        }
     }
 }
 template <class type>   // Counting Sort
@@ -96,31 +88,30 @@ void Sort<type>::descending(type *array, int size) {    // Function to sort an a
         std::swap(array[i], array[size - i - 1]);   // Swap the current element with the element at the symmetric position from the end
     }
 }
-template <class type>   // Insertion Sort
-void Sort<type>::insertionSort(type *array, int size) {  // Function to sort an array using the Insertion Sort algorithm
+template <class type>
+void Sort<type>::insertionSort(type *array, int size) {
     /*
     -> O(n) [best case] [already sorted]
     -> O(n^2) [average case]
     -> O(n^2) [worst case] [always divide in the middle]
 
     -> in insertion sort we select the element and find out the postion for that element
-    -> in selection sort we select the position and find out the element for that position
 
     -> different names of insertion sort
         -> insertion sort
         -> library sort
     */
-    type temp;  // Temporary variable to hold the current element during insertion
+    type temp;                                  // Temporary variable to hold the current element during insertion
 
-    for (int i = 1, j; i < size; i++) { // Loop through each element of the array starting from the second element
-        temp = array[i];    // Store the current element to be inserted
-        j = i - 1;  // Set 'j' to the index of the element before the current one
+    for (int i = 1, j; i < size; i++) {         // Loop through each element of the array starting from the second element
+        temp = array[i];                        // Store the current element to be inserted
+        j = i - 1;                              // Set 'j' to the index of the element before the current one
 
-        while (j > -1 && array[j] > temp) { // Move elements that are greater than 'temp' one position to the right
-            array[j + 1] = array[j];    // Shift the element to the right
-            j--;    // Move the index 'j' one step left
+        while (j >= 0 && array[j] > temp) {     // Move elements that are greater than 'temp' one position to the right
+            array[j + 1] = array[j];            // Shift the element to the right
+            j--;                                // Move the index 'j' one step left
         }
-        array[j + 1] = temp;    // Insert the stored 'temp' element into its correct position
+        array[j + 1] = temp;                    // Insert the stored 'temp' element into its correct position
     }
 }
 template <class type>   // Heap Sort
@@ -300,29 +291,26 @@ void Sort<type>::radixSort(type *array, int size) { // Function to sort an array
         }
     }
 }
-template <class type>   // Selection Sort
-void Sort<type>::selectionSort(type *array, int size) {   // Function to sort an array using the Selection Sort algorithm
+template <class type>
+void Sort<type>::selectionSort(type *array, int size) {
     /*
     -> O(n^2) [best case] [always divide in the middle]
     -> O(n^2) [average case]
     -> O(n^2) [worst case] [always divide in the middle]
 
     -> in selection sort we select the position and find out the element for that position
-    -> in quick sort we select the element and find out the postion for that element
 
     -> different names of selection sort
         -> exchange sort
         -> selection sort
     */
-    int i, j, k;    // Variables for array traversal and finding the minimum element
-
-    for (i = 0; i < size - 1; i++) {    // Loop to traverse the array
-        for (j = i + 1, k = i; j < size; j++) {   // Loop to find the index of the minimum element in the unsorted part of the array
-            if (array[j] < array[k]) {  // Compare the current element with the minimum element found so far
-                k = j;  // Update the index of the minimum element
+    for (int i = 0; i < size - 1; i++) {                // Loop to traverse the array
+        for (int j = i + 1, k = i; j < size; j++) {     // Loop to find the index of the minimum element in the unsorted part of the array
+            if (array[j] < array[k]) {                  // Compare the current element with the minimum element found so far
+                k = j;                                  // Update the index of the minimum element
             }
         }
-        swap(array[i], array[k]);   // Swap the minimum element with the first element of the unsorted part of the array
+        swap(array[i], array[k]);                       // Swap the minimum element with the first element of the unsorted part of the array
     }
 }
 template <class type>   // Shell Sort
