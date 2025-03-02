@@ -1,3 +1,10 @@
+def approximate(func):
+    def wrapper(*args, **kwargs):
+        return round(func(*args, **kwargs), 6)
+
+    return wrapper
+
+
 def factorial(n: int = 0) -> int:
     if n < 1:
         return 1
@@ -10,18 +17,20 @@ def factorial(n: int = 0) -> int:
     return res
 
 
-def combination(n: int = 0, r: int = 0) -> float:
+def combination(n: int = 0, r: int = 0) -> int:
     return factorial(n) / (factorial(n - r) * factorial(r))
 
 
-def permutation(n: int = 0, r: int = 0) -> float:
+def permutation(n: int = 0, r: int = 0) -> int:
     return factorial(n) / factorial(n - r)
 
 
+@approximate
 def binomial_distribution(x: int, n: int, p: float) -> float:
     return combination(n, x) * (p ** x) * ((1 - p) ** (n - x))
 
 
+@approximate
 def cumulative_binomial_distribution(x: int, n: int, p: float) -> float:
     res: float = 0
 
@@ -31,10 +40,12 @@ def cumulative_binomial_distribution(x: int, n: int, p: float) -> float:
     return res
 
 
+@approximate
 def hypergeometric_distribution(x: int, n: int, a: int, N: int) -> float:
     return combination(a, x) * combination(N - a, n - x) / combination(N, n)
 
 
+@approximate
 def cumulative_hypergeometric_distribution(x: int, n: int, a: int, N: int) -> float:
     res: float = 0
 
@@ -44,6 +55,7 @@ def cumulative_hypergeometric_distribution(x: int, n: int, a: int, N: int) -> fl
     return res
 
 
+@approximate
 def mean(*x_fx_pair: tuple[int, float]) -> float:
     res: float = 0
 
@@ -53,14 +65,17 @@ def mean(*x_fx_pair: tuple[int, float]) -> float:
     return res
 
 
+@approximate
 def mean_binomial_distribution(n: int, p: float) -> float:
     return n * p
 
 
+@approximate
 def mean_hypergeometric_distribution(n: int, a: int, N: int):
     return n * a / N
 
 
+@approximate
 def variance(*x_fx_pair: tuple[int, float]) -> float:
     m: float = mean(*x_fx_pair)
     res: float = 0
@@ -71,14 +86,17 @@ def variance(*x_fx_pair: tuple[int, float]) -> float:
     return res
 
 
+@approximate
 def variance_binomial_distribution(n: int, p: float) -> float:
     return n * p * (1 - p)
 
 
+@approximate
 def variance_hypergeometric_distribution(n: int, a: int, N: int) -> float:
     return (n * a * (N - n) * (N - a)) / ((N ** 2) * (N - 1))
 
 
+@approximate
 def standard_deviation(*x_fx_pair: tuple[int, float]) -> float:
     from math import sqrt
     return sqrt(variance(*x_fx_pair))
