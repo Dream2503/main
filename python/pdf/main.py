@@ -134,10 +134,7 @@ def main() -> None:
                         input("The pages of the PDF has successfully deleted. Check the output folder for the result.")
 
                     case 7:
-                        watermark: str = input("Enter the text to have as a watermark: ")
-                        output = input("Enter the output file name: ")
-                        add_watermark(path_list[0], watermark, output)
-                        input("The watermark has been added to the pdf. Check the output folder for the result.")
+                        pass
 
                     case 8:
                         current_menu = 2

@@ -81,24 +81,6 @@ def delete(path: str, page_nos: tuple[int], output: str):
         writer.write(output_file)
 
 
-def add_watermark(path: str, watermark: str, output: str):
-    pdf_document: Document = fitz.open(path)
-    watermark_color: tuple[int, int, int] = (0.5, 0.5, 0.5)
-    font_size: int = 50
-
-    for page in pdf_document:
-        width, height = page.rect.width, page.rect.height
-        page.insert_text(
-            (width / 2, height / 2),
-            watermark,
-            fontsize=font_size,
-            rotate=45,
-            color=watermark_color,
-        )
-
-    pdf_document.save(f"./output/{output}.pdf")
-
-
 def clear_directory(directory_path):
     for filename in os.listdir(directory_path):
         file_path = os.path.join(directory_path, filename)
