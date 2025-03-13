@@ -18,110 +18,68 @@
 #include <queue>
 #include <chrono>
 using namespace std;
-// struct ListNode {
-//     int val;
-//     ListNode *next;
-//     ListNode() : val(0), next(nullptr) {}
-//     ListNode(int x) : val(x), next(nullptr) {}
-//     ListNode(int x, ListNode *next) : val(x), next(next) {}
-// };
+struct ListNode {
+    int val;
+    ListNode *next;
+    ListNode() : val(0), next(nullptr) {}
+    ListNode(int x) : val(x), next(nullptr) {}
+    ListNode(int x, ListNode *next) : val(x), next(next) {}
+};
 
-// ListNode *create(vector<int> vec) {
-//     ListNode *head = new ListNode(vec[0]), *current = head;
+ListNode *create(vector<int> vec) {
+    ListNode *head = new ListNode(vec[0]), *current = head;
     
-//     for (int num: vec) {
-//         current->next = new ListNode(num);
-//         current = current->next;
-//     }
-//     return head->next;
-// }
-// void print(ListNode *head) {
-//     cout << '[';
+    for (int num: vec) {
+        current->next = new ListNode(num);
+        current = current->next;
+    }
+    return head->next;
+}
+void print(ListNode *head) {
+    cout << '[';
 
-//     while (head->next) {
-//         cout << head->val << ", ";
-//         head = head->next;
-//     }
-//     cout << head->val << ']';
-// }
+    while (head->next) {
+        cout << head->val << ", ";
+        head = head->next;
+    }
+    cout << head->val << ']';
+}
 
 class Solution {
-public:
-    vector<int> spiralOrder(vector<vector<int>> matrix) {
-        string direction = "right";
-        int row = matrix.size(), column = matrix[0].size(), i = 0, j = 0;
-        set<pair<int,int>> seen;
-        vector<int> res;
-        res.reserve(row * column);
-        bool change;
-
-        while (true) {
-            if (direction == "right") {
-                if (j < column && seen.find({i, j}) == seen.end()) {
-                    res.push_back(matrix[i][j]);
-                    seen.insert({i, j});
-                    change = false;
+    public:
+        bool isAlienSorted(vector<string> words, string order) {
+            unordered_map<char, int> look_up;
+            int size = words.size(), i, j, word1_size, word2_size;
+            string word1, word2;
+            look_up.reserve(26);
+    
+            for (i = 0; i < 26; i++) {
+                look_up[order[i]] = i;
+            }
+            for (i = 0; i < size - 1; i++) {
+                word1 = words[i]; word2 = words[i + 1];
+                word1_size = word1.size(); word2_size = word2.size();
+                j = 0;
+    
+                while (j < word1_size && j < word2_size && look_up[word1[j]] <= look_up[word2[j]]) {
                     j++;
-                } else {
-                    if (change) {
-                        break;
-                    }
-                    direction = "down";
-                    j--;
-                    change = true;
                 }
-            } else if (direction == "down") {
-                if (i < row && seen.find({i, j}) == seen.end()) {
-                    res.push_back(matrix[i][j]);
-                    seen.insert({i, j});
-                    change = false;
-                    i++;
-                } else {
-                    if (change) {
-                        break;
+                if (j == word1_size || j == word2_size) {
+                    if (word1 != word2) {
+                        return false;
                     }
-                    direction = "left";
-                    i--;
-                    change = true;
-                }
-            } else if (direction == "left") {
-                if (j > -1 && seen.find({i, j}) == seen.end()) {
-                    res.push_back(matrix[i][j]);
-                    seen.insert({i, j});
-                    change = false;
-                    j--;
                 } else {
-                    if (change) {
-                        break;
-                    }
-                    direction = "up";
-                    j++;
-                    change = true;
-                }
-            } else if (direction == "up") {
-                if (i > -1 && seen.find({i, j}) == seen.end()) {
-                    res.push_back(matrix[i][j]);
-                    seen.insert({i, j});
-                    change = false;
-                    i--;
-                } else {
-                    if (change) {
-                        break;
-                    }
-                    direction = "right";
-                    i++;
-                    change = true;
+                    return false;
                 }
             }
+            return true;
         }
-        return res;
-    }
-};
+    };
 
 int main() {
     Solution sol;
     auto start = chrono::high_resolution_clock::now();
-    sol.spiralOrder({{1, 2, 3}, {4, 5, 6}, {7, 8, 9}});
+    sol.isAlienSorted({"hello","leetcode"}, "hlabcdefgijkmnopqrstuvwxyz");
     chrono::duration<double> time = chrono::high_resolution_clock::now() - start;
     cout << "Total time taken: " << time.count();
     
