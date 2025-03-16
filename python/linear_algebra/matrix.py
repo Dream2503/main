@@ -2,6 +2,8 @@ from collections import namedtuple
 from fractions import Fraction
 from math import gcd, lcm, sqrt
 from typing import Literal, Iterator, Any
+
+from .math_num import MathNum, DATA_TYPES
 from .equation import Polynomial, Variable
 
 Order = namedtuple("Order", ["row", "column"])
@@ -285,7 +287,7 @@ class Matrix:
     """
 
     def __init__(self, rows: int = 0, columns: int = 0, method: Literal["input", "null", "identity", "pass"] = "pass",
-                 *, matrix: list[list[Any]] | None = None) -> None:
+                 *, matrix: list[list[Any]] | None = None, always_evaluate: bool = True, datatype: type = DATA_TYPES["Fraction"]) -> None:
         """Matrix object initializer function"""
         if matrix is not None:
             rows = len(matrix)
@@ -309,7 +311,7 @@ class Matrix:
             if matrix is None:
                 raise MatrixError("Matrix object requires a valid matrix")
 
-            self._matrix: list[list[Any]] = [row.copy() for row in matrix]
+            self._matrix: list[list[MathNum]] = [[MathNum(element) for element in row] for row in matrix]
             self._validate()
 
     @property
@@ -325,7 +327,7 @@ class Matrix:
         return self._order
 
     @property
-    def matrix(self) -> list[list[Any]]:
+    def matrix(self) -> list[list[MathNum]]:
         return self._matrix
 
     def __add__(self, other: "Matrix") -> "Matrix":
@@ -381,12 +383,12 @@ class Matrix:
                 raise MatrixError("Invalid matrix order for multiplication\n")
 
         try:
-            frac: Fraction = Fraction(str(other))
+            num: MathNum = MathNum(str(other))
             result = Matrix(self.row, self.column, "null")
 
             for i in range(self.row):
                 for j in range(self.column):
-                    result[i][j] = self.matrix[i][j] * frac
+                    result[i][j] = self.matrix[i][j] * num
 
             return result
 
@@ -441,11 +443,11 @@ class Matrix:
 
         else:
             try:
-                frac: Fraction = Fraction(str(other))
+                num: MathNum = MathNum(str(other))
 
                 for i in range(self.row):
                     for j in range(self.column):
-                        self.matrix[i][j] *= frac
+                        self.matrix[i][j] *= num
 
                 return self
 
@@ -461,12 +463,12 @@ class Matrix:
 
         return False
 
-    def __iter__(self) -> Iterator[list[Any]]:
+    def __iter__(self) -> Iterator[list[MathNum]]:
         """Built-in iter() overloaded function"""
         for row in self.matrix:
             yield row
 
-    def __eq__(self, other: Any) -> bool:
+    def __eq__(self, other: "Matrix") -> bool:
         """Operator== overloaded function"""
         if isinstance(other, Matrix):
             return self.matrix == other.matrix

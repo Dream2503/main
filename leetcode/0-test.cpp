@@ -47,39 +47,53 @@ void print(ListNode *head) {
 
 class Solution {
     public:
-        bool isAlienSorted(vector<string> words, string order) {
-            unordered_map<char, int> look_up;
-            int size = words.size(), i, j, word1_size, word2_size;
-            string word1, word2;
-            look_up.reserve(26);
+        vector<string> commonChars(vector<string> words) {
+            string res = words[0];
+            int i, j, size1, size2;
+            sort(res.begin(), res.end());
     
-            for (i = 0; i < 26; i++) {
-                look_up[order[i]] = i;
-            }
-            for (i = 0; i < size - 1; i++) {
-                word1 = words[i]; word2 = words[i + 1];
-                word1_size = word1.size(); word2_size = word2.size();
-                j = 0;
-    
-                while (j < word1_size && j < word2_size && look_up[word1[j]] <= look_up[word2[j]]) {
-                    j++;
+            for (string &word: words) {
+                sort(word.begin(), word.end());
+                if (res == word) {
+                    continue;
                 }
-                if (j == word1_size || j == word2_size) {
-                    if (word1 != word2) {
-                        return false;
+                i = j = 0;
+                size1 = res.size();
+                size2 = word.size();
+    
+                while (i < size1 && j < size2) {
+                    while (i < size1 && res[i] < word[j]) {
+                        res.erase(res.begin() + i);
+                        size1--;
                     }
-                } else {
-                    return false;
+                    while (j < size2 && res[i] > word[j]) {
+                        word.erase(word.begin() + j);
+                        size2--;
+                    }
+                    if (res[i] != res[j]) {
+                        
+                    }
+                    i++; j++;
                 }
+                if (i < size1) {
+                    res.erase(res.begin() + i, res.end());
+                }
+                if (j < size2) {
+                    word.erase(word.begin() + j, word.end());
+                }
+                res = res.size() > word.size() ? word : res;
             }
-            return true;
+            vector<string> rtn;
+            rtn.reserve(res.size());
+            transform(res.begin(), res.end(), back_inserter(rtn), [](char c){return string(c, 1);});
+            return rtn;
         }
     };
 
 int main() {
     Solution sol;
     auto start = chrono::high_resolution_clock::now();
-    sol.isAlienSorted({"hello","leetcode"}, "hlabcdefgijkmnopqrstuvwxyz");
+    sol.commonChars({"cool","lock","cook"});
     chrono::duration<double> time = chrono::high_resolution_clock::now() - start;
     cout << "Total time taken: " << time.count();
     

@@ -12,8 +12,8 @@ def main():
     # res = Variable(".2y^2", always_evaluate=False)
     # res = (res / Variable("1/19x")) ** 2
     # print(res)
-    res = Polynomial("2x 3y 5z")
-    res += Polynomial("9x^2 5y 3z")
+    res = Polynomial("10x^2 5x 1")
+    [print(element.evaluate()) for element in res.roots()]
     print(res)
 
 

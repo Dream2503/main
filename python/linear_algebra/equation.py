@@ -1,6 +1,5 @@
-from .math_num import MathNum
+from .math_num import MathNum, DATA_TYPES
 from typing import Generator, Any
-from fractions import Fraction
 
 
 class PolynomialError(Exception): ...
@@ -118,7 +117,7 @@ class Variable:
 
     def __init__(self, expression: Any = "0", *, coefficient: MathNum = MathNum(),
                  variables_dict: dict[str, MathNum] | None = None, always_evaluate=True,
-                 datatype: type = Fraction) -> None:
+                 datatype: type = DATA_TYPES["Fraction"]) -> None:
         """Initialization function for Variable class"""
         self._coefficient: MathNum = MathNum(coefficient)
         self._variables: dict[str, MathNum] = variables_dict.copy() if variables_dict is not None else {}
@@ -558,7 +557,7 @@ class Polynomial:
 
     def __init__(self, numerator: Any = "0", denominator: str = "1", *,
                  numerator_variables: list[Variable] | None = None, denominator_variables: list[Variable] | None = None,
-                 always_evaluate: bool = True, datatype: type = Fraction) -> None:
+                 always_evaluate: bool = True, datatype: type = DATA_TYPES["Fraction"]) -> None:
         """Polynomial object initializer function"""
         self._parameters: dict[str, bool | type] = {"always_evaluate": always_evaluate, "datatype": datatype}
 
@@ -629,9 +628,9 @@ class Polynomial:
 
         else:
             try:
-                frac: Fraction = Fraction(other)
-                num: MathNum = MathNum(frac.numerator, datatype=self._parameters["datatype"])
-                den: MathNum = MathNum(frac.denominator, datatype=self._parameters["datatype"])
+                num, den = float(other).as_integer_ratio()
+                num: MathNum = MathNum(num, datatype=self._parameters["datatype"])
+                den: MathNum = MathNum(den, datatype=self._parameters["datatype"])
                 numerator = ([var * den for var in self.numerator] + [var * num for var in self.denominator])
                 denominator = [var * den for var in self.denominator]
 
@@ -653,9 +652,9 @@ class Polynomial:
 
         else:
             try:
-                frac: Fraction = Fraction(other)
-                num: MathNum = MathNum(frac.numerator, datatype=self._parameters["datatype"])
-                den: MathNum = MathNum(frac.denominator, datatype=self._parameters["datatype"])
+                num, den = float(other).as_integer_ratio()
+                num: MathNum = MathNum(num, datatype=self._parameters["datatype"])
+                den: MathNum = MathNum(den, datatype=self._parameters["datatype"])
                 numerator = [var * den for var in self.numerator] + [var * -num for var in self.denominator]
                 denominator = [var * den for var in self.denominator]
 
@@ -678,9 +677,9 @@ class Polynomial:
 
         else:
             try:
-                frac: Fraction = Fraction(other)
-                num: MathNum = MathNum(frac.numerator, datatype=self._parameters["datatype"])
-                den: MathNum = MathNum(frac.denominator, datatype=self._parameters["datatype"])
+                num, den = float(other).as_integer_ratio()
+                num: MathNum = MathNum(num, datatype=self._parameters["datatype"])
+                den: MathNum = MathNum(den, datatype=self._parameters["datatype"])
                 numerator = [element * num for element in self.numerator]
                 denominator = [element * den for element in self.denominator]
 
@@ -703,9 +702,9 @@ class Polynomial:
 
         else:
             try:
-                frac: Fraction = Fraction(other)
-                num: MathNum = MathNum(frac.numerator, datatype=self._parameters["datatype"])
-                den: MathNum = MathNum(frac.denominator, datatype=self._parameters["datatype"])
+                num, den = float(other).as_integer_ratio()
+                num: MathNum = MathNum(num, datatype=self._parameters["datatype"])
+                den: MathNum = MathNum(den, datatype=self._parameters["datatype"])
                 numerator = [element * den for element in self.numerator]
                 denominator = [element * num for element in self.denominator]
 
@@ -974,92 +973,96 @@ class Polynomial:
             else:
                 change = True
 
-    @staticmethod
-    def _conic_section(eigen_values: dict[str, Fraction | float], determinant: Fraction) -> str:
-        """Determines which type of conic section does the eigen vector represents"""
-        are_positive: list[bool | None] = []
-        is_zero_determinant: bool = True if determinant == Fraction(0) else False
+    # @staticmethod
+    # def _conic_section(eigen_values: dict[str, Fraction | float], determinant: Fraction) -> str:
+    #     """Determines which type of conic section does the eigen vector represents"""
+    #     are_positive: list[bool | None] = []
+    #     is_zero_determinant: bool = True if determinant == Fraction(0) else False
+    #
+    #     for value in eigen_values.values():
+    #         if value == Fraction(0):
+    #             are_positive.append(None)
+    #
+    #         elif value > Fraction(0):
+    #             are_positive.append(True)
+    #
+    #         else:
+    #             are_positive.append(False)
+    #
+    #     if are_positive[0] is not None and are_positive[1] is not None:
+    #         if are_positive[0] == are_positive[1] and not is_zero_determinant:
+    #             return "Ellipse"
+    #
+    #         elif are_positive[0] != are_positive[1] and not is_zero_determinant:
+    #             return "Hyperbola"
+    #
+    #         elif are_positive[0] == are_positive[1] and is_zero_determinant:
+    #             return "Point"
+    #
+    #         elif are_positive[0] != are_positive[1] and is_zero_determinant:
+    #             return "Intersecting Lines"
+    #
+    #     else:
+    #         if (are_positive[0] is None or are_positive[1] is None) and is_zero_determinant:
+    #             return "Parabola"
+    #
+    #     return "Unexpected Error"
 
-        for value in eigen_values.values():
-            if value == Fraction(0):
-                are_positive.append(None)
-
-            elif value > Fraction(0):
-                are_positive.append(True)
-
-            else:
-                are_positive.append(False)
-
-        if are_positive[0] is not None and are_positive[1] is not None:
-            if are_positive[0] == are_positive[1] and not is_zero_determinant:
-                return "Ellipse"
-
-            elif are_positive[0] != are_positive[1] and not is_zero_determinant:
-                return "Hyperbola"
-
-            elif are_positive[0] == are_positive[1] and is_zero_determinant:
-                return "Point"
-
-            elif are_positive[0] != are_positive[1] and is_zero_determinant:
-                return "Intersecting Lines"
-
-        else:
-            if (are_positive[0] is None or are_positive[1] is None) and is_zero_determinant:
-                return "Parabola"
-
-        return "Unexpected Error"
-
-    def roots(self) -> tuple[float | complex, ...]:
+    def roots(self) -> tuple[MathNum, ...]:
         """Computes the roots of the polynomial"""
 
-        def quadratic_roots(b: Fraction, c: Fraction) -> tuple[float | complex, float | complex]:
+        def quadratic_roots(b: MathNum, c: MathNum) -> tuple[MathNum, MathNum]:
             """Computes the quadratic roots of a second degree polynomial"""
-            determinant: Fraction = (b * b) - (4 * c)
+            determinant: MathNum = b ** 2 - (4 * c)
 
             if determinant >= 0:
-                root1: float = (-b + sqrtf(determinant)) / 2
+                root1: MathNum = (-b + determinant.sqrt()) / 2
 
                 if determinant != 0:
-                    root2: float = (-b - sqrtf(determinant)) / 2
+                    root2: MathNum = (-b - determinant.sqrt()) / 2
 
                 else:
                     root2 = root1
 
-                return round(root1, 14), round(root2, 14)
+                return root1, root2
 
             else:
-                return (-b + sqrtc(determinant)) / 2, (-b - sqrtc(determinant)) / 2
+                return (MathNum((-b + determinant.sqrt()) / 2, domain="complex"),
+                        MathNum((-b - determinant.sqrt()) / 2, domain="complex"))
 
-        def cubic_roots(b: Fraction, c: Fraction, d: Fraction) -> tuple[float | complex, ...]:
+        def cubic_roots(b: MathNum, c: MathNum, d: MathNum) -> tuple[MathNum, MathNum, MathNum]:
             """Computes the cubic roots of a 3rd degree polynomial"""
-            q: Fraction = (c / 3) - (b ** 2 / 9)
-            r: Fraction = ((c * b - 3 * d) / 6) - (b ** 3 / 27)
-            check: Fraction = r ** 2 + q ** 3
+            q: MathNum = (c / 3) - (b ** 2 / 9)
+            r: MathNum = ((c * b - 3 * d) / 6) - (b ** 3 / 27)
+            check: MathNum = r ** 2 + q ** 3
 
             if check > 0:
-                a: complex = (abs(r) + sqrtc(check)) ** (1 / 3)
+                a: MathNum = MathNum((abs(r) + sqrtc(check)) ** (1 / 3), datatype=complex)
 
                 if r >= 0:
-                    t1: complex = a - (q / a)
+                    t1: MathNum = a - (q / a)
 
                 else:
                     t1 = (q / a) - a
 
-                x2: complex = -t1 / 2 - b / 3
-                y2: complex = sqrtc(3) / 2 * (a + (q / a))
-                res: tuple[complex, complex, complex] = (t1 - b / 3, complex(x2, y2.real), complex(x2, -y2.real))
-                return tuple(round(element.real, 3) if element.imag == 0
-                             else complex(round(element.real, 3), round(element.imag, 3)) for element in res)
+                x2: MathNum = -t1 / 2 - b / 3
+                y2: complex = complex(*(MathNum(3).sqrt() / 2 * (a + (q / a))).evaluate().value)
+                res: tuple[MathNum, MathNum, MathNum] = (t1 - b / 3, MathNum((x2, y2.real), datatype=complex),
+                                                         MathNum((x2, -y2.real), datatype=complex))
+                return res
+                # return tuple(round(element.real, 3) if element.imag == 0
+                #              else complex(round(element.real, 3), round(element.imag, 3)) for element in res)
 
             else:
-                theta: float = 0 if q == 0 else acos(r / (-q) ** (3 / 2))
-                phis: Generator[float] = ((theta + (j * pi)) / 3 for j in range(0, 5, 2))
-                return tuple(round(2 * sqrtf(-q) * cos(phi) - b / 3, 3) for phi in phis)
+                theta: MathNum = MathNum() if q == 0 else (r / (-q) ** (3 / 2)).acos()
+                phis: Generator[MathNum] = ((theta + (j * MathNum.pi)) / 3 for j in range(0, 5, 2))
+                return tuple(phis)
+                # return tuple(round(2 * sqrtf(-q) * cos(phi) - b / 3, 3) for phi in phis)
 
-        var: tuple[str, Fraction] = tuple(self.numerator[0].variables.items())[0]
-        factor: Fraction = self.numerator[0].coefficient
-        constant: Fraction = self.numerator[-1].coefficient if self.numerator[-1].variables == {} else Fraction(0)
-        coef: dict[Fraction, Fraction] = {}
+        var: tuple[str, MathNum] = tuple(self.numerator[0].variables.items())[0]
+        factor: MathNum = self.numerator[0].coefficient
+        constant: MathNum = self.numerator[-1].coefficient if self.numerator[-1].variables == {} else MathNum(0)
+        coef: dict[int, MathNum] = {}
 
         for i in range(len(self.numerator)):
             if self.numerator[i].variables and (
@@ -1067,55 +1070,54 @@ class Polynomial:
                 raise ValueError("roots of the this Equation cannot be determined")
 
             if self.numerator[i].variables:
-                coef[self.numerator[i].variables[var[0]]] = self.numerator[i].coefficient / factor
+                coef[int(self.numerator[i].variables[var[0]])] = self.numerator[i].coefficient / factor
 
         if var[1] == 2:
-            return quadratic_roots(coef.get(Fraction(1), Fraction(0)), constant / factor)
+            return quadratic_roots(coef.get(1, 0), constant / factor)
 
         elif var[1] == 3:
-            return cubic_roots(coef.get(Fraction(2), Fraction(0)), coef.get(Fraction(1), Fraction(0)),
-                               constant / factor)
+            return cubic_roots(coef.get(2, 0), coef.get(1, 0), constant / factor)
 
         else:
             return NotImplemented
 
-    def to_principal_axes(self) -> dict[str, "Polynomial | str"]:
-        """Converts a quadratic polynomial to its principal axes using matrix algebra"""
-        from linear_algebra import Matrix
-
-        if tuple(self.numerator[0].variables.values())[0] > Fraction(2):
-            raise PolynomialError("Quadratic polynomials can be transformed into its corresponding principal axes")
-
-        res: Matrix = Matrix(2, 2, "null")
-
-        for var in self.numerator:
-            if var.variables:
-                power: Fraction = tuple(var.variables.values())[0]
-            else:
-                power = Fraction(0)
-
-            if power == Fraction(2):
-                position: int = int(tuple(var.variables.keys())[0][1]) - 1
-                res[position][position] = var.coefficient
-
-            elif power == Fraction(1):
-                pos1: int = int(tuple(var.variables.keys())[0][1]) - 1
-                pos2: int = int(tuple(var.variables.keys())[1][1]) - 1
-                res[pos1][pos2] = var.coefficient / 2
-                res[pos2][pos1] = var.coefficient / 2
-
-        eigen_val: dict[str, Fraction | float] = res.eigen_values()
-        numerator: list[Variable] = [Variable(coefficient=Fraction(value), variables_dict={f"y{idx + 1}": Fraction(2)})
-                                     for idx, value in enumerate(eigen_val.values())]
-        numerator.append(self.numerator[-1])
-        q = Polynomial(numerator_variables=numerator)
-        conic_sec: str = self._conic_section(eigen_val, q.numerator[-1].coefficient)
-        eigen_vec: tuple[tuple[Fraction, ...], ...] = res.eigen_vectors()
-        eigen_vec = tuple(Matrix.normalize(vec) for vec in eigen_vec)
-        x: Matrix = Matrix(2, 2, matrix=[list(vec) for vec in eigen_vec]).transpose()
-        y: Matrix = Matrix(2, 1, matrix=[[Polynomial("y1")], [Polynomial("y2")]])
-        res = x * y
-        return {"x1": res[0], "x2": res[1], "conic_section": conic_sec}
+    # def to_principal_axes(self) -> dict[str, "Polynomial | str"]:
+    #     """Converts a quadratic polynomial to its principal axes using matrix algebra"""
+    #     from linear_algebra import Matrix
+    #
+    #     if tuple(self.numerator[0].variables.values())[0] > Fraction(2):
+    #         raise PolynomialError("Quadratic polynomials can be transformed into its corresponding principal axes")
+    #
+    #     res: Matrix = Matrix(2, 2, "null")
+    #
+    #     for var in self.numerator:
+    #         if var.variables:
+    #             power: Fraction = tuple(var.variables.values())[0]
+    #         else:
+    #             power = Fraction(0)
+    #
+    #         if power == Fraction(2):
+    #             position: int = int(tuple(var.variables.keys())[0][1]) - 1
+    #             res[position][position] = var.coefficient
+    #
+    #         elif power == Fraction(1):
+    #             pos1: int = int(tuple(var.variables.keys())[0][1]) - 1
+    #             pos2: int = int(tuple(var.variables.keys())[1][1]) - 1
+    #             res[pos1][pos2] = var.coefficient / 2
+    #             res[pos2][pos1] = var.coefficient / 2
+    #
+    #     eigen_val: dict[str, Fraction | float] = res.eigen_values()
+    #     numerator: list[Variable] = [Variable(coefficient=Fraction(value), variables_dict={f"y{idx + 1}": Fraction(2)})
+    #                                  for idx, value in enumerate(eigen_val.values())]
+    #     numerator.append(self.numerator[-1])
+    #     q = Polynomial(numerator_variables=numerator)
+    #     conic_sec: str = self._conic_section(eigen_val, q.numerator[-1].coefficient)
+    #     eigen_vec: tuple[tuple[Fraction, ...], ...] = res.eigen_vectors()
+    #     eigen_vec = tuple(Matrix.normalize(vec) for vec in eigen_vec)
+    #     x: Matrix = Matrix(2, 2, matrix=[list(vec) for vec in eigen_vec]).transpose()
+    #     y: Matrix = Matrix(2, 1, matrix=[[Polynomial("y1")], [Polynomial("y2")]])
+    #     res = x * y
+    #     return {"x1": res[0], "x2": res[1], "conic_section": conic_sec}
 
     copy = lambda self: Polynomial(numerator_variables=self.numerator, denominator_variables=self.denominator,
                                    **self._parameters)
