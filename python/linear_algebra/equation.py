@@ -1,4 +1,5 @@
-from .math_num import MathNum, DATA_TYPES
+from fractions import Fraction
+from .math_num import MathNum
 from typing import Generator, Any
 
 
@@ -117,7 +118,7 @@ class Variable:
 
     def __init__(self, expression: Any = "0", *, coefficient: MathNum = MathNum(),
                  variables_dict: dict[str, MathNum] | None = None, always_evaluate=True,
-                 datatype: type = DATA_TYPES["Fraction"]) -> None:
+                 datatype: type = Fraction) -> None:
         """Initialization function for Variable class"""
         self._coefficient: MathNum = MathNum(coefficient)
         self._variables: dict[str, MathNum] = variables_dict.copy() if variables_dict is not None else {}
@@ -557,7 +558,7 @@ class Polynomial:
 
     def __init__(self, numerator: Any = "0", denominator: str = "1", *,
                  numerator_variables: list[Variable] | None = None, denominator_variables: list[Variable] | None = None,
-                 always_evaluate: bool = True, datatype: type = DATA_TYPES["Fraction"]) -> None:
+                 always_evaluate: bool = True, datatype: type = Fraction) -> None:
         """Polynomial object initializer function"""
         self._parameters: dict[str, bool | type] = {"always_evaluate": always_evaluate, "datatype": datatype}
 

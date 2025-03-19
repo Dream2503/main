@@ -1,4 +1,3 @@
-from fractions import Fraction
 from .equation import Variable, Polynomial
 from .matrix import Matrix, ROW, COLUMN, SQUARE, RECTANGULAR, NULL, SCALAR, IDENTITY, DIAGONAL
 from .math_num import MathNum

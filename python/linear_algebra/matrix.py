@@ -2,8 +2,7 @@ from collections import namedtuple
 from fractions import Fraction
 from math import gcd, lcm, sqrt
 from typing import Literal, Iterator, Any
-
-from .math_num import MathNum, DATA_TYPES
+from .math_num import MathNum
 from .equation import Polynomial, Variable
 
 Order = namedtuple("Order", ["row", "column"])
@@ -287,7 +286,7 @@ class Matrix:
     """
 
     def __init__(self, rows: int = 0, columns: int = 0, method: Literal["input", "null", "identity", "pass"] = "pass",
-                 *, matrix: list[list[Any]] | None = None, always_evaluate: bool = True, datatype: type = DATA_TYPES["Fraction"]) -> None:
+                 *, matrix: list[list[Any]] | None = None, always_evaluate: bool = True, datatype: type = Fraction) -> None:
         """Matrix object initializer function"""
         if matrix is not None:
             rows = len(matrix)
