@@ -1,0 +1,210 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+namespace Dream {
+
+class ostream {
+    const ostream& overload(const char* format, auto value) const noexcept {
+        printf(format, value);
+        return *this;
+    }
+public:
+    inline const ostream& operator<<(const int value) const noexcept { return overload("%d", value); }
+    inline const ostream& operator<<(const unsigned int value) const noexcept { return overload("%u", value); }
+    inline const ostream& operator<<(const long int value) const noexcept { return overload("%ld", value); }
+    inline const ostream& operator<<(const unsigned long int value) const noexcept { return overload("%lu", value); }
+    inline const ostream& operator<<(const long long int value) const noexcept { return overload("%lld", value); }
+    inline const ostream& operator<<(const unsigned long long int value) const noexcept { return overload("%llu", value); }
+
+    inline const ostream& operator<<(const float value) const noexcept { return overload("%f", value); }
+    inline const ostream& operator<<(const double value) const noexcept { return overload("%lf", value); }
+    inline const ostream& operator<<(const long double value) const { return overload("%Lf", value); }
+
+    inline const ostream& operator<<(const char value) const noexcept { return overload("%c", value); }
+	inline const ostream& operator<<(const char* value) const noexcept { return overload("%s", value); }
+    inline const ostream& operator<<(const void* value) const noexcept { return overload("%p", value); }
+};
+
+
+class istream {
+    const istream& overload(const char* format, auto value) const noexcept {
+        scanf(format, value);
+        return *this;
+    }
+public:
+    inline const istream& operator>>(int& value) const noexcept { return overload("%d", &value); }
+    inline const istream& operator>>(unsigned int& value) const noexcept { return overload("%u", &value); }
+    inline const istream& operator>>(long int& value) const noexcept { return overload("%ld", &value); }
+    inline const istream& operator>>(unsigned long int& value) const noexcept { return overload("%lu", &value); }
+    inline const istream& operator>>(long long int& value) const noexcept { return overload("%lld", &value); }
+    inline const istream& operator>>(unsigned long long int& value) const noexcept { return overload("%llu", &value); }
+
+    inline const istream& operator>>(float& value) const noexcept { return overload("%f", &value); }
+    inline const istream& operator>>(double& value) const noexcept { return overload("%lf", &value); }
+    inline const istream& operator>>(long double& value) const noexcept { return overload("%Lf", &value); }
+
+    inline const istream& operator>>(char& value) const noexcept { return overload("%c", &value); }
+    inline const istream& operator>>(char* value) const noexcept { return overload("%s", value); }
+    inline const istream& operator>>(void* value) const noexcept { return overload("%p", value); }
+};
+
+
+const ostream cout;
+const istream cin;
+const char endl = '\n';
+
+
+template <class T, class Child>
+class iterator {
+    T* ptr;
+
+public:
+    inline iterator() = delete;
+    inline iterator(T* value) noexcept: ptr(value) {}
+    inline iterator(const iterator& itr) noexcept: ptr(itr.ptr) {}
+
+    inline Child operator+(const size_t offset) const noexcept { return Child(ptr + offset); }
+    inline Child operator-(const size_t offset) const noexcept { return Child(ptr - offset); }
+    inline size_t operator-(const iterator& other) const noexcept { return ptr - other.ptr; }
+    inline bool operator==(const iterator& itr) const noexcept { return ptr == itr.ptr; }
+    inline bool operator!=(const iterator& itr) const noexcept { return ptr != itr.ptr; }
+    inline T& operator*() const noexcept { return *ptr; }
+    inline operator const void*() const noexcept { return (const void*)ptr; }
+
+    Child& operator++() noexcept {
+        ++ptr;
+        return (Child)*this;
+    }
+
+    Child operator++(int) noexcept {
+        Child temp = (Child)*this;
+        ptr++;
+        return temp;
+    }
+
+    Child& operator--() noexcept {
+        --ptr;
+        return (Child)*this;
+    }
+
+    Child operator--(int) noexcept {
+        Child temp = (Child)*this;
+        ptr--;
+        return temp;
+    }
+};
+
+
+class string {
+    char* buffer;
+    size_t capacity;
+    size_t size;
+
+public:
+    class iterator: public Dream::iterator<char, string::iterator> {
+    public:
+        using Dream::iterator<char, string::iterator>::iterator;
+    };
+
+    string() noexcept: capacity(1), size(0) {
+        buffer = (char*)malloc(1 * sizeof(char));
+
+        if (buffer) {
+            buffer[0] = '\0';
+        }
+    }
+
+    string(const string &other) noexcept: capacity(other.capacity), size(other.size) {
+        buffer = (char*)malloc((other.capacity) * sizeof(char));
+
+        if (buffer && other.buffer) {
+            memcpy(buffer, other.buffer, other.capacity);
+        } else {
+            string();
+        }
+    }
+
+    string(string&& other) noexcept: buffer(other.buffer), capacity(other.capacity), size(other.size) {
+        other.buffer = nullptr;
+        other.capacity = 0;
+        other.size = 0;       
+    }
+    inline string(const char* other) noexcept: string(other, strlen(other)) {}
+    
+    string(const char* other, const size_t len) noexcept {
+        if (other) {
+            size = len;
+            capacity = size + 1;
+            buffer = (char*)malloc(capacity * sizeof(char));
+
+            if (buffer) {
+                memcpy(buffer, other, capacity);
+            } else {
+                string();
+            }
+        } else {
+            string();
+        }
+    }
+
+    string(const size_t num, const char other) noexcept {
+        size = num;
+        capacity = size + 1;
+        buffer = (char*)malloc((capacity) * sizeof(char));
+
+        if (buffer) {
+            for (int i = 0; i < num; i++) {
+                buffer[i] = other;
+            }
+            buffer[num] = 0;
+        } else {
+            string();
+        }
+    }
+
+    inline string(string& other, const size_t pos, const size_t len) noexcept: string(other.begin() + pos, other.begin() + pos + len) {}
+
+    string(const iterator first, const iterator last) noexcept {
+        size = last - first;
+        capacity = size + 1;
+        buffer = (char*)malloc((capacity) * sizeof(char));
+        memcpy(buffer, first, capacity);
+    }
+
+    inline iterator begin() noexcept { return iterator(buffer); }
+    inline iterator end() noexcept { return iterator(buffer + size); }
+
+    string& operator=(const string& str) noexcept {
+        buffer = str.buffer;
+        size = str.size;
+        capacity = str.capacity;
+        return *this;
+    }
+
+    friend const ostream& operator<<(const ostream& stream, const string& str) noexcept {
+        stream << str.buffer;
+        return stream;
+    }
+
+    friend const istream& operator>>(const istream& stream, string& str) noexcept {
+        char buffer[1024];
+
+        if (fgets(buffer, sizeof(buffer), stdin)) {
+            size_t len = strlen(buffer);
+
+            if (buffer[len - 1] == '\n') {
+                buffer[--len] = '\0';
+            }
+            str = string(buffer); 
+        }
+        return stream;
+    }
+
+    ~string() noexcept {
+        if (buffer) {
+            free(buffer);
+        }
+    }
+};
+}
