@@ -5,9 +5,6 @@ using namespace Dream;
 
 int main() {
     string temp("Hello");
-    string s;
-    cin >> s;
-    cout << s;
 
     for (auto it = temp.begin(); it != temp.end(); it++) {
         cout << *it;

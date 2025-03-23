@@ -6,7 +6,8 @@ constexpr int BUFFER_SIZE = 1024;
 namespace Dream {
     
     class ostream final {
-        const ostream& overload(const char* format, auto value) const noexcept {
+        template <class T>
+        const ostream& overload(const char* format, T value) const noexcept {
             printf(format, value);
             return *this;
         }
