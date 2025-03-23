@@ -1,15 +1,14 @@
-#include "C++/dream"
+#include "dream.h"
 #include <iostream>
 #include <string>
 using namespace Dream;
 
 int main() {
     string temp("Hello");
-    string s;
-    cin >> s;
-    cout << s;
+    string s(5, 'A');
+    cout << s << endl;
 
-    for (auto it = temp.begin(); it != temp.end(); it++) {
+    for (auto it = temp.rbegin(); it != temp.rend(); it++) {
         cout << *it;
     }
     // cout << s;
@@ -20,7 +19,7 @@ int main() {
     // std::cout << "The number entered is " << x << std::endl;
     // std::string temp("Hello");
 
-    // for (auto it = temp.crbegin(); it != temp.rend(); it++) {
+    // for (auto it = temp.rbegin(); it != temp.rend(); it++) {
     //     cout << *it;
     // }
     // std::string res = temp;
