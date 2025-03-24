@@ -51,11 +51,6 @@ namespace Dream {
     };
 
 
-    const ostream cout;
-    const istream cin;
-    const char endl = '\n';
-
-
     template <class T, class Child>
     class iterator {
         protected:
@@ -163,7 +158,7 @@ namespace Dream {
     class allocator {
         public:
             allocator() noexcept = default;
-            T* allocate(size_t size = 1) const noexcept {
+            T* allocate(size_t size) const noexcept {
                 T* res = (T*)malloc(size * sizeof(T));
 
                 if (res) {
@@ -182,6 +177,7 @@ namespace Dream {
     class string {
         char* buffer;
         size_t capacity, size;
+        allocator<char> alloc = allocator<char>();
 
         public:
             class iterator final: public Dream::iterator<char, iterator> {
@@ -202,7 +198,6 @@ namespace Dream {
 
             string(const char* other) noexcept: string(other, allocator<char>()) {}
             string(const string& other, const size_t pos, const size_t len) noexcept: string(other.begin() + pos, other.begin() + pos + len) {}
-            // string(const std::initializer_list<char> list) noexcept: string(iterator(list.begin()), iterator(list.end())) {}
             string(const size_t num, const char other) noexcept: string(num, other, allocator<char>()) {}
             string(const string &other) noexcept: string(other, allocator<char>()) {}
             string(const iterator& first, const iterator& last) noexcept: string(first, last, allocator<char>()) {}
@@ -212,6 +207,9 @@ namespace Dream {
 
                 if (buffer) {
                     buffer[0] = 0;
+                } else {
+		            buffer = nullptr;
+		            capacity = size = 0;
                 }
             }
 
@@ -244,6 +242,7 @@ namespace Dream {
                     buffer = alloc.allocate(capacity);
                     memcpy(buffer, other, size);
                     buffer[size] = 0;
+                    this->alloc = alloc;
                 } else {
                     string();
                 }
@@ -253,6 +252,7 @@ namespace Dream {
                 size = num;
                 capacity = size + 1;
                 buffer = alloc.allocate(capacity);
+                this->alloc = alloc;
 
                 if (buffer) {
                     for (int i = 0; i < num; i++) {
@@ -266,6 +266,7 @@ namespace Dream {
 
             string(const string &other, const allocator<char>& alloc) noexcept: capacity(other.capacity), size(other.size) {
                 buffer = alloc.allocate(other.capacity);
+                this->alloc = alloc;
 
                 if (buffer && other.buffer) {
                     memcpy(buffer, other.buffer, other.capacity);
@@ -275,6 +276,11 @@ namespace Dream {
             }
 
             string(string&& other, const allocator<char>& alloc) noexcept: buffer(other.buffer), capacity(other.capacity), size(other.size) {
+                free(buffer);
+                buffer = alloc.allocate(capacity);
+                this->alloc = alloc;
+                memcpy(buffer, other.buffer, size);
+                buffer[size] = 0;
                 other.buffer = nullptr;
                 other.capacity = other.size = 0;
             }
@@ -283,6 +289,7 @@ namespace Dream {
                 size = last - first;
                 capacity = size + 1;
                 buffer = alloc.allocate(capacity);
+                this->alloc = alloc;
                 memcpy(buffer, first, size);
                 buffer[size] = 0;
             }
@@ -345,7 +352,102 @@ namespace Dream {
             const_reverse_iterator crbegin() const noexcept { return const_reverse_iterator(buffer + size - 1); }
             const_reverse_iterator crend() const noexcept { return const_reverse_iterator(buffer - 1); }
 
-            void reserve(size_t new_capacity) {
+            string& append(const string& other);
+            string& append(const string& other, size_t sub_pos, size_t sub_len);
+            string& append(const char* other);
+            string& append(const char* other, size_t num);
+            string& append(size_t num, const char other);
+            string& append(const iterator& first, const iterator& last);
+            string& append(const string& other, size_t num);
+
+            string& assign(const string& other);
+            string& assign(const string& other, size_t sub_pos, size_t sub_len);
+            string& assign(const char* other);
+            string& assign(const char* other, size_t num);
+            string& assign(size_t num, const char other);
+            string& assign(const iterator& first, const iterator& last);
+            string& assign(const string& other, size_t num);
+
+            char& at(size_t num);
+            const char& at(size_t num) const; 
+
+            char& back();
+
+            const char* c_str();
+
+            size_t capacity();
+
+            void clear();
+
+            int compare(const string& other);
+            int compare(size_t pos, size_t len, const string& other);
+            int compare(size_t pos, size_t len, const string& str, size_t subpos, size_t sublen);
+            int compare(const char* s);
+            int compare(size_t pos, size_t len, const char* s);
+            int compare(size_t pos, size_t len, const char* s, size_t n);
+
+            size_t copy(const char* other, size_t len, size_t pos);
+
+            char* data();
+
+            bool empty();
+
+            bool ends_with(const string& suffix);
+            bool ends_with(const char* suffix);
+            bool ends_with(char ch);
+
+            iterator& erase(const_iterator& pos);
+            iterator& erase(const_iterator& first, const_iterator& last);
+            string& erase(size_t pos, size_t count);
+
+            size_t find(const string& other, size_t pos);
+            size_t find(const char* other, size_t pos);
+            size_t find(const char* other, size_t pos, size_t count);
+            size_t find(char ch, size_t pos);
+
+            size_t find_first_not_of(const string& other, size_t pos);
+            size_t find_first_not_of(const char* other, size_t pos);
+            size_t find_first_not_of(const char* other, size_t pos, size_t count);
+            size_t find_first_not_of(char ch, size_t pos);
+
+            size_t find_first_of(const string& other, size_t pos);
+            size_t find_first_of(const char* other, size_t pos);
+            size_t find_first_of(const char* other, size_t pos, size_t count);
+            size_t find_first_of(char ch, size_t pos);
+
+            size_t find_last_not_of(const string& other, size_t pos);
+            size_t find_last_not_of(const char* other, size_t pos);
+            size_t find_last_not_of(const char* other, size_t pos, size_t count);
+            size_t find_last_not_of(char ch, size_t pos);
+
+            size_t find_last_of(const string& other, size_t pos);
+            size_t find_last_of(const char* other, size_t pos);
+            size_t find_last_of(const char* other, size_t pos, size_t count);
+            size_t find_last_of(char ch, size_t pos);
+
+            char& front();
+
+            allocator<char> get_allocator();
+
+            string& insert(size_t pos, const string& other);
+            string& insert(size_t pos, const string& str, size_t sub_pos, size_t sub_len);
+            string& insert(size_t pos, const char* other);
+            string& insert(size_t pos, const char* other, size_t num);
+            string& insert(size_t pos, size_t num, char ch);
+            iterator insert(const_iterator first, char ch);
+            iterator insert(const_iterator first, size_t num, char ch);
+            iterator insert(const_iterator p, iterator first, iterator last);
+
+            size_t length();
+
+            void pop_back();
+
+            void push_back(const char ch);
+
+            string& replace(const_iterator start, const_iterator end, const char* other);
+            string& replace(const_iterator start, const_iterator end, const string& other);
+
+            void reserve(size_t new_capacity) noexcept {
                 if (new_capacity > capacity) {
                     char* new_buffer = (char*)malloc(new_capacity * sizeof(char));
 
@@ -358,7 +460,6 @@ namespace Dream {
                 }
             }
             
-
             ~string() noexcept {
                 if (buffer) {
                     free(buffer);
@@ -366,4 +467,9 @@ namespace Dream {
                 buffer = nullptr;
             }
     };
+
+    
+    const ostream cout;
+    const istream cin;
+    const char endl = '\n';
 }
