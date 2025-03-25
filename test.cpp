@@ -1,17 +1,9 @@
-#include "C++/dream.h"
+#include "C++/dream"
 #include <iostream>
 #include <string>
 int main() {
     std::string s;
-    s.replace();
-    s.reserve;
-    s.resize;
-    s.rfind;
-    s.shrink_to_fit;
-    s.size;
-    s.starts_with;
-    s.substr;
-    s.swap;
+    s.append;
     // string temp("Hello");
 
     // for (auto it = temp.rbegin(); it != temp.rend(); it++) {
