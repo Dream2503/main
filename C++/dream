@@ -286,7 +286,7 @@ namespace Dream {
                 memcpy(buffer_, other.buffer_, size_);
                 buffer_[size_] = 0;
             } else {
-                *this = nullptr();
+                *this = nullptr;
             }
             other = string();
         }
