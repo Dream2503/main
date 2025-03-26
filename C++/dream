@@ -63,6 +63,10 @@ namespace Dream {
             return nullptr;
         }
 
+        [[nodiscard]] constexpr T* reallocate(const T *ptr, const size_t size) const noexcept {
+            T * res = (T*)malloc(size * sizeof(T));
+        }
+
         constexpr void deallocate(T *ptr) const noexcept { free(ptr); }
         constexpr void construct(T *ptr, const T value) const noexcept { *ptr = value; }
         constexpr void destroy(T *ptr) const noexcept { ptr->~T(); }
@@ -358,6 +362,8 @@ namespace Dream {
             return stream;
         }
 
+        constexpr operator bool() const noexcept { return buffer_ != nullptr; }
+
         [[nodiscard]] constexpr iterator begin() const noexcept { return buffer_; }
         [[nodiscard]] constexpr iterator end() const noexcept { return buffer_ + size_; }
         [[nodiscard]] constexpr reverse_iterator rbegin() const noexcept { return buffer_ + size_ - 1; }
@@ -367,7 +373,13 @@ namespace Dream {
         [[nodiscard]] constexpr const_reverse_iterator crbegin() const noexcept { return buffer_ + size_ - 1; }
         [[nodiscard]] constexpr const_reverse_iterator crend() const noexcept { return buffer_ - 1; }
 
-        string &append(const string &other);
+        string &append(const string &other) {
+            if (other) {
+                size_ += other.size_;
+                capacity_ = size_ + 1;
+                
+            }
+        }
 
         string &append(const string &other, size_t sub_pos, size_t sub_len);
 
