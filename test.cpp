@@ -1,9 +1,16 @@
-#include "C++/dream"
 #include <iostream>
+#include <memory>
 #include <string>
+#include "C++/dream"
+
+using namespace Dream;
 int main() {
+    string s1("Hello world");
+    string s2("Dream");
+    cout << s1.append("Hi", 10) << endl;
     std::string s;
-    s.append;
+    std::string k;
+    s.append()
     // string temp("Hello");
 
     // for (auto it = temp.rbegin(); it != temp.rend(); it++) {

@@ -1,61 +1,108 @@
-// /*
-// Name:- Swapnaraj Mohanty
-// SIC :- 24BCSH93
-// Sec :- C2
+#include <stdbool.h>
+#include <stdio.h>
+#define n 10
 
-// Q. 
-// */
+int stacks[n], top1 = -1, top2 = n;
 
-// #include <stdio.h>
+void push1(int);
+void push2(int);
+int pop1();
+int pop2();
+bool is_full();
+bool is_empty1();
+bool is_empty2();
+void display();
 
-// void insertion_sort(int[], int);
+int main() {
+    push1(5);
+    push1(10);
+    push2(20);
+    push2(30);
+    display();
 
-// int main() {
-//     int array[20], n, i;
-//     printf("Enter the no. of elements of the array: ");
-//     scanf("%d", &n);
+    printf("Popped from Stack1: %d\n", pop1());
+    printf("Popped from Stack2: %d\n", pop2());
+    display();
 
-//     printf("Enter the array elements: ");
-//     for (i = 0; i < n; i++) {
-//         scanf("%d", &array[i]);
-//     }
-//     insertion_sort(array, n);
+    return 0;
+}
 
-//     printf("The array elements after sorting are: ");
-//     for (i = 0; i < n; i++) {
-//         printf("%d ", array[i]);
-//     }
-//     return 0;
-// }
+void push1(int element) {
+    if (is_full()) {
+        printf("Stack1 Overflow\n");
+    } else {
+        stacks[++top1] = element;
+    }
+}
 
-// void insertion_sort(int array[], int n) {
-//     int i, j, temp;
+void push2(int element) {
+    if (is_full()) {
+        printf("Stack2 Overflow\n");
+    } else {
+        stacks[--top2] = element;
+    }
+}
 
-//     for (i = 1; i < n; i++) {
-//         temp = array[i];
-//         j = i - 1;
+int pop1() {
+    if (is_empty1()) {
+        printf("Stack1 Underflow\n");
+        return -1;
+    }
+    return stacks[top1--];
+}
 
-//         while (j >= 0 && array[j] > temp) {
-//             array[j + 1] = array[j];
-//             j--;
-//         }
-//         array[j + 1] = temp;
-//     }
-// }
+int pop2() {
+    if (is_empty2()) {
+        printf("Stack2 Underflow\n");
+        return -1;
+    }
+    return stacks[top2++];
+}
 
-// #include <stdio.h>
-// #include <stdlib.h>
+bool is_full() {
+    if (top2 == top1 + 1) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
 
-// int* twoSum(int* nums, int numsSize, int target, int* returnSize) {
-//     int *res = (int*)malloc(2 * sizeof(int)), i, j;
+bool is_empty1() {
+    if (top1 == -1) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
 
-//     for (i = 0; i < numsSize; i++) {
-//         for (j = i + 1; j < numsSize; j++) {
-//             if (nums[i] + nums[j] == target) {
-//                 res[0] = i; res[1] = j;
-//                 return res;
-//             }
-//         }
-//     }
-//     return res;
-// }
+bool is_empty2() {
+    if (top2 == n) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+void display() {
+    int i;
+
+    if (is_empty1()) {
+        printf("Stack1 is empty\n");
+    } else {
+        printf("Stack1: ");
+
+        for (i = 0; i <= top1; i++) {
+            printf("%d ", stacks[i]);
+        }
+    }
+    if (is_empty2()) {
+        printf("Stack2 is empty\n");
+    } else {
+        printf("\nStack2: ");
+
+        for (i = n - 1; i >= top2; i--) {
+            printf("%d ", stacks[i]);
+        }
+        printf("\n");
+    }
+}
