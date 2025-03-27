@@ -25,6 +25,7 @@ namespace Dream {
         constexpr const ostream &operator<<(const char value) const noexcept { return overload("%c", value); }
         constexpr const ostream &operator<<(const char *value) const noexcept { return overload("%s", value); }
         constexpr const ostream &operator<<(const void *value) const noexcept { return overload("%p", value); }
+        constexpr const ostream &operator<<(const std::nullptr_t) const noexcept { return *this << "nullptr"; }
     };
 
 
@@ -87,6 +88,7 @@ namespace Dream {
         constexpr bool operator!=(const iterator &itr) const noexcept { return ptr_ != itr.ptr_; }
         constexpr T &operator*() const noexcept { return *ptr_; }
         constexpr operator const void *() const noexcept { return (const void *) ptr_; }
+        constexpr operator const T *() const noexcept { return (const T *) ptr_; }
 
         constexpr Child &operator=(const T value) noexcept {
             *ptr_ = value;
@@ -94,10 +96,10 @@ namespace Dream {
         }
 
         constexpr Child &operator=(const iterator &other) noexcept {
-            if (this == &other) {
+            if (this != &other) {
+                ptr_ = other.ptr;
                 return *((Child *) this);
             }
-            ptr_ = other.ptr;
             return *((Child *) this);
         }
 
@@ -203,70 +205,78 @@ namespace Dream {
             using reverse_iterator::reverse_iterator;
         };
 
-        constexpr string(const allocator<char> &alloc) noexcept : buffer_(nullptr), capacity_(0), size_(0), alloc_(alloc) {}
-        constexpr string(const char *str, const size_t count, const allocator<char> &alloc) noexcept : string(str, str + count, alloc) {}
-        constexpr string(const char *str, const allocator<char> &alloc = allocator<char>()) noexcept : string(str, str + strlen(str), alloc) {}
-        constexpr string(const string &other) noexcept : string(other, allocator<char>()) {}
-        constexpr string(string &&other) noexcept : buffer_(other.buffer_), capacity_(other.capacity_), size_(other.size_) { other = string(); }
-        constexpr string(const string &other, const allocator<char> &alloc) noexcept : string(other.begin(), other.end(), alloc) {}
-        constexpr string(const string &other, const size_t pos, const allocator<char> &alloc) noexcept :
-            string(other.begin() + pos, other.end(), alloc) {}
-        constexpr string(const string &other, const size_t pos, const size_t count) noexcept :
-            string(other.begin() + pos, other.begin() + pos + count) {}
-        constexpr string(const string &other, const size_t pos, const size_t count, const allocator<char> &alloc) noexcept :
-            string(other.begin() + pos, other.begin() + pos + count) {}
-        constexpr string() noexcept : string(allocator<char>()) {}
-        constexpr string(string &&other, const allocator<char> &alloc) noexcept :
-            buffer_(other.buffer_), capacity_(other.capacity_), size_(other.size_) {
-            other = string(alloc);
-        }
+        constexpr string(const allocator<char> &alloc = allocator<char>()) noexcept : buffer_(nullptr), capacity_(0), size_(0), alloc_(alloc) {}
+        constexpr string(const char *str, const size_t count, const allocator<char> &alloc = allocator<char>()) noexcept :
+            string(str, str + count, alloc) {}
+        constexpr string(const char *str, const allocator<char> &alloc = allocator<char>()) noexcept : string(str, strlen(str), alloc) {}
+        constexpr string(const string &other, const allocator<char> &alloc) noexcept : string(other, 0, 0, alloc) {}
+        constexpr string(const string &other, const size_t pos, const allocator<char> &alloc) noexcept : string(other, pos, 0, alloc) {}
+        constexpr string(string &&other, const allocator<char> &alloc) noexcept : string((string &&) other, 0, 0, alloc) {}
+        constexpr string(string &&other, const size_t pos, const allocator<char> &alloc) noexcept : string((string &&) other, pos, 0, alloc) {}
+        constexpr string(const string &other, const size_t pos = 0, const size_t count = 0, const allocator<char> &alloc = allocator<char>()) noexcept
+            : string(other.begin() + pos, other.begin() + (count ? pos + count : other.size_), alloc) {}
 
-        constexpr string(const size_t num, const char ch, const allocator<char> &alloc = allocator<char>()) noexcept {
-            size_ = num;
+
+        constexpr string(const size_t count, const char ch, const allocator<char> &alloc = allocator<char>()) noexcept {
+            size_ = count;
             capacity_ = size_ + 1;
             alloc_ = alloc;
 
-            if ((buffer_ = alloc_.allocate(capacity_ * sizeof(char)))) {
-                for (int i = 0; i < num; i++) {
-                    buffer_[i] = ch;
+            if (size_) {
+                if ((buffer_ = alloc_.allocate(capacity_ * sizeof(char)))) {
+                    for (size_t i = 0; i < count; i++) {
+                        buffer_[i] = ch;
+                    }
+                    buffer_[size_] = 0;
+                } else {
+                    *this = string();
                 }
-                buffer_[size_] = 0;
             } else {
                 *this = string();
             }
         }
 
         constexpr string(const iterator &first, const iterator &last, const allocator<char> &alloc = allocator<char>()) noexcept {
-            alloc_ = alloc;
             size_ = last - first;
             capacity_ = size_ + 1;
+            alloc_ = alloc;
 
-            if ((buffer_ = alloc_.allocate(capacity_ * sizeof(char)))) {
-                memcpy(buffer_, first, size_);
-                buffer_[size_] = 0;
+            if (size_) {
+                if ((buffer_ = alloc_.allocate(capacity_ * sizeof(char)))) {
+                    memcpy(buffer_, first, size_);
+                    buffer_[size_] = 0;
+                } else {
+                    *this = string();
+                }
             } else {
                 *this = string();
             }
         }
 
-        constexpr string(const string &&other, const size_t pos, const allocator<char> &alloc) noexcept {
-            size_ = other.end() - other.begin() - pos;
+        constexpr string(string &&other, const size_t pos = 0, const size_t count = 0, const allocator<char> &alloc = allocator<char>()) noexcept {
+            size_ = count ? count : other.size_ - pos;
             capacity_ = size_ + 1;
 
-            if ((buffer_ = alloc.allocate(capacity_ * sizeof(char)))) {
-                for (int i = 0; i < size_; i++) {
-                    buffer_[i] = other.buffer_[i + pos];
+            if (size_) {
+                if ((buffer_ = alloc.allocate(capacity_ * sizeof(char)))) {
+                    for (size_t i = pos; i <= pos + size_; i++) {
+                        buffer_[i - pos] = other.buffer_[i];
+                    }
+                    buffer_[size_] = 0;
+                    other = string();
+                } else {
+                    *this = string();
                 }
-                buffer_[size_] = 0;
+            } else {
+                *this = string();
             }
-            *this = string();
         }
 
         constexpr string &operator=(const char *str) noexcept { return *this = string(str); }
-        constexpr string &operator=(const char ch) noexcept { return *this = &ch; }
+        constexpr string &operator=(const char ch) noexcept { return *this = string(&ch, 1); }
 
         constexpr string &operator=(const string &other) noexcept {
-            if (this == &other) {
+            if (this != &other) {
                 return *this;
             }
             alloc_.deallocate(buffer_);
@@ -275,7 +285,7 @@ namespace Dream {
         }
 
         constexpr string &operator=(string &&other) noexcept {
-            if (this == &other) {
+            if (this != &other) {
                 capacity_ = other.capacity_;
                 size_ = other.size_;
                 alloc_.deallocate(buffer_);
@@ -286,8 +296,37 @@ namespace Dream {
             return *this;
         }
 
+        constexpr string &assign(const string &other) noexcept { return *this = other; }
+        constexpr string &assign(const string &&other) noexcept { return *this = (string &&) other; }
+        constexpr string &assign(const size_t num, const char ch) { return *this = string(num, ch); }
+        constexpr string &assign(const char *str, const size_t count) { return *this = string(str, count); }
+        constexpr string &assign(const char *str) { return *this = str; }
+        constexpr string &assign(const string &other, const size_t sub_pos, const size_t sub_len = 0) {
+            return *this = string(other, sub_pos, sub_len ? sub_len : other.size_ - sub_pos);
+        }
+        string &assign(const iterator &first, const iterator &last) { return *this = first; }
+
+        constexpr const allocator<char> &get_allocator() const noexcept { return alloc_; }
+
+        constexpr const char &at(const size_t pos) noexcept {
+            if (pos >= size_) {
+                return *end();
+            }
+            return buffer_[pos];
+        }
+
+        constexpr char &at(const size_t pos) const noexcept {
+            if (pos >= size_) {
+                return *end();
+            }
+            return buffer_[pos];
+        }
+
+
         constexpr friend const ostream &operator<<(const ostream &stream, const string &str) noexcept {
-            stream << str.buffer_;
+            if (str.buffer_) {
+                stream << str.buffer_;
+            }
             return stream;
         }
 
@@ -307,21 +346,21 @@ namespace Dream {
 
         constexpr operator bool() const noexcept { return buffer_ != nullptr; }
 
-        [[nodiscard]] constexpr iterator begin() const noexcept { return buffer_; }
-        [[nodiscard]] constexpr iterator end() const noexcept { return buffer_ + size_; }
-        [[nodiscard]] constexpr reverse_iterator rbegin() const noexcept { return buffer_ + size_ - 1; }
-        [[nodiscard]] constexpr reverse_iterator rend() const noexcept { return buffer_ - 1; }
-        [[nodiscard]] constexpr const_iterator cbegin() const noexcept { return buffer_; }
-        [[nodiscard]] constexpr const_iterator cend() const noexcept { return buffer_ + size_; }
-        [[nodiscard]] constexpr const_reverse_iterator crbegin() const noexcept { return buffer_ + size_ - 1; }
-        [[nodiscard]] constexpr const_reverse_iterator crend() const noexcept { return buffer_ - 1; }
+        constexpr iterator begin() const noexcept { return buffer_; }
+        constexpr iterator end() const noexcept { return buffer_ + size_; }
+        constexpr reverse_iterator rbegin() const noexcept { return buffer_ + size_ - 1; }
+        constexpr reverse_iterator rend() const noexcept { return buffer_ - 1; }
+        constexpr const_iterator cbegin() const noexcept { return buffer_; }
+        constexpr const_iterator cend() const noexcept { return buffer_ + size_; }
+        constexpr const_reverse_iterator crbegin() const noexcept { return buffer_ + size_ - 1; }
+        constexpr const_reverse_iterator crend() const noexcept { return buffer_ - 1; }
 
-        string &append(const size_t num, const char ch) noexcept { return this->append(string(num, ch)); }
-        string &append(const char *str, const size_t len) noexcept { return this->append(str, str + len); }
-        string &append(const char *str) noexcept { return this->append(str, str + strlen(str)); }
-        string &append(const string &other) noexcept { return this->append(other.begin(), other.end()); }
-        string &append(const string &other, const size_t sub_pos, const size_t sub_len = (other.end() - other.begin())) noexcept {
-            return this->append(other.begin() + sub_pos, other.begin() + sub_pos + sub_len);
+        string &append(const size_t num, const char ch) noexcept { return append(string(num, ch)); }
+        string &append(const char *str, const size_t len) noexcept { return append(str, str + len); }
+        string &append(const char *str) noexcept { return append(str, str + strlen(str)); }
+        string &append(const string &other) noexcept { return append(other.begin(), other.end()); }
+        string &append(const string &other, const size_t sub_pos, const size_t sub_len = 0) noexcept {
+            return this->append(other.begin() + sub_pos, other.begin() + sub_pos + (sub_len ? sub_len : other.size_ - sub_pos));
         }
 
         string &append(const iterator &first, const iterator &last) noexcept {
@@ -342,20 +381,6 @@ namespace Dream {
             }
             return *this;
         }
-
-        string &assign(const string &other) noexcept { return this->assign(other.begin(), other.end()); }
-        string &assign(const string &&other) noexcept { return }
-        string &assign(size_t num, const char other);
-        string &assign(const char *other, size_t num);
-        string &assign(const char *other);
-        string &assign(const string &other, const size_t sub_pos, const size_t sub_len = (other.end() - other.begin())) {
-            return *this = string(other, sub_pos, sub_len);
-        }
-        string &assign(const iterator &first, const iterator &last) { return *this = string(first, last); }
-
-        char &at(size_t num);
-
-        const char &at(size_t num) const;
 
         char &back();
 

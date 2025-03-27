@@ -5,12 +5,27 @@
 
 using namespace Dream;
 int main() {
-    string s1("Hello world");
-    string s2("Dream");
-    cout << s1.append("Hi", 10) << endl;
-    std::string s;
-    std::string k;
-    s.append()
+    const allocator<char> alloc;
+    string test("Hello World!");
+    string s1(alloc);
+    string s2;
+    string s3(5, 'A');
+    string s4(test.begin(), test.begin() + 20);
+    string s5("Hello World!", 7);
+    string s6("Hello World!");
+    string s7(test);
+    // string s8((string &&)test);
+    string s9(test, alloc);
+    // string s10((string &&)test, alloc);
+    string s11(test, 7);
+    // string s12((string &&)test, 7);
+    string s13(test, 7, 2);
+    string s14((string &&)test, 7, 2);
+
+
+    cout << s14  << " " << test << endl;
+
+
     // string temp("Hello");
 
     // for (auto it = temp.rbegin(); it != temp.rend(); it++) {
