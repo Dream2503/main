@@ -343,12 +343,12 @@ namespace Dream {
             return *this;
         }
 
-        string &assign(const string &other);
-        string &assign(const string &&other);
+        string &assign(const string &other) noexcept { return this->assign(other.begin(), other.end()); }
+        string &assign(const string &&other) noexcept { return }
         string &assign(size_t num, const char other);
         string &assign(const char *other, size_t num);
-        string &assign(const char *other) string &assign(const string &other, const size_t sub_pos,
-                                                         const size_t sub_len = (other.end() - other.begin())) {
+        string &assign(const char *other);
+        string &assign(const string &other, const size_t sub_pos, const size_t sub_len = (other.end() - other.begin())) {
             return *this = string(other, sub_pos, sub_len);
         }
         string &assign(const iterator &first, const iterator &last) { return *this = string(first, last); }
