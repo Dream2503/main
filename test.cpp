@@ -1,11 +1,12 @@
 #include <iostream>
-#include <memory>
+// #include <memory>
 #include <string>
-#include "C++/dream"
+#include "C++/standard_library_cpp/string.h"
 
 using namespace Dream;
 int main() {
-    const allocator<char> alloc;
+    // const allocator<char> alloc;
+    std::iterator;
     string test("Hello World!");
     string s1(alloc);
     string s2;
