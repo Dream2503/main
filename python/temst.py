@@ -51,19 +51,13 @@ def lookup_remove(main_data: list[list], lookup_data: list[list], primary_main: 
                   value: str) -> list[list]:
     primary_main_idx = main_data[0].index(primary_main)
     primary_lookup_idx = lookup_data[0].index(primary_lookup)
+    head_idx = lookup_data[0].index(head)
     delete_row_values = []
-    int cnt = 0
 
-    for i in range(2, len(main_data)):
-        if main_data[i - 1] == main_data[i]:
-            print(main_data[i])
-            cnt += 1
-    print(cnt)
-    exit(0)
 
-    for i in range(1, len(lookup_data)):
-        for j in range(1, len(main_data)):
-            if lookup_data[i][primary_lookup_idx] == main_data[j][primary_main_idx]:
+    for i in range(1, len(main_data)):
+        for j in range(1, len(lookup_data)):
+            if lookup_data[j][primary_lookup_idx] == main_data[i][primary_main_idx] and lookup_data[j][head_idx] == value:
                 break
 
         else:
@@ -72,10 +66,9 @@ def lookup_remove(main_data: list[list], lookup_data: list[list], primary_main: 
     delete_row_values.reverse()
 
     for idx in delete_row_values:
-        del lookup_data[idx]
+        del main_data[idx]
 
     print(len(main_data))
-    print(len(lookup_data))
     exit(0)
 
 
