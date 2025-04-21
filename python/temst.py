@@ -5,6 +5,7 @@ start = perf_counter()
 
 INPUT: str = "main.csv"
 OUTPUT: str = "output.csv"
+BLANK: str = "NA"
 FILTERS: tuple[tuple[str]] = (
     ("OS", "iOS/iPadOS"),
     ("Ownership", "Corporate"),
@@ -30,7 +31,7 @@ def replace_blank(data: list[list]) -> None:
     for i in range(len(data[0])):
         for j in range(1, len(data)):
             if data[j][i] == "":
-                data[j][i] = "NA"
+                data[j][i] = BLANK
 
 
 def sort_header(data: list[list]) -> list[list]:
