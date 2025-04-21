@@ -4,7 +4,7 @@ from time import perf_counter
 start = perf_counter()
 
 INPUT: str = "main.csv"
-OUTPUT: str = " output.csv"
+OUTPUT: str = "output.csv"
 FILTERS: tuple[tuple[str]] = (
     ("OS", "iOS/iPadOS"),
     ("Ownership", "Corporate"),
@@ -19,6 +19,13 @@ def filter(data: list[list], check_head: str, check_value: str) -> None:
     for i in delete_idx:
         del data[i]
 
+def replace_blank(data: list[list]) -> None:
+    for i in range(len(data[0])):
+        for j in range(1, len(data)):
+            if data[j][i] == "":
+                data[j][i] = "NA"
+
+
 def main() -> None:
     with open(INPUT, "r", encoding="utf-8") as f:
         data = list(reader(f))
@@ -26,6 +33,8 @@ def main() -> None:
 
         for operation in FILTERS:
             filter(data, *operation)
+
+        replace_blank(data)
 
         with open(OUTPUT, "w", encoding="utf-8") as output:
             output_writer = writer(output, lineterminator="\n")
