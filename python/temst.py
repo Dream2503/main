@@ -5,27 +5,29 @@ start = perf_counter()
 
 INPUT: str = "main.csv"
 OUTPUT: str = " output.csv"
-# CHECK_HEAD: str = "OS"
-# CHECK_VALUE: str = "iOS/iPadOS"
 
 def filter(data: list[list], check_head: str, check_value: str) -> None:
-    head_idx = data.index(check_head)
+    head_idx = data[0].index(check_head)
     delete_idx = [i for i in range(len(data)) if data[i][head_idx] != check_value]
     delete_idx.reverse()
 
     for i in delete_idx:
         del data[i]
 
-with open(INPUT, "r", encoding="utf-8") as f:
-    data = list(reader(f))
-    header = data[0]
-    filter(data, "OS", "iOS/iPadOS")
+def main() -> None:
+    with open(INPUT, "r", encoding="utf-8") as f:
+        data = list(reader(f))
+        header = data[0]
+        filter(data, "OS", "iOS/iPadOS")
+        filter(data, "Ownership", "Corporate")
 
-    with open(OUTPUT, "w", encoding="utf-8") as output:
-        output_writer = writer(output, lineterminator="\n")
-        output_writer.writerow(header)
-        output_writer.writerows(data)
+        with open(OUTPUT, "w", encoding="utf-8") as output:
+            output_writer = writer(output, lineterminator="\n")
+            output_writer.writerow(header)
+            output_writer.writerows(data)
 
+if __name__ == "__main__":
+    main()
 
 
 
