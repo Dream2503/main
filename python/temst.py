@@ -16,6 +16,7 @@ HEADER_ORDER = (
     "Free storage", "Ownership", "Device state", "OS", "ICCID", "EID", "Phone number"
 )
 
+
 def filter(data: list[list], check_head: str, check_value: str) -> None:
     head_idx = data[0].index(check_head)
     delete_idx = [i for i in range(1, len(data)) if data[i][head_idx] != check_value]
@@ -30,6 +31,7 @@ def replace_blank(data: list[list]) -> None:
         for j in range(1, len(data)):
             if data[j][i] == "":
                 data[j][i] = "NA"
+
 
 def sort_header(data: list[list]) -> list[list]:
     res = [[] for _ in range(len(data))]
