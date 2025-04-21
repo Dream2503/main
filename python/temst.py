@@ -52,6 +52,14 @@ def lookup_remove(main_data: list[list], lookup_data: list[list], primary_main: 
     primary_main_idx = main_data[0].index(primary_main)
     primary_lookup_idx = lookup_data[0].index(primary_lookup)
     delete_row_values = []
+    int cnt = 0
+
+    for i in range(2, len(main_data)):
+        if main_data[i - 1] == main_data[i]:
+            print(main_data[i])
+            cnt += 1
+    print(cnt)
+    exit(0)
 
     for i in range(1, len(lookup_data)):
         for j in range(1, len(main_data)):
