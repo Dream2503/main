@@ -10,6 +10,11 @@ FILTERS: tuple[tuple[str]] = (
     ("Ownership", "Corporate"),
     ("Device state", "Managed")
 )
+HEADER_ORDER = (
+    "Primary user email address", "Primary user display name", "Manufacturer", "Model", "Enrollment Data",
+    "Last check-in", "OS version", "Serial number", "IMEI", "MEID", "Subscriber carrier", "Total storage",
+    "Free storage", "Ownership", "Device state", "OS", "ICCID", "EID", "Phone number"
+)
 
 def filter(data: list[list], check_head: str, check_value: str) -> None:
     head_idx = data[0].index(check_head)
@@ -19,11 +24,23 @@ def filter(data: list[list], check_head: str, check_value: str) -> None:
     for i in delete_idx:
         del data[i]
 
+
 def replace_blank(data: list[list]) -> None:
     for i in range(len(data[0])):
         for j in range(1, len(data)):
             if data[j][i] == "":
                 data[j][i] = "NA"
+
+def sort_header(data: list[list]) -> list[list]:
+    res = [[] for _ in range(len(data))]
+
+    for value in HEADER_ORDER:
+        head_idx = data[0].index(value)
+
+        for j in range(len(data)):
+            res[j].append(data[j][head_idx])
+
+    return res
 
 
 def main() -> None:
@@ -35,15 +52,15 @@ def main() -> None:
             filter(data, *operation)
 
         replace_blank(data)
+        data = sort_header(data)
 
         with open(OUTPUT, "w", encoding="utf-8") as output:
             output_writer = writer(output, lineterminator="\n")
             output_writer.writerows(data)
 
+
 if __name__ == "__main__":
     main()
-
-
 
 # MAIN_FILE: str = "main.csv"
 # LOOKUP_FILE: str = "lookup.csv"
