@@ -22,9 +22,9 @@ with open(INPUT, "r", encoding="utf-8") as f:
     filter(data, "OS", "iOS/iPadOS")
 
     with open(OUTPUT, "w", encoding="utf-8") as output:
-                output_writer = writer(output, lineterminator="\n")
-                output_writer.writerow(header)
-                output_writer.writerows(data)
+        output_writer = writer(output, lineterminator="\n")
+        output_writer.writerow(header)
+        output_writer.writerows(data)
 
 
 
