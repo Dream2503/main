@@ -3,8 +3,9 @@ from time import perf_counter
 
 start = perf_counter()
 
-INPUT: str = "main.csv"
-OUTPUT: str = "output.csv"
+MAIN_FILE: str = "main.csv"
+LOOKUP_FILE: str = "lookup.csv"
+OUTPUT_FILE: str = "output.csv"
 BLANK: str = "NA"
 FILTERS: tuple[tuple[str]] = (
     ("OS", "iOS/iPadOS"),
@@ -12,7 +13,7 @@ FILTERS: tuple[tuple[str]] = (
     ("Device state", "Managed")
 )
 HEADER_ORDER = (
-    "Primary user email address", "Primary user display name", "Manufacturer", "Model", "Enrollment Data",
+    "Primary user email address", "Primary user display name", "Manufacturer", "Model", "Enrollment date",
     "Last check-in", "OS version", "Serial number", "IMEI", "MEID", "Subscriber carrier", "Total storage",
     "Free storage", "Ownership", "Device state", "OS", "ICCID", "EID", "Phone number"
 )
@@ -46,20 +47,47 @@ def sort_header(data: list[list]) -> list[list]:
     return res
 
 
+def lookup_remove(main_data: list[list], lookup_data: list[list], primary_main: str, primary_lookup, head: str,
+                  value: str) -> list[list]:
+    primary_main_idx = main_data[0].index(primary_main)
+    primary_lookup_idx = lookup_data[0].index(primary_lookup)
+    delete_row_values = []
+
+    for i in range(1, len(lookup_data)):
+        for j in range(1, len(main_data)):
+            if lookup_data[i][primary_lookup_idx] == main_data[j][primary_main_idx]:
+                break
+
+        else:
+            delete_row_values.append(i)
+
+    delete_row_values.reverse()
+
+    for idx in delete_row_values:
+        del lookup_data[idx]
+
+    print(len(main_data))
+    print(len(lookup_data))
+    exit(0)
+
+
 def main() -> None:
-    with open(INPUT, "r", encoding="utf-8") as f:
-        data = list(reader(f))
-        header = data[0]
+    with open(MAIN_FILE, "r", encoding="utf-8") as f1:
+        with open(LOOKUP_FILE, "r", encoding="utf-8") as f2:
+            main_data = list(reader(f1, lineterminator="\n"))
+            lookup_data = list(reader(f2, lineterminator="\n"))
 
-        for operation in FILTERS:
-            filter(data, *operation)
+            for operation in FILTERS:
+                filter(main_data, *operation)
 
-        replace_blank(data)
-        data = sort_header(data)
+            replace_blank(main_data)
+            main_data = sort_header(main_data)
+            main_data = lookup_remove(main_data, lookup_data, "Primary user email address", "mail", "accountEnabled",
+                                      "True")
 
-        with open(OUTPUT, "w", encoding="utf-8") as output:
-            output_writer = writer(output, lineterminator="\n")
-            output_writer.writerows(data)
+            with open(OUTPUT_FILE, "w", encoding="utf-8") as output:
+                output_writer = writer(output, lineterminator="\n")
+                output_writer.writerows(main_data)
 
 
 if __name__ == "__main__":
