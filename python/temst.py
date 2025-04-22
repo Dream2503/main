@@ -5,7 +5,7 @@ MAIN_FILE: str = "main.csv"
 LOOKUP_FILE: str = "lookup.csv"
 OUTPUT_FILE: str = "output.csv"
 BLANK: str = "NA"
-FILTERS: tuple[tuple[str]] = (
+FILTERS: tuple[tuple[str, str]] = (
     ("OS", "iOS/iPadOS"),
     ("Ownership", "Corporate"),
     ("Device state", "Managed"),
@@ -31,10 +31,10 @@ def filter(data: list[list[str]], check_head: str, check_value: str) -> None:
 
 
 def replace_blank(data: list[list[str]]) -> None:
-    for i in range(len(data[0])):
-        for j in range(1, len(data)):
-            if data[j][i] == "":
-                data[j][i] = BLANK
+    for i in range(1, len(data)):
+        for j in range(len(data[0])):
+            if data[i][j] == "":
+                data[i][j] = BLANK
 
 
 def sort_header(data: list[list[str]]) -> list[list][str]:
@@ -54,23 +54,29 @@ def lookup_remove(main_data: list[list[str]], lookup_data: list[list[str]], prim
     primary_main_idx: int = main_data[0].index(primary_main)
     primary_lookup_idx: int = lookup_data[0].index(primary_lookup)
     head_idx: int = lookup_data[0].index(head)
-    delete_row_values: list[int] = []
+    main_data.sort(key=lambda x: x[primary_main_idx])
+    lookup_data.sort(key=lambda x: x[primary_lookup_idx])
+    main_size: int = len(main_data)
+    lookup_size: int = len(lookup_data)
+    i = j = 1
 
-    for i in range(1, len(main_data)):
-        for j in range(1, len(lookup_data)):
-            if lookup_data[j][primary_lookup_idx] == main_data[i][primary_main_idx] and lookup_data[j][
-                head_idx] == value:
-                break
+    while i < main_size and j < lookup_size:
+        if main_data[i][primary_main_idx] < lookup_data[j][primary_lookup_idx]:
+            print("Data not found")
+            i += 1
+
+        elif main_data[i][primary_main_idx] > lookup_data[j][primary_lookup_idx]:
+            j += 1
+
+        elif lookup_data[j][head_idx] != value:
+            del main_data[i]
+            j += 1
+            main_size -= 1
 
         else:
-            delete_row_values.append(i)
+            i += 1
+            j += 1
 
-    delete_row_values.reverse()
-
-    for idx in delete_row_values:
-        del main_data[idx]
-
-    print(len(main_data))
     return main_data
 
 
