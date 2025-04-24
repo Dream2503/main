@@ -37,7 +37,7 @@ def replace_blank(data: list[list[str]]) -> None:
                 data[i][j] = BLANK
 
 
-def sort_header(data: list[list[str]]) -> list[list][str]:
+def sort_header(data: list[list[str]]) -> list[list[str]]:
     res: list[list[str]] = [[] for _ in range(len(data))]
 
     for value in HEADER_ORDER:
@@ -54,27 +54,18 @@ def lookup_remove(main_data: list[list[str]], lookup_data: list[list[str]], prim
     primary_main_idx: int = main_data[0].index(primary_main)
     primary_lookup_idx: int = lookup_data[0].index(primary_lookup)
     head_idx: int = lookup_data[0].index(head)
-    main_data.sort(key=lambda x: x[primary_main_idx])
-    lookup_data.sort(key=lambda x: x[primary_lookup_idx])
-    main_size: int = len(main_data)
-    lookup_size: int = len(lookup_data)
-    i = j = 1
+    delete_idx: list[int] = []
+    dict_lookup: dict[str, str] = {lookup_data[i][primary_lookup_idx]: lookup_data[i][head_idx] for i in
+                                   range(len(lookup_data))}
 
-    while i < main_size and j < lookup_size:
-        if main_data[i][primary_main_idx] == lookup_data[j][primary_lookup_idx]:
-            if lookup_data[j][head_idx] != value:
-                del main_data[i]
-                main_size -= 1
+    for i in range(len(main_data)):
+        if dict_lookup.get(main_data[i][primary_main_idx], None) != value:
+            delete_idx.append(i)
 
-            else:
-                i += 1
-                j += 1
+    delete_idx.reverse()
 
-        else:
-            j += 1
-
-    if i < main_size:
-        print(main_data[i][primary_main_idx])
+    for i in delete_idx:
+        del main_data[i]
 
     return main_data
 
