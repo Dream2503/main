@@ -1,8 +1,8 @@
 from csv import reader, writer
 from time import perf_counter
 
-MAIN_FILE: str = "main.csv"
-LOOKUP_FILE: str = "lookup.csv"
+MAIN_FILE: str = "DevicesWithInventory.csv"
+LOOKUP_FILE: str = "exportUser.csv"
 OUTPUT_FILE: str = "output.csv"
 BLANK: str = "NA"
 FILTERS: tuple[tuple[str, str]] = (
@@ -56,11 +56,15 @@ def lookup_remove(main_data: list[list[str]], lookup_data: list[list[str]], prim
     head_idx: int = lookup_data[0].index(head)
     delete_idx: list[int] = []
     dict_lookup: dict[str, str] = {lookup_data[i][primary_lookup_idx]: lookup_data[i][head_idx] for i in
-                                   range(len(lookup_data))}
+                                   range(1, len(lookup_data))}
 
-    for i in range(len(main_data)):
-        if dict_lookup.get(main_data[i][primary_main_idx], None) != value:
-            delete_idx.append(i)
+    for i in range(1, len(main_data)):
+        try:
+            if dict_lookup.get(main_data[i][primary_main_idx]) != value:
+                delete_idx.append(i)
+
+        except KeyError:
+            print(main_data[i][primary_main_idx])
 
     delete_idx.reverse()
 
