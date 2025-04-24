@@ -2,7 +2,7 @@ from csv import reader, writer
 from time import perf_counter
 
 MAIN_FILE: str = "DevicesWithInventory.csv"
-LOOKUP_FILE: str = "exportUser.csv"
+LOOKUP_FILE: str = "exportUsers.csv"
 OUTPUT_FILE: str = "output.csv"
 BLANK: str = "NA"
 FILTERS: tuple[tuple[str, str]] = (
@@ -18,7 +18,7 @@ HEADER_ORDER: tuple[str, ...] = (
 PRIMARY_MAIN: str = "Primary user email address"
 PRIMARY_LOOKUP: str = "mail"
 LOOKUP_HEAD: str = "accountEnabled"
-LOOKUP_VALUE: str = "True"
+LOOKUP_VALUE: tuple[str, ...] = ("True", BLANK)
 
 
 def filter(data: list[list[str]], check_head: str, check_value: str) -> None:
@@ -50,7 +50,7 @@ def sort_header(data: list[list[str]]) -> list[list[str]]:
 
 
 def lookup_remove(main_data: list[list[str]], lookup_data: list[list[str]], primary_main: str, primary_lookup,
-                  head: str, value: str) -> list[list[str]]:
+                  head: str, value: tuple[str, ...]) -> list[list[str]]:
     primary_main_idx: int = main_data[0].index(primary_main)
     primary_lookup_idx: int = lookup_data[0].index(primary_lookup)
     head_idx: int = lookup_data[0].index(head)
@@ -60,7 +60,7 @@ def lookup_remove(main_data: list[list[str]], lookup_data: list[list[str]], prim
 
     for i in range(1, len(main_data)):
         try:
-            if dict_lookup.get(main_data[i][primary_main_idx]) != value:
+            if dict_lookup.get(main_data[i][primary_main_idx]) not in value:
                 delete_idx.append(i)
 
         except KeyError:
