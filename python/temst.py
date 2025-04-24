@@ -61,21 +61,20 @@ def lookup_remove(main_data: list[list[str]], lookup_data: list[list[str]], prim
     i = j = 1
 
     while i < main_size and j < lookup_size:
-        if main_data[i][primary_main_idx] < lookup_data[j][primary_lookup_idx]:
-            print("Data not found")
-            i += 1
+        if main_data[i][primary_main_idx] == lookup_data[j][primary_lookup_idx]:
+            if lookup_data[j][head_idx] != value:
+                del main_data[i]
+                main_size -= 1
 
-        elif main_data[i][primary_main_idx] > lookup_data[j][primary_lookup_idx]:
-            j += 1
-
-        elif lookup_data[j][head_idx] != value:
-            del main_data[i]
-            j += 1
-            main_size -= 1
+            else:
+                i += 1
+                j += 1
 
         else:
-            i += 1
             j += 1
+
+    if i < main_size:
+        print(main_data[i][primary_main_idx])
 
     return main_data
 
