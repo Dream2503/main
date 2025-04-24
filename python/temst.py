@@ -55,15 +55,13 @@ def lookup_remove(main_data: list[list[str]], lookup_data: list[list[str]], prim
     primary_lookup_idx: int = lookup_data[0].index(primary_lookup)
     head_idx: int = lookup_data[0].index(head)
     delete_idx: list[int] = []
-    dict_lookup: dict[str, str] = {lookup_data[i][primary_lookup_idx]: lookup_data[i][head_idx] for i in
-                                   range(1, len(lookup_data))}
+    lookup_set: set[str] = {lookup_data[i][primary_lookup_idx] for i in range(1, len(lookup_data)) if lookup_data[i][head_idx] in value}
 
     for i in range(1, len(main_data)):
-        try:
-            if dict_lookup.get(main_data[i][primary_main_idx]) not in value:
-                delete_idx.append(i)
+        if main_data[i][primary_main_idx] not in lookup_set:
+            delete_idx.append(i)
 
-        except KeyError:
+        else:
             print(main_data[i][primary_main_idx])
 
     delete_idx.reverse()
