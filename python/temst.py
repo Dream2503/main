@@ -27,7 +27,7 @@ REPLACEMENT: tuple[tuple[str, str, str]] = (
 PRIMARY_MAIN: str = "Primary user email address"
 PRIMARY_LOOKUP: str = "mail"
 LOOKUP_HEAD: str = "accountEnabled"
-LOOKUP_VALUE: tuple[str, ...] = ("True", )
+LOOKUP_VALUE: tuple[str, ...] = ("True",)
 
 
 def filter(data: list[list[str]]) -> None:
