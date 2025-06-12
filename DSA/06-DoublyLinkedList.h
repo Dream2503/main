@@ -1,64 +1,120 @@
+#pragma once
 #include <iostream>
-using namespace std;
 
 template <class type>
 class DoublyLinkedList {
     struct Node {
-        type data = 0;
-        Node *prev = nullptr, *next = nullptr;
+        type data;
+        Node *prev, *next;
+        Node(const type data = type(), Node* prev = nullptr, Node* next = nullptr) :
+            data(data), prev(prev), next(next) {}
     };
-    Node *head = nullptr;
-    bool operators(DoublyLinkedList<type>, string);
+    Node* head = nullptr;
+    constexpr bool operators(const DoublyLinkedList& list, const std::string& opr) const noexcept {
+        Node *current1 = head, *current2 = list.head;
 
-    public:
-        DoublyLinkedList() {}
-        DoublyLinkedList(initializer_list<type>);
-        DoublyLinkedList(DoublyLinkedList<type>&);
-        DoublyLinkedList(type*, int);
-        void append(type);
-        double average() {return this->sum() / (double)this->length;}
-        void clear();
-        bool contains(type);
-        DoublyLinkedList<type> copy() {return *this;}
-        int count(type);
-        void display() {operator<<(cout, *this);}
-        void extend(DoublyLinkedList<type>);
-        int index(type);
-        void insert(int, type);
-        bool isSorted();
-        int length();
-        void leftRotate();
-        void leftShift();
-        type max();
-        type min();
-        DoublyLinkedList<type> operator+(DoublyLinkedList<type>);
-        void operator+=(DoublyLinkedList<type> list) {this->extend(list);}
-        DoublyLinkedList<type> operator*(int);
-        void operator*=(int num) {*this = *this * num;}
-        bool operator>(DoublyLinkedList<type> list) {return this->operators(list, ">");}
-        bool operator>=(DoublyLinkedList<type> list) {return this->operators(list, ">=");}
-        bool operator<(DoublyLinkedList<type> list) {return this->operators(list, "<");}
-        bool operator<=(DoublyLinkedList<type> list) {return this->operators(list, "<=");}
-        bool operator==(DoublyLinkedList<type> list) {return this->operators(list, "==");}
-        bool operator!=(DoublyLinkedList<type> list) {return not (*this == list);}
-        template <class T>
-        friend ostream &operator<<(ostream&, DoublyLinkedList<T>);
-        type &operator[](int);
-        type pop(int);
-        void rightRotate();
-        void rightShift();
-        void remove(type);
-        void reverse();
-        void sort();
-        type sum();
+        while (current1 && current2) {
+            if ((opr == ">") && (current1->data <= current2->data) ||
+                (opr == ">=") && (current1->data < current2->data) ||
+                (opr == "<") && (current1->data >= current2->data) ||
+                (opr == "<=") && (current1->data > current2->data) ||
+                (opr == "==") && (current1->data != current2->data)) {
+                return false;
+                }
+            current1 = current1->next;
+            current2 = current2->next;
+        }
+        if ((current1 || current2) && (opr == "==")) {
+            return false;
+        }
+        return true;
+    }
 
+public:
+    DoublyLinkedList() {}
+
+    DoublyLinkedList(const std::initializer_list<type>& list) {
+        Node* current = head = new Node(*list.begin());
+        auto it = list.begin() + 1;
+
+        while (it != list.end()) {
+            current->next = new Node(*it, current);
+            current = current->next;
+            ++it;
+        }
+    }
+
+    DoublyLinkedList(const DoublyLinkedList& list) {
+        if (list.head) {
+            Node *current1 = head = new Node(list.head->data), *current2 = list.head->next;
+
+            while (current2) {
+                current1->next = new Node(current2->data, current1);
+                current1 = current1->next;
+                current2 = current2->next;
+            }
+        }
+    }
+
+    DoublyLinkedList(const type* array, const int size) {
+        if (size) {
+            Node* current = head = new Node(array[0]);
+
+            for (int i = 1; i < size; i++) {
+                current->next = new Node(array[i], current);
+                current = current->next;
+            }
+        }
+    }
+
+    DoublyLinkedList(DoublyLinkedList&& other) noexcept {
+        head = other.head;
+        other.head = nullptr;
+    }
+
+    void append(type);
+    double average() { return this->sum() / (double)this->length; }
+    void clear();
+    bool contains(type);
+    DoublyLinkedList<type> copy() { return *this; }
+    int count(type);
+    void display() { operator<<(cout, *this); }
+    void extend(DoublyLinkedList<type>);
+    int index(type);
+    void insert(int, type);
+    bool isSorted();
+    int length();
+    void leftRotate();
+    void leftShift();
+    type max();
+    type min();
+    DoublyLinkedList<type> operator+(DoublyLinkedList<type>);
+    void operator+=(DoublyLinkedList<type> list) { this->extend(list); }
+    DoublyLinkedList<type> operator*(int);
+    void operator*=(int num) { *this = *this * num; }
+    bool operator>(DoublyLinkedList<type> list) { return this->operators(list, ">"); }
+    bool operator>=(DoublyLinkedList<type> list) { return this->operators(list, ">="); }
+    bool operator<(DoublyLinkedList<type> list) { return this->operators(list, "<"); }
+    bool operator<=(DoublyLinkedList<type> list) { return this->operators(list, "<="); }
+    bool operator==(DoublyLinkedList<type> list) { return this->operators(list, "=="); }
+    bool operator!=(DoublyLinkedList<type> list) { return not(*this == list); }
+    template <class T>
+    friend ostream& operator<<(ostream&, DoublyLinkedList<T>);
+    type& operator[](int);
+    type pop(int);
+    void rightRotate();
+    void rightShift();
+    void remove(type);
+    void reverse();
+    void sort();
+    type sum();
 };
 template <class type>
 DoublyLinkedList<type>::DoublyLinkedList(initializer_list<type> list) {
     bool onHead = true;
-    Node *current;
-    
-    for (const type element: list) {
+    Node* current;
+
+    for (const type element : list) {
         if (onHead) {
             this->head = new Node;
             this->head->data = element;
@@ -73,7 +129,7 @@ DoublyLinkedList<type>::DoublyLinkedList(initializer_list<type> list) {
     }
 }
 template <class type>
-DoublyLinkedList<type>::DoublyLinkedList(DoublyLinkedList<type> &list) {
+DoublyLinkedList<type>::DoublyLinkedList(DoublyLinkedList<type>& list) {
     if (list.head) {
         this->head = new Node;
         this->head->data = list.head->data;
@@ -89,11 +145,11 @@ DoublyLinkedList<type>::DoublyLinkedList(DoublyLinkedList<type> &list) {
     }
 }
 template <class type>
-DoublyLinkedList<type>::DoublyLinkedList(type *array, int size) {
+DoublyLinkedList<type>::DoublyLinkedList(type* array, int size) {
     if (size > 0) {
         this->head = new Node;
         this->head->data = array[0];
-        Node *current = this->head;
+        Node* current = this->head;
 
         for (int i = 1; i < size; i++) {
             current->next = new Node;
@@ -108,15 +164,21 @@ bool DoublyLinkedList<type>::operators(DoublyLinkedList<type> list, string opr) 
     Node *current1 = this->head, *current2 = list.head;
 
     while (current1 and current2) {
-        if ((opr == ">") and (current1->data <= current2->data)) return false;
-        else if ((opr == ">=") and (current1->data < current2->data)) return false;
-        else if ((opr == "<") and (current1->data >= current2->data)) return false;
-        else if ((opr == "<=") and (current1->data > current2->data)) return false;
-        else if ((opr == "==") and (current1->data != current2->data)) return false;
+        if ((opr == ">") and (current1->data <= current2->data))
+            return false;
+        else if ((opr == ">=") and (current1->data < current2->data))
+            return false;
+        else if ((opr == "<") and (current1->data >= current2->data))
+            return false;
+        else if ((opr == "<=") and (current1->data > current2->data))
+            return false;
+        else if ((opr == "==") and (current1->data != current2->data))
+            return false;
         current1 = current1->next;
         current2 = current2->next;
     }
-    if ((current1 or current2) and (opr == "==")) return false;
+    if ((current1 or current2) and (opr == "=="))
+        return false;
     return true;
 }
 
@@ -127,17 +189,19 @@ void DoublyLinkedList<type>::append(type value) {
         this->head->data = value;
         return;
     }
-    Node *current = this->head;
-    while (current->next) current = current->next;
+    Node* current = this->head;
+    while (current->next)
+        current = current->next;
     current->next = new Node;
     current->next->prev = current;
     current->next->data = value;
 }
 template <class type>
 void DoublyLinkedList<type>::clear() {
-    if (not this->head) return;
-    Node *current = this->head;
-    
+    if (not this->head)
+        return;
+    Node* current = this->head;
+
     while (current->next) {
         delete current->prev;
         current = current->next;
@@ -147,21 +211,23 @@ void DoublyLinkedList<type>::clear() {
 }
 template <class type>
 bool DoublyLinkedList<type>::contains(type value) {
-    Node *current = this->head;
+    Node* current = this->head;
 
     while (current) {
-        if (current->data == value) return true;
+        if (current->data == value)
+            return true;
         current = current->next;
     }
     return false;
 }
 template <class type>
 int DoublyLinkedList<type>::count(type value) {
-    Node *current = this->head;
+    Node* current = this->head;
     int cnt = 0;
-    
+
     while (current) {
-        if (current->data == value) cnt++;
+        if (current->data == value)
+            cnt++;
         current = current->next;
     }
     return cnt;
@@ -169,21 +235,24 @@ int DoublyLinkedList<type>::count(type value) {
 template <class type>
 void DoublyLinkedList<type>::extend(DoublyLinkedList<type> list) {
     DoublyLinkedList<type> result(list);
-    if (not this->head) this->head = result.head;
+    if (not this->head)
+        this->head = result.head;
     else {
-        Node *current = this->head;
-        while (current->next) current = current->next;
+        Node* current = this->head;
+        while (current->next)
+            current = current->next;
         current->next = result.head;
         result.head->prev = current;
     }
 }
 template <class type>
 int DoublyLinkedList<type>::index(type value) {
-    Node *current = this->head;
+    Node* current = this->head;
     int cnt = 0;
 
     while (current) {
-        if (current->data == value) return cnt;
+        if (current->data == value)
+            return cnt;
         current = current->next;
         cnt++;
     }
@@ -198,7 +267,7 @@ void DoublyLinkedList<type>::insert(int index, type value) {
         this->head = new Node;
         this->head->data = value;
     } else if (index == 0) {
-        Node *current = this->head;
+        Node* current = this->head;
         this->head = new Node;
         this->head->data = value;
         this->head->next = current;
@@ -206,7 +275,8 @@ void DoublyLinkedList<type>::insert(int index, type value) {
         Node *temp, *current = this->head;
 
         for (int i = 0; i < index - 1; i++) {
-            if (current->next) current = current->next;
+            if (current->next)
+                current = current->next;
             else {
                 cout << "Index out of range";
                 exit(0);
@@ -223,18 +293,20 @@ void DoublyLinkedList<type>::insert(int index, type value) {
 }
 template <class type>
 bool DoublyLinkedList<type>::isSorted() {
-    if (not this->head) return true;
-    Node *current = this->head;
+    if (not this->head)
+        return true;
+    Node* current = this->head;
 
     while (current->next) {
-        if (current->data > current->next->data) return false;
+        if (current->data > current->next->data)
+            return false;
         current = current->next;
     }
     return true;
 }
 template <class type>
 int DoublyLinkedList<type>::length() {
-    Node *current = this->head;
+    Node* current = this->head;
     int len = 0;
 
     while (current) {
@@ -245,23 +317,28 @@ int DoublyLinkedList<type>::length() {
 }
 template <class type>
 void DoublyLinkedList<type>::leftRotate() {
-    if (not (this->head and this->head->next)) return;
+    if (not(this->head and this->head->next))
+        return;
     Node *element = this->head, *current = this->head->next;
     this->head = this->head->next;
     this->head->prev = nullptr;
-    while (current->next) current = current->next;
+    while (current->next)
+        current = current->next;
     current->next = element;
     element->prev = current;
     element->next = nullptr;
 }
 template <class type>
 void DoublyLinkedList<type>::leftShift() {
-    if (not this->head) return;
-    else if (not this->head->next) this->head->data = 0;
+    if (not this->head)
+        return;
+    else if (not this->head->next)
+        this->head->data = 0;
     else {
         this->pop(0);
-        Node *current = this->head;
-        while (current->next) current = current->next;
+        Node* current = this->head;
+        while (current->next)
+            current = current->next;
         current->next = new Node;
         current->next->prev = current;
         current->next->data = 0;
@@ -269,24 +346,28 @@ void DoublyLinkedList<type>::leftShift() {
 }
 template <class type>
 type DoublyLinkedList<type>::max() {
-    if (not this->head) return 0;
-    Node *current = this->head->next;
+    if (not this->head)
+        return 0;
+    Node* current = this->head->next;
     type max = this->head->data;
 
     while (current) {
-        if (current->data > max) max = current->data;
+        if (current->data > max)
+            max = current->data;
         current = current->next;
     }
     return max;
 }
 template <class type>
 type DoublyLinkedList<type>::min() {
-    if (not this->head) return 0;
-    Node *current = this->head->next;
+    if (not this->head)
+        return 0;
+    Node* current = this->head->next;
     type min = this->head->data;
 
     while (current) {
-        if (current->data < min) min = current->data;
+        if (current->data < min)
+            min = current->data;
         current = current->next;
     }
     return min;
@@ -304,25 +385,29 @@ DoublyLinkedList<type> DoublyLinkedList<type>::operator*(int num) {
     if (num < 0) {
         cout << "Invalid number";
         exit(0);
-    } else if (not this->head or num == 0) return list;
-    else if (num == 1) return this->copy();
+    } else if (not this->head or num == 0)
+        return list;
+    else if (num == 1)
+        return this->copy();
     else {
-        Node *current = result.head;
+        Node* current = result.head;
 
-        for (int i = 1; i < num; i++ ) {
+        for (int i = 1; i < num; i++) {
             list = this->copy();
-            while (current->next) current = current->next;
+            while (current->next)
+                current = current->next;
             current->next = list.head;
             list.head->prev = current;
         }
         return result;
-    } 
+    }
 }
 template <class T>
-ostream &operator<<(ostream &out, DoublyLinkedList<T> list) {
-    if (not list.head) out << "No elements to display" << endl;
+ostream& operator<<(ostream& out, DoublyLinkedList<T> list) {
+    if (not list.head)
+        out << "No elements to display" << endl;
     else {
-        typename DoublyLinkedList<T>::Node *current = list.head;
+        typename DoublyLinkedList<T>::Node* current = list.head;
         out << '[';
 
         while (current->next) {
@@ -334,17 +419,18 @@ ostream &operator<<(ostream &out, DoublyLinkedList<T> list) {
     return out;
 }
 template <class type>
-type &DoublyLinkedList<type>::operator[](int index) {
+type& DoublyLinkedList<type>::operator[](int index) {
     if (index < 0 or ((not this->head) and index > 0)) {
         cout << "Index out of range";
         exit(0);
     }
-    Node *current = this->head;
+    Node* current = this->head;
 
-    for (int i = 0 ; i < index and current; i++) {
+    for (int i = 0; i < index and current; i++) {
         current = current->next;
     }
-    if (current) return current->data;
+    if (current)
+        return current->data;
     cout << "Index out of range";
     exit(0);
 }
@@ -354,7 +440,7 @@ type DoublyLinkedList<type>::pop(int index) {
         cout << "Index out of range";
         exit(0);
     }
-    Node *temp;
+    Node* temp;
     type value;
 
     if (index == 0) {
@@ -363,7 +449,7 @@ type DoublyLinkedList<type>::pop(int index) {
         this->head = temp->next;
         delete temp;
     } else {
-        Node *current = this->head;
+        Node* current = this->head;
 
         for (int i = 0; i < index; i++) {
             if (current->next) {
@@ -381,9 +467,11 @@ type DoublyLinkedList<type>::pop(int index) {
 }
 template <class type>
 void DoublyLinkedList<type>::rightRotate() {
-    if (not (this->head and this->head->next)) return;
-    Node *current = this->head->next;
-    while (current->next) current = current->next;
+    if (not(this->head and this->head->next))
+        return;
+    Node* current = this->head->next;
+    while (current->next)
+        current = current->next;
     current->prev->next = nullptr;
     current->next = this->head;
     this->head->prev = current;
@@ -391,29 +479,33 @@ void DoublyLinkedList<type>::rightRotate() {
 }
 template <class type>
 void DoublyLinkedList<type>::rightShift() {
-    if (not this->head) return;
-    else if (not this->head->next) this->head->data = 0;
+    if (not this->head)
+        return;
+    else if (not this->head->next)
+        this->head->data = 0;
     else {
         this->insert(0, 0);
-        Node *current = this->head->next;
-        while (current->next) current = current->next;
+        Node* current = this->head->next;
+        while (current->next)
+            current = current->next;
         current->next->next = nullptr;
         delete current;
     }
 }
 template <class type>
 void DoublyLinkedList<type>::remove(type value) {
-    if (not this->head) return;
+    if (not this->head)
+        return;
     if (this->head->data == value) {
-        Node *temp = this->head;
+        Node* temp = this->head;
         this->head = temp->next;
         delete temp;
         return;
     }
-    Node *current = this->head->next;
+    Node* current = this->head->next;
 
     while (current) {
-        if (current->data == value){
+        if (current->data == value) {
             current->prev->next = current->next;
             delete current;
         }
@@ -422,9 +514,10 @@ void DoublyLinkedList<type>::remove(type value) {
 }
 template <class type>
 void DoublyLinkedList<type>::reverse() {
-    if (not (this->head and this->head->next)) return;
+    if (not(this->head and this->head->next))
+        return;
     Node *current = this->head, *temp;
-    
+
     while (current->next) {
         temp = current->next;
         current->next = current->prev;
@@ -437,9 +530,10 @@ void DoublyLinkedList<type>::reverse() {
 }
 template <class type>
 type DoublyLinkedList<type>::sum() {
-    if (not this->head) return 0;
+    if (not this->head)
+        return 0;
     type sum = this->head->data;
-    Node *current = this->head->next;
+    Node* current = this->head->next;
 
     while (current) {
         sum += current->data;

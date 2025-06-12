@@ -1,4 +1,3 @@
-from csv import reader, writer
 from time import perf_counter
 
 MAIN_FILE: str = "DevicesWithInventory.csv"

@@ -17,11 +17,11 @@ def create() -> None:
             mem_size: int = int(input("Enter Memory Size (in GB): "))
 
         except ValueError:
-            print("\nINVALID INPUT")
+            print("\nINVALID MAIN_FILE")
             f.close()
             return
 
-        data: list[int, str] = [model, ram, mem_type, mem_size]
+        data: list[int | str] = [model, ram, mem_type, mem_size]
         recs.writerow(data)
         ask: str = input("\nAdd more Records(y/n):")
         print()
@@ -68,11 +68,11 @@ def append() -> None:
         mem_size: int = int(input("Enter Memory Size (in GB): "))
 
     except ValueError:
-        print("\nINVALID INPUT")
+        print("\nINVALID MAIN_FILE")
         f.close()
         return
 
-    data: list[int, str] = [model, ram, mem_type, mem_size]
+    data: list[int | str] = [model, ram, mem_type, mem_size]
     recs.writerow(data)
     print("\nRECORD ADDED")
     f.close()
@@ -126,7 +126,7 @@ def update() -> None:
                 new_recs.append([data[0], ram, mem_type, mem_size])
 
             except ValueError:
-                print("\nINVALID INPUT")
+                print("\nINVALID MAIN_FILE")
                 f.close()
                 return
 
@@ -182,7 +182,7 @@ def delete() -> None:
 def main() -> int:
     while True:
         print("\n\n")
-        print("\t\tMAIN MENU")
+        print("\t\tMAIN_FILE MENU")
         print("*********************************************\n")
         print("1. Create Record")
         print("2. Display Record")

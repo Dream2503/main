@@ -14,7 +14,7 @@ def create() -> None:
 
 
         except ValueError:
-            print("\nINVALID INPUT")
+            print("\nINVALID MAIN_FILE")
             f.close()
             return
 
@@ -70,7 +70,7 @@ def append() -> None:
         mem_size: int = int(input("Enter Memory Size (in GB): "))
 
     except ValueError:
-        print("\nINVALID INPUT")
+        print("\nINVALID MAIN_FILE")
         f.close()
         return
 
@@ -135,7 +135,7 @@ def update() -> None:
                 data[3] = int(input("Enter New Memory Size (in GB): "))
 
             except ValueError:
-                print("\nINVALID INPUT")
+                print("\nINVALID MAIN_FILE")
                 f.close()
                 return
 
@@ -185,7 +185,7 @@ def delete() -> None:
 def main() -> int:
     while True:
         print("\n\n")
-        print("\t\tMAIN MENU")
+        print("\t\tMAIN_FILE MENU")
         print("*****************************************\n")
         print("1. Create Record")
         print("2. Display Record")

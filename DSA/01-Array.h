@@ -5,19 +5,19 @@ template <typename type>
 class Array {
 protected:
     type* list = nullptr;
-    int len = 0, size = 0;
+    size_t len = 0, size = 0;
 
-    static constexpr void swap(type& first, type& second) noexcept {
-        type temp = first;
-        first = second;
-        second = temp;
+    constexpr void swap(Array& array) noexcept {
+        std::swap(list, array.list);
+        std::swap(len, array.len);
+        std::swap(size, array.size);
     }
 
-    bool operators(const Array& array, const std::string& opr) const noexcept {
-        for (int i = 0; i < len && i < array.len; i++) {
-            if ((opr == ">") && (list[i] < array[i]) || (opr == ">=") && (list[i] < array[i]) ||
-                (opr == "<") && (list[i] > array[i]) || (opr == "<=") && (list[i] > array[i]) ||
-                (opr == "==") && (len != array.len || list[i] != array[i])) {
+    constexpr bool operators(const Array& array, const std::string& opr) const noexcept {
+        for (size_t i = 0; i < len && i < array.len; i++) {
+            if ((opr == ">") && (list[i] <= array.list[i]) || (opr == ">=") && (list[i] < array.list[i]) ||
+                (opr == "<") && (list[i] >= array.list[i]) || (opr == "<=") && (list[i] > array.list[i]) ||
+                (opr == "==") && (len != array.len || list[i] != array.list[i])) {
                 return false;
             }
         }
@@ -28,18 +28,18 @@ protected:
         size = size ? size * 2 : 1;
         type* new_list = new type[size];
 
-        for (int i = 0; i < len; i++) {
+        for (size_t i = 0; i < len; i++) {
             new_list[i] = list[i];
         }
         delete[] list;
         list = new_list;
     }
 
-    Array(const type* other, const int len, const int size) : list(nullptr), len(len), size(size) {
+    Array(const type* other, const size_t len, const size_t size) : list(nullptr), len(len), size(size) {
         if (size) {
             list = new type[size];
 
-            for (int i = 0; i < len; i++) {
+            for (size_t i = 0; i < len; i++) {
                 list[i] = other[i];
             }
         }
@@ -56,11 +56,11 @@ public:
         array.size = 0;
     }
 
-    Array(const std::initializer_list<type> list) : Array(list.begin(), list.size()) {}
+    Array(const std::initializer_list<type>& list) : Array(list.begin(), list.size()) {}
 
-    Array(const type* list, const int size) : Array(list, size, size) {}
+    Array(const type* list, const size_t size) : Array(list, size, size) {}
 
-    void append(const type value) {
+    void append(const type& value) {
         if (len == size) {
             re_size();
         }
@@ -77,15 +77,15 @@ public:
         len = size = 0;
     }
 
-    constexpr bool contains(const type value) const noexcept { return index(value) == -1 ? false : true; }
+    constexpr bool contains(const type& value) const noexcept { return index(value) == -1 ? false : true; }
 
-    constexpr Array copy() const { return Array(*this); }
+    Array copy() const { return Array(*this); }
 
-    constexpr int count(const type value) const noexcept {
-        int cnt = 0;
+    constexpr size_t count(const type& value) const noexcept {
+        size_t cnt = 0;
 
-        for (const type element : *this) {
-            if (element == value) {
+        for (size_t i = 0; i < len; i++) {
+            if (list[i] == value) {
                 cnt++;
             }
         }
@@ -97,13 +97,13 @@ public:
     constexpr type* end() const noexcept { return list + len; }
 
     void extend(const Array& array) {
-        for (int i = 0; i < array.len; i++) {
-            append(array.list[i]);
+        for (const type& element : array) {
+            append(element);
         }
     }
 
-    constexpr int index(const type value) const noexcept {
-        for (int i = 0; i < len; i++) {
+    constexpr size_t index(const type& value) const noexcept {
+        for (size_t i = 0; i < len; i++) {
             if (list[i] == value) {
                 return i;
             }
@@ -111,28 +111,29 @@ public:
         return -1;
     }
 
-    void insert(const int idx, const type value) {
-        if (idx > len || idx < 0) {
+    void insert(const size_t idx, const type& value) {
+        if (idx > len) {
             throw std::out_of_range("Index out of range");
         }
         if (len == size) {
             re_size();
         }
-        for (int i = len++; i > idx; i--) {
+        for (size_t i = len++; i > idx; i--) {
             list[i] = list[i - 1];
         }
         list[idx] = value;
     }
 
     constexpr bool is_sorted() const noexcept {
-        if (list[0] < list[1]) {
-            for (int i = 1; i < len; i++) {
+        if (list[0] <= list[1]) {
+            for (size_t i = 1; i < len; i++) {
                 if (list[i] < list[i - 1]) {
                     return false;
                 }
             }
-        } else {
-            for (int i = 1; i < len; i++) {
+        }
+        if (list[0] >= list[1]) {
+            for (size_t i = 1; i < len; i++) {
                 if (list[i] > list[i - 1]) {
                     return false;
                 }
@@ -141,11 +142,11 @@ public:
         return true;
     }
 
-    constexpr int length() const noexcept { return len; }
+    constexpr size_t length() const noexcept { return len; }
 
     void leftRotate() {
         if (len) {
-            this->append(pop(0));
+            append(pop(0));
         }
     }
 
@@ -160,9 +161,9 @@ public:
         if (len) {
             type res = list[0];
 
-            for (const type element : *this) {
-                if (element > res) {
-                    res = element;
+            for (size_t i = 0; i < len; i++) {
+                if (list[i] > res) {
+                    res = list[i];
                 }
             }
             return res;
@@ -174,9 +175,9 @@ public:
         if (len) {
             type res = list[0];
 
-            for (const type element : *this) {
-                if (element < res) {
-                    res = element;
+            for (size_t i = 0; i < len; i++) {
+                if (list[i] < res) {
+                    res = list[i];
                 }
             }
             return res;
@@ -184,16 +185,9 @@ public:
         return 0;
     }
 
-    Array& operator=(const Array& array) {
+    Array& operator=(Array array) {
         if (this != &array) {
-            delete[] list;
-            len = array.len;
-            size = array.size;
-            list = new type[size];
-
-            for (int i = 0; i < len; i++) {
-                list[i] = array.list[i];
-            }
+            swap(array);
         }
         return *this;
     }
@@ -201,16 +195,13 @@ public:
 
     Array operator+(const Array& array) const {
         Array res = Array(*this);
-        res += array;
+        res.extend(array);
         return res;
     }
 
-    void operator+=(const Array& array) { this->extend(array); }
+    void operator+=(const Array& array) { extend(array); }
 
     Array operator*(const int num) const {
-        if (num < 0) {
-            throw std::invalid_argument("Negative number not allowed");
-        }
         Array res;
 
         for (int i = 0; i < num; i++) {
@@ -219,7 +210,7 @@ public:
         return res;
     }
 
-    void operator*=(int num) { *this = *this * num; }
+    void operator*=(const size_t num) { *this = *this * num; }
 
     constexpr bool operator>(const Array& array) const noexcept { return operators(array, ">"); }
 
@@ -237,8 +228,8 @@ public:
         if (array.len) {
             out << '[';
 
-            for (int i = 0; i < array.len; i++) {
-                out << array[i];
+            for (size_t i = 0; i < array.len; i++) {
+                out << array.list[i];
 
                 if (i != array.len - 1) {
                     out << ", ";
@@ -249,20 +240,22 @@ public:
         return out;
     }
 
-    type& operator[](const int index) const {
-        if (index >= len || index < 0) {
+    const type& operator[](const size_t idx) const {
+        if (idx >= len) {
             throw std::out_of_range("Index out of range");
         }
-        return list[index];
+        return list[idx];
     }
 
-    type pop(const int idx) {
-        if (idx >= len || idx < 0) {
+    type& operator[](const size_t idx) { return const_cast<type&>(static_cast<const Array&>(*this)[idx]); }
+
+    type pop(const size_t idx) {
+        if (idx >= len) {
             throw std::out_of_range("Index out of range");
         }
         type temp = list[idx];
 
-        for (int i = idx; i < len - 1; i++) {
+        for (size_t i = idx; i < len - 1; i++) {
             list[i] = list[i + 1];
         }
         --len;
@@ -276,7 +269,7 @@ public:
         --len;
     }
 
-    void remove(const type value) {
+    void remove(const type& value) {
         try {
             pop(index(value));
         } catch (const std::out_of_range& e) {
@@ -285,16 +278,16 @@ public:
     }
 
     constexpr void reverse() noexcept {
-        for (int i = 0, j = len - 1; i < j; i++, j--) {
-            swap(list[i], list[j]);
+        for (size_t i = 0, j = len - 1; i < j; i++, j--) {
+            std::swap(list[i], list[j]);
         }
     }
 
-    constexpr void sort() const noexcept {
-        for (int i = 0; i < len - 1; i++) {
-            for (int j = 0; j < len - i - 1; j++) {
+    constexpr void sort() noexcept {
+        for (size_t i = 0; i < len - 1; i++) {
+            for (size_t j = 0; j < len - i - 1; j++) {
                 if (list[j] > list[j + 1]) {
-                    swap(list[j], list[j + 1]);
+                    std::swap(list[j], list[j + 1]);
                 }
             }
         }
@@ -303,7 +296,7 @@ public:
     constexpr type sum() const noexcept {
         type res = type();
 
-        for (const type element : *this) {
+        for (const type& element : *this) {
             res += element;
         }
         return res;
