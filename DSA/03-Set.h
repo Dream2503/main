@@ -69,7 +69,7 @@ public:
         }
     }
 
-    Set intersection(const Set& set) const {
+    Set size_tersection(const Set& set) const {
         Set res;
         res.size = len + set.len;
         res.list = new type[res.size];
@@ -92,7 +92,7 @@ public:
 
     Set Union(const Set& set) const {
         Set res(*this);
-        int i = 0;
+        size_t i = 0;
 
         for (const type& element : set) {
             res.append(element);

@@ -8,6 +8,12 @@ class SortedLinkedList : public LinkedList<type> {
     using LinkedList<type>::head;
     string mode = "asc";
 
+    constexpr bool operators(const SortedLinkedList& array, const std::string& opr) const noexcept {
+        if (mode != array.mode) {
+            throw std::invalid_argument("Different type of sorted arrays can't be compared");
+        }
+        return LinkedList<type>::operators(array, opr);
+    }
 
     using LinkedList<type>::append;
     using LinkedList<type>::extend;
@@ -31,18 +37,23 @@ public:
 
     SortedLinkedList(const SortedLinkedList& list) : LinkedList<type>(list), mode(list.mode) {}
 
-    SortedLinkedList(const type* list, const int size, const std::string& mode = "asc") {
+    SortedLinkedList(const type* list, const size_t size, const std::string& mode = "asc") {
         this->mode = mode;
 
-        for (int i = 0; i < size; i++)
-            this->insert(list[i]);
+        for (size_t i = 0; i < size; i++)
+            insert(list[i]);
+    }
+
+    SortedLinkedList(SortedLinkedList&& list) noexcept {
+        head = list.head;
+        list.head = nullptr;
     }
 
     SortedLinkedList copy() const { return SortedLinkedList(*this); }
 
-    constexpr int count(const type& value) const noexcept {
+    constexpr size_t count(const type& value) const noexcept {
         Node* current = head;
-        int cnt = 0;
+        size_t cnt = 0;
 
         while (current) {
             if (current->data == value) {
@@ -59,26 +70,12 @@ public:
 
     void extend(const SortedLinkedList& list) { *this += list; }
 
-    constexpr int index(const type& value) const noexcept {
-        Node* current = head;
-        int cnt = 0;
-
-        while (current) {
-            if (current->data == value) {
-                return cnt;
-            }
-            current = current->next;
-            cnt++;
-        }
-        return -1;
-    }
-
-    void insert(type value) {
+    void insert(const type& value) {
         if (!head) {
             head = new Node(value);
             return;
         }
-        Node *current = this->head, *prev = nullptr;
+        Node *current = head, *prev = nullptr;
 
         while (current) {
             if ((mode == "asc" && current->data >= value) || (mode == "dsc" and current->data <= value)) {
@@ -124,6 +121,14 @@ public:
             current = current->next;
         }
         return current->data;
+    }
+
+    SortedLinkedList& operator=(SortedLinkedList list) {
+        if (this != &list) {
+            std::swap(head, list.head);
+            std::swap(mode, list.mode)
+        }
+        return *this;
     }
 
     SortedLinkedList operator+(const SortedLinkedList& list) {
@@ -174,10 +179,7 @@ public:
 
     void operator+=(const SortedLinkedList& list) { *this = *this + list; }
 
-    SortedLinkedList operator*(const int num) const {
-        if (num < 0) {
-            throw std::invalid_argument("Invalid Number");
-        }
+    SortedLinkedList operator*(const size_t num) const {
         if (!head) {
             return SortedLinkedList();
         }
@@ -187,13 +189,13 @@ public:
         SortedLinkedList result;
         Node *current = result.head = new Node(head->data), *current1 = head->next;
 
-        for (int i = 1; i < num; i++) {
+        for (size_t i = 1; i < num; i++) {
             current->next = new Node(head->data);
             current = current->next;
         }
 
         while (current1) {
-            for (int i = 0; i < num; i++) {
+            for (size_t i = 0; i < num; i++) {
                 current->next = new Node(current1->data);
                 current = current->next;
             }
@@ -202,13 +204,10 @@ public:
         return result;
     }
 
-    void operator*=(const int num) { *this = *this * num; }
+    void operator*=(const size_t num) { *this = *this * num; }
 
     void reverse() noexcept {
         mode = mode == "asc" ? "dsc" : "asc";
         LinkedList<type>::reverse();
     }
-
-    SortedLinkedList(SortedLinkedList&&) noexcept = default;
-    SortedLinkedList& operator=(SortedLinkedList&&) noexcept = default;
 };

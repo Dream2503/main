@@ -201,10 +201,10 @@ public:
 
     void operator+=(const Array& array) { extend(array); }
 
-    Array operator*(const int num) const {
+    Array operator*(const size_t num) const {
         Array res;
 
-        for (int i = 0; i < num; i++) {
+        for (size_t i = 0; i < num; i++) {
             res.extend(*this);
         }
         return res;

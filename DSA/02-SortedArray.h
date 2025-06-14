@@ -161,7 +161,7 @@ public:
 
     void operator+=(SortedArray& array) { *this = *this + array; }
 
-    SortedArray operator*(const int num) const {
+    SortedArray operator*(const size_t num) const {
         SortedArray res;
         res.list = new type[len * num];
         res.len = res.size = len * num;
@@ -175,7 +175,7 @@ public:
         return res;
     }
 
-    void operator*=(const int num) { *this = *this * num; }
+    void operator*=(const size_t num) { *this = *this * num; }
 
     constexpr void reverse() noexcept {
         for (size_t i = 0, j = len - 1; i < j; i++, j--) {

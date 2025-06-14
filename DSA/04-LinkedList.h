@@ -57,11 +57,11 @@ public:
         }
     }
 
-    LinkedList(const type* array, const int size) {
+    LinkedList(const type* array, const size_t size) {
         if (size) {
             Node* current = head = new Node(array[0]);
 
-            for (int i = 1; i < size; i++) {
+            for (size_t i = 1; i < size; i++) {
                 current->next = new Node(array[i]);
                 current = current->next;
             }
@@ -86,7 +86,7 @@ public:
         }
     }
 
-    constexpr double average() const noexcept { return sum() / static_cast<double>(this->length()); }
+    constexpr double average() const noexcept { return sum() / static_cast<double>(length()); }
 
     void clear() noexcept {
         if (head) {
@@ -116,9 +116,9 @@ public:
 
     LinkedList copy() const { return LinkedList(*this); }
 
-    constexpr int count(const type& value) const noexcept {
+    constexpr size_t count(const type& value) const noexcept {
         Node* current = head;
-        int cnt = 0;
+        size_t cnt = 0;
 
         while (current) {
             if (current->data == value) {
@@ -145,9 +145,9 @@ public:
         list.head = nullptr;
     }
 
-    constexpr int index(type value) const noexcept {
+    constexpr size_t index(const type& value) const noexcept {
         Node* current = head;
-        int cnt = 0;
+        size_t cnt = 0;
 
         while (current) {
             if (current->data == value) {
@@ -159,8 +159,8 @@ public:
         return -1;
     }
 
-    void insert(const int index, const type& value) {
-        if (index < 0 || !head) {
+    void insert(const size_t index, const type& value) {
+        if (!head) {
             throw std::out_of_range("Index out of range");
         }
         if (!head) {
@@ -174,7 +174,7 @@ public:
         }
         Node* current = head;
 
-        for (int i = 0; i < index - 1; i++) {
+        for (size_t i = 0; i < index - 1; i++) {
             if (current->next) {
                 current = current->next;
             } else {
@@ -210,9 +210,9 @@ public:
         return true;
     }
 
-    constexpr int length() const noexcept {
+    constexpr size_t length() const noexcept {
         Node* current = head;
-        int len = 0;
+        size_t len = 0;
 
         while (current) {
             len++;
@@ -284,29 +284,9 @@ public:
         return min;
     }
 
-    LinkedList operator=(const LinkedList& list) {
+    LinkedList& operator=(LinkedList list) {
         if (this != &list) {
-            clear();
-
-            if (!list.head) {
-                head = nullptr;
-            } else {
-                Node *current1 = head = new Node(list.head->data), *current2 = list.head->next;
-
-                while (current2) {
-                    current1->next = new Node(current2->data);
-                    current2 = current2->next;
-                }
-            }
-        }
-        return *this;
-    }
-
-    LinkedList& operator=(LinkedList&& other) noexcept {
-        if (this != &other) {
-            clear();
-            head = other.head;
-            other.head = nullptr;
+            std::swap(head, list.head);
         }
         return *this;
     }
@@ -319,10 +299,7 @@ public:
 
     void operator+=(const LinkedList& list) { extend(list); }
 
-    LinkedList operator*(const int num) const {
-        if (num < 0) {
-            throw std::invalid_argument("Invalid number");
-        }
+    LinkedList operator*(const size_t num) const {
         if (!head || !num) {
             return LinkedList();
         }
@@ -332,7 +309,7 @@ public:
         LinkedList result(*this);
         Node* current = result.head;
 
-        for (int i = 1; i < num; i++) {
+        for (size_t i = 1; i < num; i++) {
             LinkedList list = copy();
 
             while (current->next) {
@@ -344,7 +321,7 @@ public:
         return result;
     }
 
-    void operator*=(const int num) { *this = *this * num; }
+    void operator*=(const size_t num) { *this = *this * num; }
 
     constexpr bool operator>(const LinkedList& list) const noexcept { return operators(list, ">"); }
 
@@ -372,13 +349,13 @@ public:
         return out;
     }
 
-    constexpr type& operator[](const int index) {
-        if (index < 0 or !head) {
+    constexpr type& operator[](const size_t index) {
+        if (!head) {
             throw std::out_of_range("Index out of range");
         }
         Node* current = head;
 
-        for (int i = 0; i < index and current; i++) {
+        for (size_t i = 0; i < index && current; i++) {
             current = current->next;
         }
         if (current) {
@@ -387,14 +364,14 @@ public:
         throw std::out_of_range("Index out of range");
     }
 
-    type pop(const int index) {
-        if (!head || index < 0) {
+    type pop(const size_t index) {
+        if (!head) {
             throw std::out_of_range("Index out of range");
         }
         Node* temp;
         type value;
 
-        if (index == 0) {
+        if (!index) {
             temp = head;
             value = head->data;
             head = head->next;
@@ -402,7 +379,7 @@ public:
         } else {
             Node* current = head;
 
-            for (int i = 0; i < index; i++) {
+            for (size_t i = 0; i < index; i++) {
                 if (current->next) {
                     temp = current;
                     current = current->next;
@@ -451,7 +428,7 @@ public:
         delete current;
     }
 
-    void remove(type value) noexcept {
+    void remove(const type& value) noexcept {
         if (!head) {
             return;
         }
@@ -478,7 +455,7 @@ public:
         if (!head || !head->next) {
             return;
         }
-        Node *end = nullptr, *prev = this->head, *current = prev->next;
+        Node *end = nullptr, *prev = head, *current = prev->next;
 
         while (current) {
             prev->next = end;
