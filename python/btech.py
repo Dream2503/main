@@ -12,12 +12,12 @@ semester1: dict[str, tuple[int, int]] = {
     "Workshop Practice": (90, 1),
 }
 semester2: dict[str, tuple[int, int]] = {
-    "Basic Electronics Engineering": (46, 3),
-    "Data Structures & Algorithms": (48.5, 3),
-    "Engineering Chemistry": (48, 3),
-    "Engineering Thermodynamics": (46, 2),
-    "Environmental Science & Engineering": (26, 0),
-    "Probability & Statistics": (50, 3),
+    "Basic Electronics Engineering": (90, 3),
+    "Data Structures & Algorithms": (48.5 + 36, 3),
+    "Engineering Chemistry": (95, 3),
+    "Engineering Thermodynamics": (46+37, 2),
+    "Environmental Science & Engineering": (47, 0),
+    "Probability & Statistics": (96, 3),
 
     "Basic Electronics Engineering Lab": (91, 1),
     "Corporate Communication Skills": (91, 2),
