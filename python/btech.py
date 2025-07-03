@@ -13,9 +13,9 @@ semester1: dict[str, tuple[int, int]] = {
 }
 semester2: dict[str, tuple[int, int]] = {
     "Basic Electronics Engineering": (90, 3),
-    "Data Structures & Algorithms": (48.5 + 36, 3),
+    "Data Structures & Algorithms": (93.5, 3),
     "Engineering Chemistry": (95, 3),
-    "Engineering Thermodynamics": (46+37, 2),
+    "Engineering Thermodynamics": (87, 2),
     "Environmental Science & Engineering": (47, 0),
     "Probability & Statistics": (96, 3),
 
