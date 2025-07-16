@@ -7,13 +7,6 @@ class SortedDoublyLinkedList : public DoublyLinkedList<type> {
     using DoublyLinkedList<type>::head;
     std::string mode = "asc";
 
-    constexpr bool operators(const SortedDoublyLinkedList& array, const std::string& opr) const noexcept {
-        if (mode != array.mode) {
-            throw std::invalid_argument("Different type of sorted arrays can't be compared");
-        }
-        return DoublyLinkedList<type>::operators(array, opr);
-    }
-
     using DoublyLinkedList<type>::append;
     using DoublyLinkedList<type>::extend;
     using DoublyLinkedList<type>::is_sorted;
@@ -43,9 +36,9 @@ public:
             insert(list[i]);
     }
 
-    SortedDoublyLinkedList(SortedDoublyLinkedList&& list) noexcept {
-        head = list.head;
-        list.head = nullptr;
+    constexpr SortedDoublyLinkedList(SortedDoublyLinkedList&& list) noexcept {
+        std::swap(head, list.head);
+        std::swap(mode, list.mode);
     }
 
     SortedDoublyLinkedList copy() const { return SortedDoublyLinkedList(*this); }
@@ -56,7 +49,7 @@ public:
 
         while (current) {
             if (current->data == value) {
-                while (current->data == value) {
+                while (current && current->data == value) {
                     cnt++;
                     current = current->next;
                 }
@@ -77,7 +70,7 @@ public:
         Node *current = head, *prev = nullptr;
 
         while (current) {
-            if ((mode == "asc" && current->data >= value) || (mode == "dsc" and current->data <= value)) {
+            if ((mode == "asc" && current->data >= value) || (mode == "dsc" && current->data <= value)) {
                 if (!prev) {
                     prev = new Node(value, nullptr, current);
                     current->prev = prev;
@@ -124,7 +117,7 @@ public:
         return current->data;
     }
 
-    SortedDoublyLinkedList& operator=(SortedDoublyLinkedList list) {
+    constexpr SortedDoublyLinkedList& operator=(SortedDoublyLinkedList list) {
         if (this != &list) {
             std::swap(head, list.head);
             std::swap(mode, list.mode);
@@ -139,20 +132,23 @@ public:
         if (!list.head) {
             return *this;
         }
+        bool flag = false;
+
         if (mode != list.mode) {
+            flag = true;
             reverse();
         }
-        SortedDoublyLinkedList result;
+        SortedDoublyLinkedList res;
         Node *current1 = head, *current2 = list.head;
 
         if ((mode == "asc" && current1->data < current2->data) || (mode == "dsc" && current1->data > current2->data)) {
-            result.head = new Node(current1->data);
+            res.head = new Node(current1->data);
             current1 = current1->next;
         } else {
-            result.head = new Node(current2->data);
+            res.head = new Node(current2->data);
             current2 = current2->next;
         }
-        Node* current = result.head;
+        Node* current = res.head;
 
         while (current1 && current2) {
             if ((mode == "asc" && current1->data < current2->data) ||
@@ -166,16 +162,19 @@ public:
             current = current->next;
         }
         while (current1) {
-            current->next = new Node(current1->data, current, current1->next);
+            current->next = new Node(current1->data, current);
             current = current->next;
             current1 = current1->next;
         }
         while (current2) {
-            current->next = new Node(current2->data, current, current2->next);
+            current->next = new Node(current2->data, current);
             current = current->next;
             current2 = current2->next;
         }
-        return result;
+        if (flag) {
+            reverse();
+        }
+        return res;
     }
 
     void operator+=(const SortedDoublyLinkedList& list) { *this = *this + list; }
@@ -187,8 +186,8 @@ public:
         if (num == 1) {
             return *this;
         }
-        SortedDoublyLinkedList result;
-        Node *current = result.head = new Node(head->data), *current1 = head->next;
+        SortedDoublyLinkedList res;
+        Node *current = res.head = new Node(head->data), *current1 = head->next;
 
         for (size_t i = 1; i < num; i++) {
             current->next = new Node(head->data, current);
@@ -202,10 +201,19 @@ public:
             }
             current1 = current1->next;
         }
-        return result;
+        return res;
     }
 
     void operator*=(const size_t num) { *this = *this * num; }
+
+    constexpr bool operator==(const SortedDoublyLinkedList& list) const noexcept {
+        if (mode != list.mode) {
+            throw std::invalid_argument("Different type of sorted doubly linked lists can't be compared");
+        }
+        return DoublyLinkedList<type>::operator==(list);
+    }
+
+    constexpr bool operator!=(const SortedDoublyLinkedList& list) const noexcept { return !operator==(list); }
 
     void reverse() noexcept {
         mode = mode == "asc" ? "dsc" : "asc";

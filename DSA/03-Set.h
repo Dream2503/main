@@ -28,6 +28,8 @@ public:
         }
     }
 
+    constexpr Set(Set&& set) noexcept { Array<type>::swap(set); }
+
     void append(const type& value) {
         if (len == size) {
             Array<type>::re_size();

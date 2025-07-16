@@ -1,19 +1,11 @@
 #pragma once
 #include "04-LinkedList.h"
-using namespace std;
 
 template <class type>
 class SortedLinkedList : public LinkedList<type> {
     using Node = typename LinkedList<type>::Node;
     using LinkedList<type>::head;
-    string mode = "asc";
-
-    constexpr bool operators(const SortedLinkedList& array, const std::string& opr) const noexcept {
-        if (mode != array.mode) {
-            throw std::invalid_argument("Different type of sorted arrays can't be compared");
-        }
-        return LinkedList<type>::operators(array, opr);
-    }
+    std::string mode = "asc";
 
     using LinkedList<type>::append;
     using LinkedList<type>::extend;
@@ -27,7 +19,7 @@ class SortedLinkedList : public LinkedList<type> {
 public:
     SortedLinkedList() {}
 
-    SortedLinkedList(const initializer_list<type>& list, const std::string& mode = "asc") {
+    SortedLinkedList(const std::initializer_list<type>& list, const std::string& mode = "asc") {
         this->mode = mode;
 
         for (const type& element : list) {
@@ -44,9 +36,9 @@ public:
             insert(list[i]);
     }
 
-    SortedLinkedList(SortedLinkedList&& list) noexcept {
-        head = list.head;
-        list.head = nullptr;
+    constexpr SortedLinkedList(SortedLinkedList&& list) noexcept {
+        std::swap(head, list.head);
+        std::swap(mode, list.mode);
     }
 
     SortedLinkedList copy() const { return SortedLinkedList(*this); }
@@ -57,7 +49,7 @@ public:
 
         while (current) {
             if (current->data == value) {
-                while (current->data == value) {
+                while (current && current->data == value) {
                     cnt++;
                     current = current->next;
                 }
@@ -78,7 +70,7 @@ public:
         Node *current = head, *prev = nullptr;
 
         while (current) {
-            if ((mode == "asc" && current->data >= value) || (mode == "dsc" and current->data <= value)) {
+            if ((mode == "asc" && current->data >= value) || (mode == "dsc" && current->data <= value)) {
                 if (!prev) {
                     prev = new Node(value, current);
                     head = prev;
@@ -123,10 +115,10 @@ public:
         return current->data;
     }
 
-    SortedLinkedList& operator=(SortedLinkedList list) {
+    constexpr SortedLinkedList& operator=(SortedLinkedList list) {
         if (this != &list) {
             std::swap(head, list.head);
-            std::swap(mode, list.mode)
+            std::swap(mode, list.mode);
         }
         return *this;
     }
@@ -138,20 +130,23 @@ public:
         if (!list.head) {
             return *this;
         }
+        bool flag = false;
+
         if (mode != list.mode) {
+            flag = true;
             reverse();
         }
-        SortedLinkedList result;
+        SortedLinkedList res;
         Node *current1 = head, *current2 = list.head;
 
         if ((mode == "asc" && current1->data < current2->data) || (mode == "dsc" && current1->data > current2->data)) {
-            result.head = new Node(current1->data);
+            res.head = new Node(current1->data);
             current1 = current1->next;
         } else {
-            result.head = new Node(current2->data);
+            res.head = new Node(current2->data);
             current2 = current2->next;
         }
-        Node* current = result.head;
+        Node* current = res.head;
 
         while (current1 && current2) {
             if ((mode == "asc" && current1->data < current2->data) ||
@@ -165,16 +160,19 @@ public:
             current = current->next;
         }
         while (current1) {
-            current->next = new Node(current1->data, current1->next);
+            current->next = new Node(current1->data);
             current = current->next;
             current1 = current1->next;
         }
         while (current2) {
-            current->next = new Node(current2->data, current2->next);
+            current->next = new Node(current2->data);
             current = current->next;
             current2 = current2->next;
         }
-        return result;
+        if (flag) {
+            reverse();
+        }
+        return res;
     }
 
     void operator+=(const SortedLinkedList& list) { *this = *this + list; }
@@ -186,8 +184,8 @@ public:
         if (num == 1) {
             return *this;
         }
-        SortedLinkedList result;
-        Node *current = result.head = new Node(head->data), *current1 = head->next;
+        SortedLinkedList res;
+        Node *current = res.head = new Node(head->data), *current1 = head->next;
 
         for (size_t i = 1; i < num; i++) {
             current->next = new Node(head->data);
@@ -201,10 +199,19 @@ public:
             }
             current1 = current1->next;
         }
-        return result;
+        return res;
     }
 
     void operator*=(const size_t num) { *this = *this * num; }
+
+    constexpr bool operator==(const SortedLinkedList& list) const noexcept {
+        if (mode != list.mode) {
+            throw std::invalid_argument("Different type of sorted linked lists can't be compared");
+        }
+        return LinkedList<type>::operator==(list);
+    }
+
+    constexpr bool operator!=(const SortedLinkedList& list) const noexcept { return !operator==(list); }
 
     void reverse() noexcept {
         mode = mode == "asc" ? "dsc" : "asc";

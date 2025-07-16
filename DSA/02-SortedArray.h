@@ -9,12 +9,6 @@ class SortedArray : public Array<type> {
     using Array<type>::re_size;
     std::string mode = "asc";
 
-    constexpr bool operators(const SortedArray& array, const std::string& opr) const noexcept {
-        if (mode != array.mode) {
-            throw std::invalid_argument("Different type of sorted arrays can't be compared");
-        }
-        return Array<type>::operators(array, opr);
-    }
     using Array<type>::append;
     using Array<type>::extend;
     using Array<type>::is_sorted;
@@ -47,11 +41,10 @@ public:
             reverse();
         }
     }
-    SortedArray(SortedArray&& array) noexcept : list(array.list), len(array.len), size(array.size), mode(array.mode) {
-        array.list = nullptr;
-        array.len = 0;
-        array.size = 0;
-        array.mode = "asc";
+
+    constexpr SortedArray(SortedArray&& array) noexcept {
+        Array<type>::swap(array);
+        std::swap(mode, array.mode);
     }
 
     SortedArray(const type* list, const size_t size, const std::string& mode = "asc") {
@@ -105,7 +98,7 @@ public:
             re_size();
         }
         for (size_t i = 0; i <= len; i++) {
-            if ((list[i] >= value && mode == "asc") || (list[i] <= value and mode == "dsc")) {
+            if ((list[i] >= value && mode == "asc") || (list[i] <= value && mode == "dsc")) {
                 idx = i;
                 break;
             }
@@ -120,7 +113,7 @@ public:
 
     void merge(SortedArray& array) { *this += array; }
 
-    SortedArray& operator=(SortedArray array) {
+    constexpr SortedArray& operator=(SortedArray array) {
         if (this != &array) {
             Array<type>::swap(array);
             std::swap(mode, array.mode);
@@ -176,6 +169,14 @@ public:
     }
 
     void operator*=(const size_t num) { *this = *this * num; }
+
+    constexpr bool operator==(const SortedArray& array) const noexcept {
+        if (mode != array.mode) {
+            throw std::invalid_argument("Different type of sorted arrays can't be compared");
+        }
+        return Array<type>::operator==(array);
+    }
+    constexpr bool operator!=(const SortedArray& array) const noexcept { return !operator==(array); }
 
     constexpr void reverse() noexcept {
         for (size_t i = 0, j = len - 1; i < j; i++, j--) {

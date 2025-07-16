@@ -13,17 +13,6 @@ protected:
         std::swap(size, array.size);
     }
 
-    constexpr bool operators(const Array& array, const std::string& opr) const noexcept {
-        for (size_t i = 0; i < len && i < array.len; i++) {
-            if ((opr == ">") && (list[i] <= array.list[i]) || (opr == ">=") && (list[i] < array.list[i]) ||
-                (opr == "<") && (list[i] >= array.list[i]) || (opr == "<=") && (list[i] > array.list[i]) ||
-                (opr == "==") && (len != array.len || list[i] != array.list[i])) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     void re_size() {
         size = size ? size * 2 : 1;
         type* new_list = new type[size];
@@ -50,11 +39,7 @@ public:
 
     Array(const Array& array) : Array(array.list, array.len, array.size) {}
 
-    Array(Array&& array) noexcept : list(array.list), len(array.len), size(array.size) {
-        array.list = nullptr;
-        array.len = 0;
-        array.size = 0;
-    }
+    constexpr Array(Array&& array) noexcept { swap(array); }
 
     Array(const std::initializer_list<type>& list) : Array(list.begin(), list.size()) {}
 
@@ -185,7 +170,7 @@ public:
         return 0;
     }
 
-    Array& operator=(Array array) {
+     constexpr Array& operator=(Array array) {
         if (this != &array) {
             swap(array);
         }
@@ -212,15 +197,17 @@ public:
 
     void operator*=(const size_t num) { *this = *this * num; }
 
-    constexpr bool operator>(const Array& array) const noexcept { return operators(array, ">"); }
-
-    constexpr bool operator>=(const Array& array) const noexcept { return operators(array, ">="); }
-
-    constexpr bool operator<(const Array& array) const noexcept { return operators(array, "<"); }
-
-    constexpr bool operator<=(const Array& array) const noexcept { return operators(array, "<="); }
-
-    constexpr bool operator==(const Array& array) const noexcept { return operators(array, "=="); }
+    constexpr bool operator==(const Array& array) const noexcept {
+        if (array.len != len) {
+            return false;
+        }
+        for (size_t i = 0; i < array.len; i++) {
+            if (array.list[i] != list[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     constexpr bool operator!=(const Array& array) const noexcept { return !operator==(array); }
 

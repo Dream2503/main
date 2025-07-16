@@ -11,26 +11,6 @@ protected:
     };
     Node* head = nullptr;
 
-    constexpr bool operators(const LinkedList& list, const std::string& opr) const noexcept {
-        Node *current1 = head, *current2 = list.head;
-
-        while (current1 && current2) {
-            if ((opr == ">") && (current1->data <= current2->data) ||
-                (opr == ">=") && (current1->data < current2->data) ||
-                (opr == "<") && (current1->data >= current2->data) ||
-                (opr == "<=") && (current1->data > current2->data) ||
-                (opr == "==") && (current1->data != current2->data)) {
-                return false;
-            }
-            current1 = current1->next;
-            current2 = current2->next;
-        }
-        if ((current1 || current2) && (opr == "==")) {
-            return false;
-        }
-        return true;
-    }
-
 public:
     LinkedList() {}
 
@@ -68,10 +48,7 @@ public:
         }
     }
 
-    LinkedList(LinkedList&& other) noexcept {
-        head = other.head;
-        other.head = nullptr;
-    }
+    constexpr LinkedList(LinkedList&& list) noexcept { std::swap(head, list.head); }
 
     void append(const type& value) {
         if (!head) {
@@ -159,7 +136,7 @@ public:
         return -1;
     }
 
-    void insert(const size_t index, const type& value) {
+    void insert(const size_t idx, const type& value) {
         if (!head) {
             throw std::out_of_range("Index out of range");
         }
@@ -167,14 +144,14 @@ public:
             head = new Node(value);
             return;
         }
-        if (index == 0) {
+        if (idx == 0) {
             Node* current = head;
             head = new Node(value, current);
             return;
         }
         Node* current = head;
 
-        for (size_t i = 0; i < index - 1; i++) {
+        for (size_t i = 0; i < idx - 1; i++) {
             if (current->next) {
                 current = current->next;
             } else {
@@ -221,7 +198,7 @@ public:
         return len;
     }
 
-    void leftRotate() {
+    constexpr void leftRotate() noexcept {
         if (!head || !head->next) {
             return;
         }
@@ -249,7 +226,7 @@ public:
         while (current->next) {
             current = current->next;
         }
-        current->next = new Node(type());
+        current->next = new Node;
     }
 
     constexpr type max() const noexcept {
@@ -284,7 +261,7 @@ public:
         return min;
     }
 
-    LinkedList& operator=(LinkedList list) {
+    constexpr LinkedList& operator=(LinkedList list) {
         if (this != &list) {
             std::swap(head, list.head);
         }
@@ -306,8 +283,8 @@ public:
         if (num == 1) {
             return copy();
         }
-        LinkedList result(*this);
-        Node* current = result.head;
+        LinkedList res(*this);
+        Node* current = res.head;
 
         for (size_t i = 1; i < num; i++) {
             LinkedList list = copy();
@@ -318,20 +295,26 @@ public:
             current->next = list.head;
             list.head = nullptr;
         }
-        return result;
+        return res;
     }
 
     void operator*=(const size_t num) { *this = *this * num; }
 
-    constexpr bool operator>(const LinkedList& list) const noexcept { return operators(list, ">"); }
+    constexpr bool operator==(const LinkedList& list) const noexcept {
+        Node *current1 = head, *current2 = list.head;
 
-    constexpr bool operator>=(const LinkedList& list) const noexcept { return operators(list, ">="); }
-
-    constexpr bool operator<(const LinkedList& list) const noexcept { return operators(list, "<"); }
-
-    constexpr bool operator<=(const LinkedList& list) const noexcept { return operators(list, "<="); }
-
-    constexpr bool operator==(const LinkedList& list) const noexcept { return operators(list, "=="); }
+        while (current1 && current2) {
+            if (current1->data != current2->data) {
+                return false;
+            }
+            current1 = current1->next;
+            current2 = current2->next;
+        }
+        if (current1 || current2) {
+            return false;
+        }
+        return true;
+    }
 
     constexpr bool operator!=(const LinkedList& list) const noexcept { return !operator==(list); }
 
@@ -349,13 +332,13 @@ public:
         return out;
     }
 
-    constexpr type& operator[](const size_t index) {
+    constexpr type& operator[](const size_t idx) {
         if (!head) {
             throw std::out_of_range("Index out of range");
         }
         Node* current = head;
 
-        for (size_t i = 0; i < index && current; i++) {
+        for (size_t i = 0; i < idx && current; i++) {
             current = current->next;
         }
         if (current) {
@@ -364,14 +347,14 @@ public:
         throw std::out_of_range("Index out of range");
     }
 
-    type pop(const size_t index) {
+    type pop(const size_t idx) {
         if (!head) {
             throw std::out_of_range("Index out of range");
         }
         Node* temp;
         type value;
 
-        if (!index) {
+        if (!idx) {
             temp = head;
             value = head->data;
             head = head->next;
@@ -379,7 +362,7 @@ public:
         } else {
             Node* current = head;
 
-            for (size_t i = 0; i < index; i++) {
+            for (size_t i = 0; i < idx; i++) {
                 if (current->next) {
                     temp = current;
                     current = current->next;
@@ -394,7 +377,7 @@ public:
         return value;
     }
 
-    void rightRotate() {
+    constexpr void rightRotate() noexcept {
         if (!head || !head->next) {
             return;
         }
