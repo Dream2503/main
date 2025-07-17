@@ -7,25 +7,27 @@
 // @lc code=start
 class Solution {
 public:
-    int removeElement(vector<int>& nums, int val) {
-        if (not nums.size()) return 0;
-        sort(nums.begin(), nums.end());
-        int cnt = 0, size = nums.size(), save;
+    int removeElement(std::vector<int>& nums, const int val) {
+        const size_t len = nums.size();
 
-        for (int i = 0; i < size; i++) {
-            if (nums[i] == val) {
-                save = i;
-
-                while (i < size and nums[i] == val) {
-                    cnt++;
-                    i++;
-                }
-                nums.erase(nums.begin()+save, nums.begin()+save+cnt);
-                return size - cnt;
-            }
+        if (len == 0) {
+            return 0;
         }
-        return size;
+        int i = 0, j = len - 1;
+
+        while (i < j) {
+            while (i < j && nums[i] != val) {
+                i++;
+            }
+            while (i < j && nums[j] == val) {
+                j--;
+            }
+            std::swap(nums[i], nums[j]);
+        }
+        while (i < len && nums[i] != val) {
+            i++;
+        }
+        return i;
     }
 };
 // @lc code=end
-

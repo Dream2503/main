@@ -7,37 +7,22 @@
 // @lc code=start
 class Solution {
 public:
-    string intToRoman(int num) {
-        vector<pair<int,char>> vec{{1, 'I'}, {5, 'V'}, {10, 'X'}, {50, 'L'}, {100, 'C'}, {500, 'D'}, {1000, 'M'}};
-        unordered_map<int,char> hash(vec.begin(), vec.end());
-        string res, temp;
-        int unit, factor = 1;
+    std::string intToRoman(int num) {
+        static const std::vector<std::pair<int, std::string>> roman = {
+            {1000, "M"}, {900, "CM"}, {500, "D"}, {400, "CD"},
+            {100, "C"}, {90, "XC"}, {50, "L"}, {40, "XL"},
+            {10, "X"}, {9, "IX"}, {5, "V"}, {4, "IV"}, {1, "I"}
+        };
+        std::string result;
 
-        while (num) {
-            temp = "";
-            unit = (num % 10);
-            num /= 10;
-
-            if (unit < 5) {
-                if (unit == 4) {
-                    temp += hash[5*factor];
-                    temp += hash[factor];
-                } else for (int i = 1; i <= unit; i++) temp += hash[factor];
-            } else if (unit > 5) {
-                if (unit == 9) {
-                    temp += hash[10*factor];
-                    temp += hash[factor];
-                } else {
-                    for (int i = 1; i <= unit - 5; i++) temp += hash[factor];
-                    temp += hash[5*factor];
-                }
-            } else temp += hash[unit*factor];
-            res += temp;
-            factor *= 10;
+        for (const auto& [value, symbol] : roman) {
+            while (num >= value) {
+                result += symbol;
+                num -= value;
+            }
         }
-        reverse(res.begin(), res.end());
-        return res;
+
+        return result;
     }
 };
 // @lc code=end
-

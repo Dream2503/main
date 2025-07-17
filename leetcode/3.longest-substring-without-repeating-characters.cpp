@@ -5,46 +5,26 @@
  */
 
 // @lc code=start
-#include <iostream>
-using namespace std;
-
 class Solution {
-private:
-    bool in(char ch, string str) {
-        short cnt = 0;
-        char chr;
-
-        while ((chr = str[cnt]) != '\0') {
-            if (chr == ch)
-                return true;
-            cnt ++;
-        }
-
-        return false;
-    }
-
 public:
-    int lengthOfLongestSubstring(string s) {
-        short cnt = 0, shortLen = 0, longLen = 0, length = s.length();
-        string shorter;
+    int lengthOfLongestSubstring(const string& s) {
+        const size_t len = s.length();
+        int left = 0, right = 1, max = 1;
 
-        while (cnt < (length - longLen)) {
-            for (short idx = cnt; idx < length; idx++) {
-                if (shorter.find(s[idx]) >= shortLen) {
-                    shorter += s[idx];
-                    shortLen++;
-                } else
-                    break;
-            }
-            if (longLen < shortLen)
-                longLen = shortLen;
-            
-            shorter.clear();
-            shortLen = 0;
-            cnt++;
+        if (!len) {
+            return 0;
         }
-        return longLen;
+        while (right < len) {
+            for (int i = right - 1; i >= left; i--) {
+                if (s[i] == s[right]) {
+                    left = i + 1;
+                    break;
+                }
+            }
+            max = std::max(right - left + 1, max);
+            right++;
+        }
+        return max;
     }
 };
 // @lc code=end
-

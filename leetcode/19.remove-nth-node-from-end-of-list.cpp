@@ -17,26 +17,22 @@
  */
 class Solution {
 public:
-    ListNode* removeNthFromEnd(ListNode* head, int n) {
-        int cnt = 0;
-        ListNode *current = head->next, *prev = head;
+    ListNode* removeNthFromEnd(const ListNode* head, const int n) {
+        ListNode *current = head, *later = head;
+        int i;
 
-        while (prev) {
-            cnt++;
-            prev = prev->next;
+        for (i = 0; i <= n && later; i++) {
+            later = later->next;
         }
-        cnt -= n;
-        prev = head;
-
-        if (cnt == 0) return head->next;
-
-        for (int i = 1; i < cnt; i++) {
-            prev = current;
+        if (i != n + 1) {
+            return head->next;
+        }
+        while (later) {
+            later = later->next;
             current = current->next;
         }
-        prev->next = current->next;
+        current->next = current->next->next;
         return head;
     }
 };
 // @lc code=end
-

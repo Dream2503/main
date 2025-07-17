@@ -5,44 +5,27 @@
  */
 
 // @lc code=start
-#include <iostream>
-using namespace std;
-
 class Solution {
 public:
-    string longestPalindrome(string s) {
-        short length = s.length(), i = 0, cnt;
-        bool is_palindrome = false;
-        string big, x;
-        big += s[0];
+    string longestPalindrome(const std::string& s) {
+        const size_t len = s.length();
+        int start = 0, max_len = 1;
 
-        while (i < length - big.length()) {
-            for (short j = length - 1; j > i; j--) {
-                if (s[i] == s[j]) {
-                    is_palindrome = true;
-                    cnt = 1;
-
-                    for (short k = i + 1; k < j; k++) {
-                        if (s[k] == s[j - cnt])
-                            is_palindrome = true;
-                        else {
-                            is_palindrome = false;
-                            break;
-                        }
-                        cnt++;
-                    }
-                    if (is_palindrome) {
-                        x = s.substr(i, j-i+1);
-
-                        if (big.length() < x.length())
-                            big = x;
-                    }
-                }
+        auto expand = [&](int left, int right) -> void {
+            while (left >= 0 && right < len && s[left] == s[right]) {
+                left--;
+                right++;
             }
-            i++;
+            if (right - left - 1 > max_len) {
+                start = left + 1;
+                max_len = right - left - 1;
+            }
+        };
+        for (int i = 0; i < len; i++) {
+            expand(i, i);
+            expand(i, i + 1);
         }
-        return big;
+        return s.substr(start, max_len);
     }
 };
 // @lc code=end
-

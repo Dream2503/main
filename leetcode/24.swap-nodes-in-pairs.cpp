@@ -18,21 +18,29 @@
 class Solution {
 public:
     ListNode* swapPairs(ListNode* head) {
-        if (not (head and head->next)) return head;
+        if (!(head && head->next)) {
+            return head;
+        }
         ListNode *end = nullptr, *prev = head, *current = prev->next;
         head = current;
 
         while (current) {
             prev->next = current->next;
             current->next = prev;
-            if (end) end->next = current;
+
+            if (end) {
+                end->next = current;
+            }
             end = prev;
             prev = prev->next;
-            if (prev) current = prev->next;
-            else break;
+
+            if (prev) {
+                current = prev->next;
+            } else {
+                break;
+            }
         }
         return head;
     }
 };
 // @lc code=end
-

@@ -17,25 +17,27 @@
  */
 class Solution {
 public:
-    ListNode* mergeKLists(vector<ListNode*>& lists) {
-        vector<int> res;
+    ListNode* mergeKLists(const std::vector<ListNode*>& lists) {
+        auto comparator = [](const ListNode* a, const ListNode* b) -> bool { return a->val > b->val; };
+        std::priority_queue<ListNode*, std::vector<ListNode*>, decltype(comparator)> min_heap(comparator);
 
-        for (ListNode *node: lists) {
-            while (node) {
-                res.push_back(node->val);
-                node = node->next;
+        for (ListNode* list : lists) {
+            if (list) {
+                min_heap.push(list);
             }
         }
-        if (not res.size()) return nullptr;
-        sort(res.begin(), res.end());
-        ListNode *head = new ListNode(res[0]), *current = head;
-        
-        for (int num: res) {
-            current->next = new ListNode(num);
+        ListNode res = ListNode(), *current = &res;
+
+        while (!min_heap.empty()) {
+            current->next = min_heap.top();
             current = current->next;
+            min_heap.pop();
+
+            if (current->next) {
+                min_heap.push(current->next);
+            }
         }
-        return head->next;
+        return res.next;
     }
 };
 // @lc code=end
-

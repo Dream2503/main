@@ -7,13 +7,56 @@
 // @lc code=start
 class Solution {
 public:
-    double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
-        int size1 = nums1.size(), size2 = nums2.size(), res = (size1 + size2) / 2;;
-        vector<int> mergeList(size1+size2);
-        merge(nums1.begin(), nums1.end(), nums2.begin(), nums2.end(), mergeList.begin());
-        if ((size1 + size2) % 2 == 0) return (mergeList[res] + mergeList[res - 1]) / 2.0;
-        else return mergeList[res];
+    double findMedianSortedArrays(const std::vector<int>& nums1, const std::vector<int>& nums2) {
+        const size_t size1 = nums1.size(), size2 = nums2.size(), total = size1 + size2;
+        const size_t target = total % 2 == 0 ? total / 2 - 1 : total / 2;
+        int i = 0, j = 0, value = 0;
+
+        if (!total) {
+            return 0;
+        }
+        if (total == 1) {
+            return size1 ? nums1[0] : nums2[0];
+        }
+        while (i < size1 && j < size2) {
+            if (nums1[i] < nums2[j]) {
+                value = nums1[i];
+                i++;
+            } else {
+                value = nums2[j];
+                j++;
+            }
+            if (i + j - 1 == target) {
+                break;
+            }
+        }
+        if (i + j - 1 != target) {
+            while (i < size1 && i + j - 1 != target) {
+                value = nums1[i];
+                i++;
+            }
+            while (j < size2 && i + j - 1 != target) {
+                value = nums2[j];
+                j++;
+            }
+        }
+        if (total % 2 == 0) {
+            if (i < size1 && j < size2) {
+                if (nums1[i] < nums2[j]) {
+                    value += nums1[i];
+                } else {
+                    value += nums2[j];
+                }
+            } else {
+                if (i < size1) {
+                    value += nums1[i];
+                } else {
+                    value += nums2[j];
+                }
+            }
+            return value / 2.0;
+        }
+        return value;
     }
 };
 // @lc code=end
-

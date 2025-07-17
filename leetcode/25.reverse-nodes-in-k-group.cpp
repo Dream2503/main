@@ -17,24 +17,44 @@
  */
 class Solution {
 public:
-    ListNode* reverseKGroup(ListNode* head, int k) {
-        if (not head->next) return head;
-        vector<int> vec;
-        
-        while (head) {
-            vec.push_back(head->val);
-            head = head->next;
-        }
-        for (int i = 0, size = vec.size() - k; i <= size; i += k) reverse(vec.begin()+i, vec.begin()+i+k);
-        head = new ListNode(vec[0]);
-        ListNode *current = head;
-
-        for (int num: vec) {
-            current->next = new ListNode(num);
+    void reverse(ListNode* end, ListNode* prev, ListNode* current, ListNode* stop) {
+        while (current != stop) {
+            prev->next = end;
+            end = prev;
+            prev = current;
             current = current->next;
         }
-        return head->next;
+        prev->next = end;
+    }
+
+    ListNode* reverseKGroup(ListNode* head, const int k) {
+        ListNode *prev = head, *end = head, *last = head;
+        bool first = true;
+
+        if (k == 1) {
+            return head;
+        }
+
+        while (end) {
+            for (int i = 1; i < k; i++) {
+                if (end->next) {
+                    end = end->next;
+                } else {
+                    return head;
+                }
+            }
+            if (first) {
+                head = end;
+                first = false;
+            } else {
+                last->next = end;
+                last = prev;
+            }
+            end = end->next;
+            reverse(end, prev, prev->next, end);
+            prev = end;
+        }
+        return head;
     }
 };
 // @lc code=end
-

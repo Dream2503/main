@@ -8,16 +8,26 @@
 class Solution {
 public:
     int reverse(int x) {
-        bool neg = false;
-        if (x < 0) neg = true;
-        string res = to_string(x);
-        if (neg) res.erase(res.begin());
-        std::reverse(res.begin(), res.end());
-        long num = stol(res);
-        if (neg) num *= -1;
-        if (num < INT_MIN or num > INT_MAX) return 0;
-        return (int)num;
+        if (x == INT32_MIN) {
+            return 0;
+        }
+        const bool is_negative = x < 0;
+        x = is_negative ? -x : x;
+        std::vector<int> num(10);
+        int len = 0;
+
+        while (x) {
+            num[len] = x % 10;
+            x /= 10;
+            len++;
+        }
+        for (int i = 0; i < len; i++) {
+            if (x > INT32_MAX / 10 || (x == INT32_MAX / 10 && num[i] > INT32_MAX % 10)) {
+                return 0;
+            }
+            x = x * 10 + num[i];
+        }
+        return is_negative ? -x : x;
     }
 };
 // @lc code=end
-

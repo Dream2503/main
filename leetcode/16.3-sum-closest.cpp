@@ -7,27 +7,34 @@
 // @lc code=start
 class Solution {
 public:
-    int threeSumClosest(vector<int> nums, int target) {
-        sort(nums.begin(), nums.end());
-        int left, right, sum, size = nums.size(), tol = INT_MAX, res; 
+    int threeSumClosest(std::vector<int>& nums, const int target) {
+        std::sort(nums.begin(), nums.end());
+        const size_t size = nums.size();
+        int left, right, res = 0, tol = INT32_MAX;
 
         for (int i = 0; i < size; i++) {
-            if (i > 0 and nums[i] == nums[i - 1]) continue;
+            if (i > 0 && nums[i] == nums[i - 1]) {
+                continue;
+            }
             left = i + 1, right = size - 1;
 
             while (left < right) {
-                sum = nums[left] + nums[right] + nums[i];
-                if (abs(target - sum) < tol) {
+                const int sum = nums[left] + nums[right] + nums[i];
+
+                if (std::abs(target - sum) < tol) {
                     tol = abs(target - sum);
                     res = sum;
                 }
-                if (sum == target) {left++; right--;}
-                else if (sum < target) left++;
-                else right--;
+                if (sum == target) {
+                    left++;
+                    right--;
+                } else if (sum < target)
+                    left++;
+                else
+                    right--;
             }
         }
         return res;
     }
 };
 // @lc code=end
-

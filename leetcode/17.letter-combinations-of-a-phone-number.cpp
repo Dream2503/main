@@ -7,41 +7,32 @@
 // @lc code=start
 class Solution {
 public:
-    vector<string> letterCombinations(string digits) {
-        vector<pair<char,string>> vec{{'2', "abc"}, {'3', "def"}, {'4', "ghi"}, {'5', "jkl"}, {'6', "mno"}, {'7', "pqrs"}, {'8', "tuv"}, {'9', "wxyz"}};
-        unordered_map<char,string> hash(vec.begin(), vec.end());
-        vector<string> res;
-        int size = digits.size();
-        string temp;
+    std::vector<std::string> letterCombinations(const std::string& digits) {
+        static const std::vector<std::string> codes = {"abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+        std::vector res(1, std::string(digits.size(), 'K'));
+        int i = 0;
 
-        if (size == 1) 
-            for (char ch: hash[digits[0]]) {
-                temp = ch;
-                res.push_back(temp);
+        if (digits.empty()) {
+            return {};
+        }
+        for (const char ch : digits) {
+            const int idx = ch - '0' - 2, size = codes[idx].length(), res_size = res.size();
+            std::vector<std::string> temp;
+            temp.reserve(res_size * size);
+
+            for (std::string& element : res) {
+                temp.insert(temp.end(), size, element);
             }
-        else if (size == 2) 
-            for (char ch1: hash[digits[0]])
-                for (char ch2: hash[digits[1]]) {
-                    temp = ch1; temp += ch2;
-                    res.push_back(temp);
-                }
-        else if (size == 3) 
-            for (char ch1: hash[digits[0]])
-                for (char ch2: hash[digits[1]])
-                    for (char ch3: hash[digits[2]]) {
-                        temp = ch1; temp += ch2; temp += ch3;
-                        res.push_back(temp);
-                    }
-        else if (size == 4) 
-            for (char ch1: hash[digits[0]])
-                for (char ch2: hash[digits[1]])
-                    for (char ch3: hash[digits[2]])
-                        for (char ch4: hash[digits[3]]) {
-                            temp = ch1; temp += ch2; temp += ch3; temp += ch4;
-                            res.push_back(temp);
-                        }
+            res = std::move(temp);
+            int j = 0;
+
+            for (std::string& s : res) {
+                s[i] = codes[idx][j];
+                j = (j + 1) % size;
+            }
+            i++;
+        }
         return res;
     }
 };
 // @lc code=end
-

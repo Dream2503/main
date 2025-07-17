@@ -18,52 +18,30 @@
 class Solution {
 public:
     ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
-        if (not list1) return list2;
-        if (not list2) return list1;
-        ListNode *result = new ListNode, *current;
-
-        if (list1->val < list2->val) {
-            result->val = list1->val;
-            list1 = list1->next;
-        } else {
-            result->val = list2->val;
-            list2 = list2->next;
+        if (!list1) {
+            return list2;
         }
-        current = result;
+        if (!list2) {
+            return list1;
+        }
+        ListNode res = ListNode(), *current = &res;
 
-        while (list1 and list2) {
-            current->next = new ListNode;
-            current = current->next;
-
+        while (list1 && list2) {
             if (list1->val < list2->val) {
-                current->val = list1->val;
+                current->next = list1;
                 list1 = list1->next;
-            } else if ( list1->val > list2->val) {
-                current->val = list2->val;
-                list2 = list2->next;
             } else {
-                current->val = list1->val;
-                list1 = list1->next;
-                current->next = new ListNode;
-                current = current->next;
-                current->val = list2->val;
+                current->next = list2;
                 list2 = list2->next;
             }
-        }
-        while (list1) {
-            current->next = new ListNode;
             current = current->next;
-            current->val = list1->val;
-            list1 = list1->next;
         }
-        while (list2) {
-            current->next = new ListNode;
-            current = current->next;
-            current->val = list2->val;
-            list2 = list2->next;
+        if (list1) {
+            current->next = list1;
+        } else {
+            current->next = list2;
         }
-        return result;
+        return res.next;
     }
 };
 // @lc code=end
-

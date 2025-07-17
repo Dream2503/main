@@ -7,17 +7,18 @@
 // @lc code=start
 class Solution {
 public:
-    string longestCommonPrefix(vector<string>& strs) {
-        string res;
-        int n = strs[0].size(), pos = 0;
-        char ch;
+    std::string longestCommonPrefix(const std::vector<std::string>& strs) {
+        int i = 0;
+        std::string res;
 
-        while (n) {
-            ch = strs[0][pos];
-            for (string element: strs) if (ch != element[pos]) return res;
+        for (const char ch : strs[0]) {
+            for (const std::string& element : strs) {
+                if (ch != element[i]) {
+                    return  res;
+                }
+            }
             res += ch;
-            pos++;
-            n--;
+            i++;
         }
         return res;
     }
