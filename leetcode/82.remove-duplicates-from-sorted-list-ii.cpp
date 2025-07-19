@@ -18,26 +18,38 @@
 class Solution {
 public:
     ListNode* deleteDuplicates(ListNode* head) {
-        if (not (head and head->next)) return head;
-        unordered_map<int,int> hash;
-        vector<int> res;
-        
-        while (head) {
-            hash[head->val]++;
-            head = head->next;
+        if (!head || !head->next) {
+            return head;
         }
-        for (auto element: hash) if (element.second == 1) res.push_back(element.first);
-        if (res.size() == 0) return nullptr;
-        sort(res.begin(), res.end());
-        head = new ListNode(res[0]);
         ListNode *current = head;
 
-        for (int num: res) {
-            current->next = new ListNode(num);
-            current = current->next;
+        while (head && head->next && head->val == head->next->val) {
+            while (current && current->val == head->val) {
+                current = current->next;
+            }
+            head = current;
         }
-        return head->next;
+        if (!head) {
+            return head;
+        }
+        ListNode* prev = head;
+        current = head->next;
+
+        while (current) {
+            if (current->next && current->val == current->next->val) {
+                const int val = current->val;
+
+                while (current && current->val == val) {
+                    current = current->next;
+                }
+                prev->next = current;
+            } else {
+                prev = current;
+                current = current->next;
+            }
+
+        }
+        return head;
     }
 };
 // @lc code=end
-

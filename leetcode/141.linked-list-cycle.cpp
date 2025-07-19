@@ -15,17 +15,18 @@
  */
 class Solution {
 public:
-    bool hasCycle(ListNode *head) {
-        ListNode *fast = head, *slow = head;
+    bool hasCycle(const ListNode* head) {
+        const ListNode *fast = head, *slow = head;
 
-        while (fast and fast->next) {
+        while (fast && fast->next) {
             fast = fast->next->next;
             slow = slow->next;
-            if (fast == slow) return true;
-        }
 
-        return false;        
+            if (fast == slow) {
+                return true;
+            }
+        }
+        return false;
     }
 };
 // @lc code=end
-

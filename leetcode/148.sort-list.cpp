@@ -18,23 +18,61 @@
 class Solution {
 public:
     ListNode* sortList(ListNode* head) {
-        if (not (head and head->next)) return head;
-        vector<int> vec;
-        ListNode *current = head;
+        const auto split = [](ListNode* node, int n) -> ListNode* {
+            while (--n && node) {
+                node = node->next;
+            }
+            if (!node) {
+                return nullptr;
+            }
+            ListNode* res = node->next;
+            node->next = nullptr;
+            return res;
+        };
+        const auto merge = [](ListNode* list1, ListNode* list2, ListNode* prev) -> ListNode* {
+            ListNode* current = prev;
 
-        while (current) {
-            vec.push_back(current->val);
-            current = current->next;
-        }
-        sort(vec.begin(), vec.end());
-        current = head;
+            while (list1 && list2) {
+                if (list1->val < list2->val) {
+                    current->next = list1;
+                    list1 = list1->next;
+                } else {
+                    current->next = list2;
+                    list2 = list2->next;
+                }
+                current = current->next;
+            }
+            current->next = list1 ? list1 : list2;
 
-        for (int num: vec) {
-            current->val = num;
-            current = current->next;
+            while (current->next) {
+                current = current->next;
+            }
+            return current;
+        };
+        if (!head || !head->next) {
+            return head;
         }
-        return head;
+        int len = 0;
+        const ListNode* node = head;
+
+        while (node) {
+            len++;
+            node = node->next;
+        }
+        ListNode dummy(0);
+        dummy.next = head;
+
+        for (int i = 1; i < len; i *= 2) {
+            ListNode* prev = &dummy;
+            ListNode* current = dummy.next;
+
+            while (current) {
+                ListNode *left = current, *right = split(left, i);
+                current = split(right, i);
+                prev = merge(left, right, prev);
+            }
+        }
+        return dummy.next;
     }
 };
 // @lc code=end
-

@@ -18,23 +18,35 @@
 class Solution {
 public:
     ListNode* insertionSortList(ListNode* head) {
-        if (not head->next) return head;
-        vector<int> vec;
-        ListNode *current = head;
-
-        while (current) {
-            vec.push_back(current->val);
-            current = current->next;
+        if (!head || !head->next) {
+            return head;
         }
-        sort(vec.begin(), vec.end());
-        current = head;
+        ListNode *prev = head->next, *current = prev->next;
+        head->next = nullptr;
 
-        for (int num: vec) {
-            current->val = num;
-            current = current->next;
+        while (prev) {
+            if (prev->val < head->val) {
+                prev->next = head;
+                head = prev;
+            } else {
+                ListNode *current_sorted = head->next, *prev_sorted = head;
+
+                while (current_sorted && current_sorted->val < prev->val) {
+                    prev_sorted = current_sorted;
+                    current_sorted = current_sorted->next;
+                }
+                if (current_sorted != prev_sorted) {
+                    prev_sorted->next = prev;
+                    prev->next = current_sorted;
+                }
+            }
+            prev = current;
+
+            if (current) {
+                current = current->next;
+            }
         }
         return head;
     }
 };
 // @lc code=end
-

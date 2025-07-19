@@ -7,46 +7,40 @@
 // @lc code=start
 class Solution {
 public:
-    string addBinary(string a, string b) {
-        string res;
-        a.insert(a.begin(), 0);
-        b.insert(b.begin(), 0);
-        auto ch1 = a.end() - 1, ch2 = b.end() - 1;
-        int temp, carry = 0;
+    std::string addBinary(std::string& a, std::string& b) {
+        int i = a.size() - 1, j = b.size() - 1, k = std::max(i, j) + 2, carry = 0;
+        auto res = new char[k + 1];
+        res[k--] = 0;
 
-        for (; *ch1 and *ch2; ch1--, ch2--) {
-            temp = (*ch1 - '0') + (*ch2 - '0') + carry;
+        while (i >= 0 || j >= 0) {
+            int temp = 0;
+
+            if (i >= 0) {
+                temp += a[i] - '0';
+            }
+            if (j >= 0) {
+                temp += b[j] - '0';
+            }
+            temp += carry;
             carry = 0;
 
             if (temp == 2) {
                 carry = 1;
-                res.insert(res.begin(), '0');
+                res[k] = '0';
             } else if (temp == 3) {
                 carry = 1;
-                res.insert(res.begin(), '1');
-            } else res.insert(res.begin(), (char)(temp+'0'));
+                res[k] = '1';
+            } else {
+                res[k] = temp + '0';
+            }
+            i--;
+            j--;
+            k--;
         }
-        for (; *ch1; ch1--) {
-            temp = *ch1 - '0' + carry;
-            carry = 0;
-
-            if (temp == 2) {
-                carry = 1;
-                res.insert(res.begin(), '0');
-            } else res.insert(res.begin(), (char)(temp+'0'));
+        if (carry) {
+            res[k] = carry + '0';
         }
-        for (; *ch2; ch2--) {
-            temp = *ch2 - '0' + carry;
-            carry = 0;
-
-            if (temp == 2) {
-                carry = 1;
-                res.insert(res.begin(), '0');
-            } else res.insert(res.begin(), (char)(temp+'0'));
-        }
-        if (carry) res.insert(res.begin(), (char)(carry+'0'));
-        return res;
+        return res[0] == '1' ? res : res + 1;
     }
 };
 // @lc code=end
-

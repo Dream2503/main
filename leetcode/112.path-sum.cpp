@@ -1,7 +1,7 @@
 /*
- * @lc app=leetcode id=104 lang=cpp
+ * @lc app=leetcode id=112 lang=cpp
  *
- * [104] Maximum Depth of Binary Tree
+ * [112] Path Sum
  */
 
 // @lc code=start
@@ -18,13 +18,16 @@
  */
 class Solution {
 public:
-    int maxDepth(const TreeNode* root) {
+    bool hasPathSum(const TreeNode* root, int targetSum) {
         if (!root) {
-            return 0;
+            return false;
         }
-        int x = maxDepth(root->left), y = maxDepth(root->right);
-        return x > y ? x + 1 : y + 1;
+        targetSum -= root->val;
+
+        if (!root->left && !root->right) {
+            return targetSum == 0;
+        }
+        return hasPathSum(root->left, targetSum) || hasPathSum(root->right, targetSum);
     }
 };
 // @lc code=end
-

@@ -15,17 +15,25 @@
  */
 class Solution {
 public:
-    ListNode *detectCycle(ListNode *head) {
-        if (not (head and head->next)) return nullptr;
-        vector<ListNode*> seen;
+    ListNode* detectCycle(ListNode* head) {
+        const ListNode* fast = head;
+        ListNode* slow = head;
 
-        while (head) {
-            if (find(seen.begin(), seen.end(), head) != seen.end()) return head;
-            seen.push_back(head);
-            head = head->next;
+        while (fast && fast->next) {
+            fast = fast->next->next;
+            slow = slow->next;
+
+            if (fast == slow) {
+                slow = head;
+
+                while (slow != fast) {
+                    slow = slow->next;
+                    fast = fast->next;
+                }
+                return slow;
+            }
         }
         return nullptr;
     }
 };
 // @lc code=end
-

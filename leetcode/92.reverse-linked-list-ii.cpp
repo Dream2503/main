@@ -17,25 +17,39 @@
  */
 class Solution {
 public:
-    ListNode* reverseBetween(ListNode* head, int left, int right) {
-        if (not head->next) return head;
-        vector<int> res;
-        left--;
-
-        while (head) {
-            res.push_back(head->val);
-            head = head->next;
+    ListNode* reverseBetween(ListNode* head, int left, const int right) {
+        if (!head->next || left == right) {
+            return head;
         }
-        reverse(res.begin()+left, res.begin()+right);
-        head = new ListNode(res[0]);
-        ListNode *current = head;
-    
-        for (int num: res) {
-            current->next = new ListNode(num);
+        ListNode* current = head, *temp;
+
+        for (int i = 2; i < left; i++) {
             current = current->next;
         }
-        return head->next;
+        if (left == 1) {
+            temp = head;
+        } else {
+            temp = current->next;
+        }
+        ListNode *end = temp, *prev = end->next, *now = prev->next;
+
+        for (int i = 0; i < right - left && prev; i++) {
+            prev->next = end;
+            end = prev;
+            prev = now;
+
+            if (now) {
+                now = now->next;
+            }
+        }
+        if (left == 1) {
+            head->next = prev;
+            head = end;
+        } else {
+            current->next = end;
+            temp->next = prev;
+        }
+        return head;
     }
 };
 // @lc code=end
-

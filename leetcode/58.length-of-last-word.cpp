@@ -7,20 +7,20 @@
 // @lc code=start
 class Solution {
 public:
-    int lengthOfLastWord(string s) {
-        bool started = false;
-        int res = 0;
+    int lengthOfLastWord(const std::string& s) {
+        int res = 0, i = s.length() - 1;
 
-        for (auto ch = s.end() - 1; ch != s.begin() - 1; ch--) {
-            if (*ch == ' ' and (not started)) continue;
-            else if (*ch == ' ') break;
-            else if (*ch != ' ') {
-                started = true;
-                res++;
+        while (s[i] == ' ') {
+            i--;
+        }
+        while (i >= 0) {
+            if (s[i] == ' ') {
+                return res;
             }
+            res++;
+            i--;
         }
         return res;
     }
 };
 // @lc code=end
-

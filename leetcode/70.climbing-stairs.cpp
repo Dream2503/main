@@ -7,18 +7,18 @@
 // @lc code=start
 class Solution {
 public:
-    int climbStairs(int n) {
-        if (n == 0 or n == 1) {
-            return 1;
+    int climbStairs(const int n) {
+        if (n == 1) {
+            return n;
         }
-        int prev = 1, curr = 1;
+        int prev = 1, current = 1;
+
         for (int i = 2; i <= n; i++) {
-            int temp = curr;
-            curr = prev + curr;
+            const int temp = current;
+            current = prev + current;
             prev = temp;
         }
-        return curr;
+        return current;
     }
 };
 // @lc code=end
-

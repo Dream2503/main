@@ -7,24 +7,21 @@
 // @lc code=start
 class Solution {
 public:
-    int findMaxConsecutiveOnes(vector<int>& nums) {
-        int max = 0, i = 0, j, size = nums.size();
+    int findMaxConsecutiveOnes(const std::vector<int>& nums) {
+        int res = 0, current = 0, i = 0, size = nums.size();
 
         while (i < size) {
             if (nums[i]) {
-                j = i;
-
-                while (j < size) {
-                    if (nums[j]) j++;
-                    else break;
+                while (i < size && nums[i]) {
+                    current++;
+                    i++;
                 }
-                if ((j - i) > max) max = j - i;
-                i = j;
+                res = std::max(res, current);
+                current = 0;
             }
             i++;
         }
-        return max;
+        return res;
     }
 };
 // @lc code=end
-

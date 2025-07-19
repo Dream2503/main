@@ -10,14 +10,13 @@ using namespace std;
 
 class Solution {
 public:
-    bool validMountainArray(vector<int>& arr) {
-        int size = arr.size(), i = 0, j = size - 1;
-        bool increasing = true;
+    bool validMountainArray(const std::vector<int>& arr) {
+        const int size = arr.size();
+        int i = 0, j = size - 1;
 
         if (size < 3) {
             return false;
         }
-
         while (i < size - 1 && arr[i] < arr[i + 1]) {
             i++;
         }

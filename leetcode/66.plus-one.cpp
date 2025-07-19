@@ -7,21 +7,17 @@
 // @lc code=start
 class Solution {
 public:
-    vector<int> plusOne(vector<int>& digits) {
-        int carry = 1;
-        for (auto num = digits.end() - 1; num != digits.begin() - 1; num--) {
-            if (*num == 9) {
-                *num = 0;
-                carry = 1;
+    std::vector<int>& plusOne(std::vector<int>& digits) {
+        for (int i = digits.size() - 1; i >= 0; i--) {
+            if (digits[i] == 9) {
+                digits[i] = 0;
             } else {
-                *num += carry;
-                carry--;
-                break;
+                digits[i] += 1;
+                return digits;
             }
         }
-        if (carry) digits.insert(digits.begin(), carry);
+        digits.insert(digits.begin(), 1);
         return digits;
     }
 };
 // @lc code=end
-

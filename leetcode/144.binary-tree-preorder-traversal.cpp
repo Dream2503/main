@@ -1,7 +1,7 @@
 /*
- * @lc app=leetcode id=94 lang=cpp
+ * @lc app=leetcode id=144 lang=cpp
  *
- * [94] Binary Tree Inorder Traversal
+ * [144] Binary Tree Preorder Traversal
  */
 
 // @lc code=start
@@ -18,16 +18,16 @@
  */
 class Solution {
 public:
-    std::vector<int> inorderTraversal(const TreeNode* root) {
+    std::vector<int> preorderTraversal(const TreeNode* root) {
         std::vector<int> res;
-        std::function<void(const TreeNode*)> in_order = [&](const TreeNode* node) -> void {
+        std::function<void(const TreeNode*)> pre_order = [&](const TreeNode* node) -> void {
             if (node) {
-                in_order(node->left);
                 res.push_back(node->val);
-                in_order(node->right);
+                pre_order(node->left);
+                pre_order(node->right);
             }
         };
-        in_order(root);
+        pre_order(root);
         return res;
     }
 };

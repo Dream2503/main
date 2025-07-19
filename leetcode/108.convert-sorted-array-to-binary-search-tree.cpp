@@ -18,20 +18,15 @@
  */
 class Solution {
 public:
-    TreeNode* sortedArrayToBST(vector<int>& nums) {
-        int size = nums.size(), mid = size / 2, i;
-        TreeNode *res = new TreeNode(nums[mid]), *current = res;
-
-        for (i = mid - 1; i > -1; i--) {
-            current->left = new TreeNode(nums[i]);
-            current = current->left;
-        }
-        for (i = mid + 1; i < size; i++) {
-            current->right = new TreeNode(nums[i]);
-            current = current->right;
-        }
-        return res;
+    TreeNode* sortedArrayToBST(const vector<int>& nums) {
+        std::function<TreeNode*(int, int)> create_node = [&](const int low, const int high) -> TreeNode* {
+            if (low > high) {
+                return nullptr;
+            }
+            const int mid = (low + high) / 2;
+            return new TreeNode(nums[mid], create_node(low, mid - 1), create_node(mid + 1, high));
+        };
+        return create_node(0, nums.size() - 1);
     }
 };
 // @lc code=end
-

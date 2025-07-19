@@ -7,16 +7,13 @@
 // @lc code=start
 class Solution {
 public:
-    int singleNumber(vector<int>& nums) {
-        int size = nums.size();
-        if (size == 1) return nums[0];
-        sort(nums.begin(), nums.end());
+    int singleNumber(const std::vector<int>& nums) {
+        int res = 0;
 
-        for (int i = 0; i < size - 1; i += 2) {
-            if (nums[i] != nums[i+1]) return nums[i];
+        for (const int num : nums) {
+            res ^= num;
         }
-        return nums[size-1];
+        return res;
     }
 };
 // @lc code=end
-

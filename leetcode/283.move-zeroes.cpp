@@ -7,17 +7,26 @@
 // @lc code=start
 class Solution {
 public:
-    void moveZeroes(vector<int>& nums) {
-        int size = nums.size();
+    void moveZeroes(std::vector<int>& nums) {
+        const int size = nums.size();
+        int i = 0;
 
-        for (int i = 0; i < size; i++) {
-            if (not nums[i]) {
-                nums.erase(nums.begin()+i);
-                nums.push_back(0);
-                size--; i--;
+        while (i < size && nums[i]) {
+            i++;
+        }
+        int j = i + 1;
+
+        while (j < size) {
+            while (j < size && !nums[j]) {
+                j++;
             }
+            if (j < size) {
+                nums[i++] = nums[j++];
+            }
+        }
+        while (i < size) {
+            nums[i++] = 0;
         }
     }
 };
 // @lc code=end
-

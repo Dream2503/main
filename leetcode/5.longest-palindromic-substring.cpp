@@ -7,7 +7,7 @@
 // @lc code=start
 class Solution {
 public:
-    string longestPalindrome(const std::string& s) {
+    std::string longestPalindrome(const std::string& s) {
         const size_t len = s.length();
         int start = 0, max_len = 1;
 

@@ -1,7 +1,7 @@
 /*
- * @lc app=leetcode id=94 lang=cpp
+ * @lc app=leetcode id=145 lang=cpp
  *
- * [94] Binary Tree Inorder Traversal
+ * [145] Binary Tree Postorder Traversal
  */
 
 // @lc code=start
@@ -18,17 +18,18 @@
  */
 class Solution {
 public:
-    std::vector<int> inorderTraversal(const TreeNode* root) {
+    std::vector<int> postorderTraversal(TreeNode* root) {
         std::vector<int> res;
-        std::function<void(const TreeNode*)> in_order = [&](const TreeNode* node) -> void {
+        std::function<void(const TreeNode*)> post_order = [&](const TreeNode* node) -> void {
             if (node) {
-                in_order(node->left);
+                post_order(node->left);
+                post_order(node->right);
                 res.push_back(node->val);
-                in_order(node->right);
             }
         };
-        in_order(root);
+        post_order(root);
         return res;
     }
 };
 // @lc code=end
+

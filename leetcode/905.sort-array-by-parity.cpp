@@ -10,8 +10,9 @@ using namespace std;
 
 class Solution {
 public:
-    vector<int> sortArrayByParity(vector<int>& nums) {
-        int size = nums.size(), i = 0, j = size - 1;
+    std::vector<int>& sortArrayByParity(std::vector<int>& nums) {
+        const int size = nums.size();
+        int i = 0, j = size - 1;
 
         while (i < j) {
             while (i < size && nums[i] % 2 == 0) {

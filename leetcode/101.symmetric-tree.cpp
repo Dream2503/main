@@ -18,18 +18,21 @@
  */
 class Solution {
 public:
-    bool isSymmetric(TreeNode* root) {
-        bool res = true;
-        auto inOrder = [](TreeNode *root1, TreeNode *root2, bool &res, auto inOrder) -> void {
-            if (res and root1 and root2) {
-                inOrder(root1->left, root2->right, res, inOrder);
-                if (root1->val != root2->val) res = false;
-                inOrder(root1->right, root2->left, res, inOrder);
+    bool isSymmetric(const TreeNode* root) {
+        std::function<bool(const TreeNode*, const TreeNode*)> is_same = [&](const TreeNode* node1,
+                                                                            const TreeNode* node2) -> bool {
+            if (!node1 && !node2) {
+                return true;
             }
-            else if (root1 or root2) res = false;
+            if (!node1 || !node2) {
+                return false;
+            }
+            if (node1->val != node2->val) {
+                return false;
+            }
+            return is_same(node1->left, node2->right) && is_same(node1->right, node2->left);
         };
-        inOrder(root->left, root->right, res, inOrder);
-        return res;
+        return is_same(root->left, root->right);
     }
 };
 // @lc code=end

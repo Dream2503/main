@@ -7,14 +7,24 @@
 // @lc code=start
 class Solution {
 public:
-    bool canConstruct(string ransomNote, string magazine) {
-        if (ransomNote.size() > magazine.size()) return false;
+    bool canConstruct(const std::string& ransomNote, const std::string& magazine) {
+        if (ransomNote.length() > magazine.length()) {
+            return false;
+        }
         int array[26] = {0};
-        for (char ch: ransomNote) array[ch-'a']++;
-        for (char ch: magazine) array[ch-'a']--;
-        for (int element: array) if (element > 0) return false;
+
+        for (const char ch : ransomNote) {
+            array[ch - 'a']++;
+        }
+        for (const char ch : magazine) {
+            array[ch - 'a']--;
+        }
+        for (const int element : array) {
+            if (element > 0) {
+                return false;
+            }
+        }
         return true;
     }
 };
 // @lc code=end
-

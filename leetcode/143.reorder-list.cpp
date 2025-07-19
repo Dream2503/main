@@ -18,27 +18,35 @@
 class Solution {
 public:
     void reorderList(ListNode* head) {
-        if (not (head and head->next)) return;
-        ListNode *current = head;
-        vector<int> vec;
+        ListNode* slow = head;
+        const ListNode* fast = head;
+
+        while (fast && fast->next) {
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+        ListNode *prev = nullptr, *current = slow->next;
+        slow->next = nullptr;
 
         while (current) {
-            vec.push_back(current->val);
-            current = current->next;
+            ListNode* next = current->next;
+            current->next = prev;
+            prev = current;
+            current = next;
         }
-        int i = 1, j = vec.size() - 1;
-        head->val = vec[0];
-        current = head->next;
+        ListNode* first = head;
+        ListNode* second = prev;
 
-        while (i < j) {
-            current->val = vec[j];
-            current = current->next;
-            current->val = vec[i];
-            current = current->next;
-            i++, j--;
+        while (second) {
+            ListNode* temp1 = first->next;
+            ListNode* temp2 = second->next;
+
+            first->next = second;
+            second->next = temp1;
+
+            first = temp1;
+            second = temp2;
         }
-        if (vec.size() % 2 == 0) current->val = vec[i];
     }
 };
 // @lc code=end
-

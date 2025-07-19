@@ -17,43 +17,36 @@
  */
 class Solution {
 public:
-    ListNode* partition(ListNode* head, int x) {
-        if (not (head and head->next)) return head;
-        ListNode *current = head, *res, *temp;
-        bool onHead = true;
-        
-        while (current) {
-            if (current->val < x) {
-                if (onHead) {
-                    res = new ListNode(current->val);
-                    temp = res;
-                    onHead = false;
-                }
-                else {
-                    temp->next = new ListNode(current->val);
-                    temp = temp->next;
-                }
-            }
-            current = current->next;
-        }
-        current = head;
+    ListNode* partition(ListNode* head, const int x) {
+        ListNode *left = nullptr, *right = nullptr, *left_current = nullptr, *right_current = nullptr;
 
-        while (current) {
-            if (current->val >= x) {
-                if (onHead) {
-                    res = new ListNode(current->val);
-                    temp = res;
-                    onHead = false;
+        while (head) {
+            if (head->val < x) {
+                if (left) {
+                    left_current->next = head;
+                    left_current = left_current->next;
+                } else {
+                    left_current = left = head;
                 }
-                else {
-                    temp->next = new ListNode(current->val);
-                    temp = temp->next;
+            } else {
+                if (right) {
+                    right_current->next = head;
+                    right_current = right_current->next;
+                } else {
+                    right_current = right = head;
                 }
             }
-            current = current->next;
+            head = head->next;
         }
-        return res;
+        if (left_current) {
+            left_current->next = right;
+        } else {
+            return right;
+        }
+        if (right_current) {
+            right_current->next = nullptr;
+        }
+        return left;
     }
 };
 // @lc code=end
-

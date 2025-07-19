@@ -6,25 +6,26 @@
 
 // @lc code=start
 class Solution {
-    char convert(char &ch) {
-        if (ch >= '0' and ch <= '9') return 'a';
-        if (ch >= 'A' and ch <= 'Z')  ch += ' ';
-        return ch;
-    }
-
 public:
-    bool isPalindrome(string s) {
-        char check;
+    bool isPalindrome(const std::string& s) {
+        int i = 0, j = s.length() - 1;
 
-        for (int i = 0, j = s.size() - 1; i <= j;) {
-            if (not (convert(s[i]) >= 'a' and s[i] <= 'z')) {i++; continue;}
-            if (not (convert(s[j]) >= 'a' and s[j] <= 'z')) {j--; continue;}
-            check = s[i] - s[j];
-            if (check) return false;
-            i++, j--;
+        while (i < j) {
+            while (i < j && !std::isalnum(s[i])) {
+                i++;
+            }
+            while (i < j && !std::isalnum(s[j])) {
+                j--;
+            }
+            if (i < j) {
+                if (std::tolower(s[i++]) != std::tolower(s[j--])) {
+                    return false;
+                }
+            } else {
+                return true;
+            }
         }
         return true;
     }
 };
 // @lc code=end
-

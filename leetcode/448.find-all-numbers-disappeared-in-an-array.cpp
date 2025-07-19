@@ -7,24 +7,19 @@
 // @lc code=start
 class Solution {
 public:
-    vector<int> findDisappearedNumbers(vector<int>& nums) {
-        int old = nums.size();
-        sort(nums.begin(), nums.end());
-        nums.erase(unique(nums.begin(), nums.end()), nums.end());
-        int news = nums.size(), i = 0, j = 1, k = 0;
-        vector<int> res(old-news);
+    std::vector<int> findDisappearedNumbers(std::vector<int>& nums) {
+        const int size = nums.size();
 
-// [1, 2, 3, 4, 7, 8]
-
-        while (i < news and j <= old) {
-            if (nums[i] != j) {
-                res[k] = j;
-                j++; k++;
-            } else {i++; j++;}
+        for (int i = 0; i < size; i++) {
+            const int idx = std::abs(nums[i]) - 1;
+            nums[idx] = -std::abs(nums[idx]);
         }
-        while (j <= old) {
-            res[k] = j;
-            j++; k++;
+
+        std::vector<int> res;
+        for (int i = 0; i < size; i++) {
+            if (nums[i] > 0) {
+                res.push_back(i + 1);
+            }
         }
         return res;
     }

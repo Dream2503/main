@@ -5,17 +5,41 @@
  */
 
 // @lc code=start
-#include <vector>
 #include <algorithm>
+#include <vector>
 using namespace std;
 
 class Solution {
 public:
-    vector<int> sortedSquares(vector<int>& nums) {
-        transform(nums.begin(), nums.end(), nums.begin(), [](int n) {return n * n;});
-        sort(nums.begin(), nums.end());
-        return nums;
+    std::vector<int> sortedSquares(const vector<int>& nums) {
+        std::vector<int> res;
+        const int size = nums.size();
+        res.reserve(size);
+        int i = 0;
+
+        while (i < size && nums[i] < 0) {
+            i++;
+        }
+        int j = i - 1;
+
+        while (i < size && j >= 0) {
+            if (std::abs(nums[i]) < std::abs(nums[j])) {
+                res.push_back(nums[i] * nums[i]);
+                i++;
+            } else {
+                res.push_back(nums[j] * nums[j]);
+                j--;
+            }
+        }
+        while (i < size) {
+            res.push_back(nums[i] * nums[i]);
+            i++;
+        }
+        while (j >= 0) {
+            res.push_back(nums[j] * nums[j]);
+            j--;
+        }
+        return res;
     }
 };
 // @lc code=end
-

@@ -19,20 +19,14 @@
 class Solution {
 public:
     ListNode* middleNode(ListNode* head) {
-        ListNode *middle = head, *current = head;
+        const ListNode* fast = head;
+        ListNode* slow = head;
 
-        while (current->next) {
-            middle = middle->next;
-            current = current->next;
-
-            if (current) {
-                current = current->next;
-            }
-            if (!current) {
-                break;
-            }
+        while (fast && fast->next) {
+            slow = slow->next;
+            fast = fast->next->next;
         }
-        return middle;
+        return slow;
     }
 };
 // @lc code=end
