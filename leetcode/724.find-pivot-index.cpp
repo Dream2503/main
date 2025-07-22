@@ -7,18 +7,21 @@
 // @lc code=start
 class Solution {
 public:
-    int pivotIndex(vector<int>& nums) {
-        int leftSum = 0, rightSum = 0, size = nums.size(), idx = 0;
-        if (size == 1) return 0;
-        for (int i = 1; i < size; i++) rightSum += nums[i];
+    int pivotIndex(const std::vector<int>& nums) {
+        int res = 0, left_sum = 0, right_sum = std::accumulate(nums.begin() + 1, nums.end(), 0);
+        const int size = nums.size();
 
-        while (leftSum != rightSum and idx < size - 1) {
-            leftSum += nums[idx++];
-            rightSum -= nums[idx];
+        if (size == 1) {
+            return 0;
         }
-        if (leftSum == rightSum) return idx;
+        while (left_sum != right_sum && res < size - 1) {
+            left_sum += nums[res++];
+            right_sum -= nums[res];
+        }
+        if (left_sum == right_sum) {
+            return res;
+        }
         return -1;
     }
 };
 // @lc code=end
-

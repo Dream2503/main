@@ -18,7 +18,7 @@
 class Solution {
 public:
     ListNode* swapPairs(ListNode* head) {
-        if (!(head && head->next)) {
+        if (!head || !head->next) {
             return head;
         }
         ListNode *end = nullptr, *prev = head, *current = prev->next;

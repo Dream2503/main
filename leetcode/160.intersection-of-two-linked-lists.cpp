@@ -15,22 +15,14 @@
  */
 class Solution {
 public:
-    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
-        vector<ListNode*> vec;
+    ListNode* getIntersectionNode(ListNode* headA, ListNode* headB) {
+        ListNode *a = headA, *b = headB;
 
-        while (headA or headB) {
-            if (headA) {
-                if (find(vec.begin(), vec.end(), headA) != vec.end()) return headA;
-                vec.push_back(headA);
-                headA = headA->next;
-            } if (headB) {
-                if (find(vec.begin(), vec.end(), headB) != vec.end()) return headB;
-                vec.push_back(headB);
-                headB = headB->next;
-            }
+        while (a != b) {
+            a = a ? a->next : headB;
+            b = b ? b->next : headA;
         }
-        return nullptr;
+        return a;
     }
 };
 // @lc code=end
-

@@ -7,15 +7,22 @@
 // @lc code=start
 class Solution {
 public:
-    int firstUniqChar(string s) {
-        if ( s == "tuvwxyzabcdefghijklmnopqrs") return 0;
-        unordered_map<char,int> hash;
-        for (char ch: s) hash[ch]++;
-        char ch = 0;
-        for (auto element: hash) if (element.second == 1) ch = element.first;
-        if (not ch) return -1;
-        return find(s.begin(), s.end(), ch) - s.begin();
+    int firstUniqChar(const std::string& s) {
+        static std::array<int, 26> hash;
+        const int len = s.length();
+        hash.fill(0);
+
+        for (int i = 0; i < len; i++) {
+            hash[s[i] - 'a']++;
+        }
+        int res = INT32_MAX;
+
+        for (int i = 0; i < 26; i++) {
+            if (hash[i] == 1) {
+                res = std::min(res, static_cast<int>(s.find(i + 'a')));
+            }
+        }
+        return res == INT32_MAX ? -1 : res;
     }
 };
 // @lc code=end
-

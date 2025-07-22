@@ -7,13 +7,24 @@
 // @lc code=start
 class Solution {
 public:
-    int numJewelsInStones(string jewels, string stones) {
-        unordered_map<char,int> hash;
+    int numJewelsInStones(const std::string& jewels, const std::string& stones) {
+        static int64_t hash;
         int res = 0;
-        for (char ch: stones) hash[ch]++;
-        for (char ch: jewels) res += hash[ch];
+        hash = 0;
+
+        for (const char ch : jewels) {
+            if (ch >= 'a') {
+                hash |= 1l << (ch - 'a');
+            } else {
+                hash |= 1l << (ch - 'A' + 26);
+            }
+        }
+        for (const char ch : stones) {
+            if (ch >= 'a' && hash & (1l << (ch - 'a')) || ch <= 'Z' && hash & (1l << (ch - 'A' + 26))) {
+                res++;
+            }
+        }
         return res;
     }
 };
 // @lc code=end
-

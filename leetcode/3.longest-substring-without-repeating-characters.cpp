@@ -7,8 +7,8 @@
 // @lc code=start
 class Solution {
 public:
-    int lengthOfLongestSubstring(const string& s) {
-        const size_t len = s.length();
+    int lengthOfLongestSubstring(const std::string& s) {
+        const int len = s.length();
         int left = 0, right = 1, max = 1;
 
         if (!len) {

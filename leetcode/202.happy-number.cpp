@@ -8,15 +8,14 @@
 class Solution {
 public:
     bool isHappy(int n) {
-        unordered_set<int> seen;
-        int sum, digit;
+        std::vector<int> seen;
 
-        while (n != 1 and seen.find(n) == seen.end()) {
-            seen.insert(n);
-            sum = 0;
-            
+        while (n != 1 && std::find(seen.begin(), seen.end(), n) == seen.end()) {
+            seen.push_back(n);
+            int sum = 0;
+
             while (n > 0) {
-                digit = n % 10;
+                const int digit = n % 10;
                 sum += digit * digit;
                 n /= 10;
             }
@@ -26,4 +25,3 @@ public:
     }
 };
 // @lc code=end
-

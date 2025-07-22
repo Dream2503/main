@@ -7,16 +7,18 @@
 // @lc code=start
 class Solution {
 public:
-    string reverseWords(string s) {
-        int i = 0, j = 0, size = s.size();
+    std::string& reverseWords(std::string& s) {
+        const int len = s.length();
+        int i = 0, j = 0;
 
-        while (j < size) {
-            while (j < size and s[j] != ' ') j++;
-            reverse(s.begin()+i, s.begin()+j);
+        while (j < len) {
+            while (j < len && s[j] != ' ') {
+                j++;
+            }
+            reverse(s.begin() + i, s.begin() + j);
             i = ++j;
         }
         return s;
     }
 };
 // @lc code=end
-

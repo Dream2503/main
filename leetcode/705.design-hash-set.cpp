@@ -6,23 +6,39 @@
 
 // @lc code=start
 class MyHashSet {
-public:
-    unordered_set<int> hashSet;
+    constexpr static int SIZE = 509;
+    std::vector<std::list<int>> buckets;
 
-    MyHashSet() {
-        
+    int hash(const int key) const { return key % SIZE; }
+
+public:
+    MyHashSet() : buckets(SIZE) {}
+
+    void add(const int key) {
+        const int idx = hash(key);
+
+        for (const int val : buckets[idx]) {
+            if (val == key) {
+                return;
+            }
+        }
+        buckets[idx].push_back(key);
     }
-    
-    void add(int key) {
-        this->hashSet.insert(key);
+
+    void remove(const int key) {
+        const int idx = hash(key);
+        buckets[idx].remove(key);
     }
-    
-    void remove(int key) {
-        this->hashSet.erase(key);
-    }
-    
-    bool contains(int key) {
-        return find(this->hashSet.begin(), this->hashSet.end(), key) != this->hashSet.end();
+
+    bool contains(const int key) const {
+        const int idx = hash(key);
+
+        for (const int val : buckets[idx]) {
+            if (val == key) {
+                return true;
+            }
+        }
+        return false;
     }
 };
 
@@ -34,4 +50,3 @@ public:
  * bool param_3 = obj->contains(key);
  */
 // @lc code=end
-

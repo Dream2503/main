@@ -5,86 +5,76 @@
  */
 
 // @lc code=start
-#include <iostream>
-#include <vector>
-#include <set>
-
-using namespace std;
 class Solution {
 public:
-    vector<int> spiralOrder(vector<vector<int>>& matrix) {
-        string direction = "right";
-        int row = matrix.size(), column = matrix[0].size(), i = 0, j = 0;
-        set<pair<int,int>> seen;
-        vector<int> res;
-        res.reserve(row * column);
-        bool change;
+    std::vector<int> spiralOrder(const std::vector<std::vector<int>>& matrix) {
+        const int m = matrix.size(), n = matrix[0].size();
+        char direction = 'r';
+        int i = 0, j = 0, edge[4] = {0, 1, m, n}; // {left, up, down, right}
+        std::vector<int> res;
+        res.reserve(m * n);
 
         while (true) {
-            if (direction == "right") {
-                if (j < column && seen.find({i, j}) == seen.end()) {
-                    res.push_back(matrix[i][j]);
-                    seen.insert({i, j});
-                    change = false;
+            res.push_back(matrix[i][j]);
+
+            switch (direction) {
+            case 'r':
+                if (j + 1 < edge[3]) {
                     j++;
                 } else {
-                    if (change) {
-                        break;
-                    }
-                    direction = "down";
+                    direction = 'd';
+                    edge[3]--;
                     i++;
-                    j--;
-                    change = true;
+
+                    if (i == edge[2]) {
+                        return res;
+                    }
                 }
-            } else if (direction == "down") {
-                if (i < row && seen.find({i, j}) == seen.end()) {
-                    res.push_back(matrix[i][j]);
-                    seen.insert({i, j});
-                    change = false;
+                break;
+
+            case 'd':
+                if (i + 1 < edge[2]) {
                     i++;
                 } else {
-                    if (change) {
-                        break;
-                    }
-                    direction = "left";
+                    direction = 'l';
+                    edge[2]--;
                     j--;
-                    i--;
-                    change = true;
+
+                    if (j == edge[0] - 1) {
+                        return res;
+                    }
                 }
-            } else if (direction == "left") {
-                if (j > -1 && seen.find({i, j}) == seen.end()) {
-                    res.push_back(matrix[i][j]);
-                    seen.insert({i, j});
-                    change = false;
+                break;
+
+            case 'l':
+                if (j - 1 >= edge[0]) {
                     j--;
                 } else {
-                    if (change) {
-                        break;
-                    }
-                    direction = "up";
+                    direction = 'u';
+                    edge[0]++;
                     i--;
+
+                    if (i == edge[1] - 1) {
+                        return res;
+                    }
+                }
+                break;
+
+            default:
+                if (i - 1 >= edge[1]) {
+                    i--;
+                } else {
+                    direction = 'r';
+                    edge[1]++;
                     j++;
-                    change = true;
-                }
-            } else if (direction == "up") {
-                if (i > -1 && seen.find({i, j}) == seen.end()) {
-                    res.push_back(matrix[i][j]);
-                    seen.insert({i, j});
-                    change = false;
-                    i--;
-                } else {
-                    if (change) {
-                        break;
+
+                    if (j == edge[3]) {
+                        return res;
                     }
-                    direction = "right";
-                    j++;
-                    i++;
-                    change = true;
                 }
             }
         }
-        return res;
+        return {};
     }
 };
 // @lc code=end
-

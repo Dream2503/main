@@ -7,16 +7,20 @@
 // @lc code=start
 class Solution {
 public:
-    bool containsNearbyDuplicate(vector<int>& arr, int k) {
-        unordered_map<int,int> dict;
-        int size = arr.size();
+    bool containsNearbyDuplicate(const std::vector<int>& arr, const int k) {
+        const int size = arr.size();
+        std::unordered_map<int, int> hash;
 
         for (int i = 0; i < size; i++) {
-            if (dict.find(arr[i]) != dict.end()) if (abs(i-dict[arr[i]]) <= k) return true;
-            dict[arr[i]] = i;
+            if (hash.find(arr[i]) != hash.end()) {
+                if (i - hash[arr[i]] <= k) {
+                    return true;
+                }
+                hash[arr[i]] = i;
+            }
+            hash.emplace(arr[i], i);
         }
         return false;
     }
 };
 // @lc code=end
-

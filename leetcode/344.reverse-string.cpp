@@ -7,8 +7,10 @@
 // @lc code=start
 class Solution {
 public:
-    void reverseString(vector<char>& s) {
-        reverse(s.begin(), s.end());
+    void reverseString(std::vector<char>& s) {
+        for (int i = 0, j = s.size() - 1; i < j; i++, j--) {
+            std::swap(s[i], s[j]);
+        }
     }
 };
 // @lc code=end

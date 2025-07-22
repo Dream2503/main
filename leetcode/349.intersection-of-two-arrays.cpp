@@ -7,22 +7,29 @@
 // @lc code=start
 class Solution {
 public:
-    vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
-        sort(nums1.begin(), nums1.end()); sort(nums2.begin(), nums2.end());
-        int i = 0, j = 0, size1 = nums1.size(), size2 = nums2.size();
-        unordered_set<int> seen;
-
-        while (i < size1 and j < size2) {
-            if (nums1[i] < nums2[j]) i++;
-            else if (nums1[i] > nums2[j]) j++;
-            else {
-                seen.insert(nums1[i++]);
-                j++;
-            }
-        }
-        vector<int> res(seen.begin(), seen.end());
+    std::vector<int> intersection(std::vector<int>& nums1, std::vector<int>& nums2) {
+        std::sort(nums1.begin(), nums1.end());
+        nums1.resize(std::unique(nums1.begin(), nums1.end()) - nums1.begin());
+        std::sort(nums2.begin(), nums2.end());
+        nums2.resize(std::unique(nums2.begin(), nums2.end()) - nums2.begin());
+        vector<int> res;
+        std::set_intersection(nums1.begin(), nums1.end(), nums2.begin(), nums2.end(), std::back_inserter(res));
         return res;
+
+        // const int size1 = nums1.size(), size2 = nums2.size();
+        // int i = 0, j = 0;
+        //
+        // while (i < size1 && j < size2) {
+        //     if (nums1[i] < nums2[j]) {
+        //         i++;
+        //     } else if (nums1[i] > nums2[j]) {
+        //         j++;
+        //     } else {
+        //         res.push_back(nums1[i]);
+        //         j++;
+        //     }
+        // }
+        // return res;
     }
 };
 // @lc code=end
-

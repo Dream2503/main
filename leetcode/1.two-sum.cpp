@@ -8,13 +8,16 @@
 class Solution {
 public:
     std::vector<int> twoSum(const std::vector<int>& nums, const int target) {
-        const size_t size = nums.size();
+        const int size = nums.size();
+        std::unordered_map<int, int> hash;
 
-        for (int i = 0; i < size; i++)
-            for (int j = i + 1; j < size; j++)
-                if (nums[i] + nums[j] == target)
-                    return {i, j};
-
+        for (int i = 0; i < size; i++) {
+            if (hash.find(nums[i]) == hash.end()) {
+                hash.emplace(target - nums[i], i);
+            } else {
+                return {hash[nums[i]], i};
+            }
+        }
         return {};
     }
 };

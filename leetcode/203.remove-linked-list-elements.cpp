@@ -17,23 +17,19 @@
  */
 class Solution {
 public:
-    ListNode* removeElements(ListNode* head, int val) {
-        ListNode *current = head, *prev;
-
-        while (head and head->val == val) {
+    ListNode* removeElements(ListNode* head, const int val) {
+        while (head && head->val == val) {
             head = head->next;
-            delete current;
-            current = head;
         }
+        ListNode *prev = nullptr, *current = head;
+
         while (current) {
             if (current->val == val) {
                 prev->next = current->next;
-                delete current;
-                current = prev->next;
             } else {
                 prev = current;
-                current = current->next;
             }
+            current = current->next;
         }
         return head;
     }

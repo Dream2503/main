@@ -7,19 +7,20 @@
 // @lc code=start
 class Solution {
 public:
-    int dominantIndex(vector<int>& nums) {
-        int max = 0, idx, size = nums.size();
+    int dominantIndex(std::vector<int>& nums) {
+        const int size = nums.size(), res = std::max_element(nums.begin(), nums.end()) - nums.begin();
 
-        for (int i = 0; i < size; i++)
-            if (nums[i] > max) {
-                max = nums[i];
-                idx = i;
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < size - i - 1; j++) {
+                if (nums[j] > nums[j + 1]) {
+                    std::swap(nums[j], nums[j + 1]);
+                }
             }
-        max /= 2;
-        nums[idx] = -1;
-        for (int i = 0; i < size; i++) if (nums[i] > max) return -1;
-        return idx;
+        }
+        if (nums[size - 1] >= nums[size - 2] * 2) {
+            return res;
+        }
+        return -1;
     }
 };
 // @lc code=end
-

@@ -17,7 +17,7 @@
  */
 class Solution {
 public:
-    ListNode* removeNthFromEnd(const ListNode* head, const int n) {
+    ListNode* removeNthFromEnd(ListNode* head, const int n) {
         ListNode *current = head, *later = head;
         int i;
 

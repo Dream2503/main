@@ -5,20 +5,20 @@
  */
 
 // @lc code=start
-class Solution {
-public:
-    int climbStairs(const int n) {
-        if (n == 1) {
-            return n;
-        }
-        int prev = 1, current = 1;
+constexpr std::array<int, 46> get_array() {
+    std::array<int, 46> res{};
+    res[0] = 1;
+    res[1] = 1;
 
-        for (int i = 2; i <= n; i++) {
-            const int temp = current;
-            current = prev + current;
-            prev = temp;
-        }
-        return current;
+    for (int i = 2; i < 46; i++) {
+        res[i] = res[i - 1] + res[i - 2];
     }
+    return res;
+}
+class Solution {
+    constexpr static std::array<int, 46> res = get_array();
+
+public:
+    int climbStairs(const int n) { return res[n]; }
 };
 // @lc code=end

@@ -18,8 +18,10 @@
 class Solution {
 public:
     ListNode* reverseList(ListNode* head) {
-        if (not (head and head->next)) return head;
-        ListNode *end = nullptr, *prev = head, *current = prev->next;
+        if (!head || !head->next) {
+            return head;
+        }
+        ListNode *end = nullptr, *prev = head, *current = head->next;
 
         while (current) {
             prev->next = end;
@@ -32,4 +34,3 @@ public:
     }
 };
 // @lc code=end
-

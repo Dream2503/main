@@ -7,28 +7,30 @@
 // @lc code=start
 class Solution {
 public:
-    vector<string> findRestaurant(vector<string>& list1, vector<string>& list2) {
-        int size1 = list1.size(), size2 = list2.size();
-        vector<pair<int,string>> vec;
+    std::vector<std::string> findRestaurant(const std::vector<std::string>& list1,
+                                            const std::vector<std::string>& list2) {
+        using type = std::pair<int, const std::string*>;
+        auto comparator = [](const type& a, const type& b) { return a.first > b.first; };
+        const int size1 = list1.size(), size2 = list2.size();
+        std::priority_queue<type, std::vector<type>, decltype(comparator)> heap(comparator);
 
         for (int i = 0; i < size1; i++) {
             for (int j = 0; j < size2; j++) {
                 if (list1[i] == list2[j]) {
-                    vec.push_back({i+j, list1[i]});
+                    heap.emplace(i + j, &list1[i]);
                     break;
                 }
             }
         }
-        sort(vec.begin(), vec.end());
-        int min = vec[0].first, size = vec.size();
-        vector<string> res{vec[0].second};
+        const int min = heap.top().first;
+        std::vector res{*heap.top().second};
+        heap.pop();
 
-        for (int i = 1; i < size; i++) {
-            if (vec[i].first == min) res.push_back(vec[i].second);
-            else break;
+        while (!heap.empty() && heap.top().first == min) {
+            res.push_back(*heap.top().second);
+            heap.pop();
         }
         return res;
     }
 };
 // @lc code=end
-

@@ -6,24 +6,48 @@
 
 // @lc code=start
 class MyHashMap {
-public:
-    unordered_map<int,int> hashMap;
+    constexpr static int SIZE = 509;
+    std::vector<std::list<std::pair<int, int>>> buckets;
 
-    MyHashMap() {
-        
+    int hash(const int key) const { return key % SIZE; }
+
+public:
+    MyHashMap() : buckets(SIZE) {}
+
+    void put(const int key, const int value) {
+        const int idx = hash(key);
+
+        for (auto& [first, second] : buckets[idx]) {
+            if (first == key) {
+                second = value;
+                return;
+            }
+        }
+        buckets[idx].emplace_back(key, value);
     }
-    
-    void put(int key, int value) {
-        this->hashMap[key] = value;
+
+    int get(const int key) const {
+        const int idx = hash(key);
+
+        for (auto& [first, second] : buckets[idx]) {
+            if (first == key) {
+                return second;
+            }
+        }
+        return -1;
     }
-    
-    int get(int key) {
-        if (this->hashMap.find(key) == this->hashMap.end()) return -1;
-        return this->hashMap[key];
-    }
-    
-    void remove(int key) {
-        hashMap.erase(key);
+
+    void remove(const int key) {
+        const int idx = hash(key);
+        int temp;
+
+        for (auto& [first, second] : buckets[idx]) {
+            if (first == key) {
+                temp = second;
+                break;
+            }
+        }
+        buckets[idx].remove({key, temp});
     }
 };
 
@@ -35,4 +59,3 @@ public:
  * obj->remove(key);
  */
 // @lc code=end
-

@@ -7,11 +7,16 @@
 // @lc code=start
 class Solution {
 public:
-    bool containsDuplicate(vector<int>& nums) {
-        sort(nums.begin(), nums.end());
-        vector<int> res(nums.begin(), unique(nums.begin(), nums.end()));
-        return nums.size() != res.size();
+    bool containsDuplicate(std::vector<int>& nums) {
+        const int size = nums.size();
+        std::sort(nums.begin(), nums.end());
+
+        for (int i = 1; i < size; i++) {
+            if (nums[i - 1] == nums[i]) {
+                return true;
+            }
+        }
+        return false;
     }
 };
 // @lc code=end
-

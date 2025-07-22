@@ -18,29 +18,26 @@
 class Solution {
 public:
     ListNode* oddEvenList(ListNode* head) {
-        if (not (head and head->next and head->next->next)) return head;
-        vector<int> even, odd;
-        ListNode *current = head->next;
+        if (!head || !head->next || !head->next->next) {
+            return head;
+        }
+        ListNode *odd = head, *current_odd = odd, *even = head->next, *current_even = even;
+        head = head->next->next;
 
-        while (current) {
-            even.push_back(current->val);
-            
-            if (current = current->next) {
-                odd.push_back(current->val);
-                current = current->next;
+        while (head) {
+            current_odd->next = head;
+            current_odd = current_odd->next;
+            head = head->next;
+
+            if (head) {
+                current_even->next = head;
+                current_even = current_even->next;
+                head = head->next;
             }
         }
-        current = head->next;
-
-        for (int num: odd) {
-            current->val = num;
-            current = current->next;
-        }
-        for (int num: even) {
-            current->val = num;
-            current = current->next;
-        }
-        return head;
+        current_even->next = nullptr;
+        current_odd->next = even;
+        return odd;
     }
 };
 // @lc code=end
