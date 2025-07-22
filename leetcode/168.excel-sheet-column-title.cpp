@@ -7,15 +7,15 @@
 // @lc code=start
 class Solution {
 public:
-    string convertToTitle(int columnNumber) {
-        string res;
-
+    std::string convertToTitle(int columnNumber) {
+        std::string res;
+        
         while(columnNumber) {
             columnNumber--;
-            res.push_back((columnNumber % 26) + 65);
+            res.push_back((columnNumber % 26) + 'A');
             columnNumber /= 26;
         }
-        reverse(res.begin(), res.end());
+        std::reverse(res.begin(), res.end());
         return res;
     }
 };
