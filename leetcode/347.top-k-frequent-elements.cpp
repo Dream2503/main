@@ -9,20 +9,30 @@ class Solution {
 public:
     std::vector<int> topKFrequent(const std::vector<int>& nums, const int k) {
         std::unordered_map<int, int> hash;
-        std::vector<int> res;
-        res.reserve(k);
 
         for (const int element : nums) {
             hash[element]++;
         }
-        std::vector<std::pair<int, int>> vec(hash.begin(), hash.end());
-        std::partial_sort(vec.begin(), vec.begin() + k, vec.end(),
-                          [](const auto& a, const auto& b) { return a.second > b.second; });
+        using pair = std::pair<const int, int>;
+        auto comparator = [](const pair* a, const pair* b) { return a->second > b->second; };
+        std::priority_queue<pair*, std::vector<pair*>, decltype(comparator)> heap(comparator);
 
-        for (int i = 0; i < k; i++) {
-            res.push_back(vec[i].first);
+        for (pair& element : hash) {
+            if (heap.size() < k) {
+                heap.push(&element);
+            } else if (element.second > heap.top()->second) {
+                heap.pop();
+                heap.push(&element);
+            }
+        }
+        std::vector<int> res;
+        res.reserve(k);
+
+        while (!heap.empty()) {
+            res.push_back(heap.top()->first);
+            heap.pop();
         }
         return res;
     }
-};  
+};
 // @lc code=end

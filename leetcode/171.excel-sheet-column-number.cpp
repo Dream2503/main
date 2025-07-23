@@ -7,13 +7,11 @@
 // @lc code=start
 class Solution {
 public:
-    int titleToNumber(string columnTitle) {
-        reverse(columnTitle.begin(), columnTitle.end());
-        unsigned int multiplier = 1, res = 0;
+    int titleToNumber(const std::string& columnTitle) {
+        int res = 0;
 
-        for (unsigned int ch: columnTitle) {
-            res += (ch - 64) * multiplier;
-            multiplier *= 26;
+        for (const char ch : columnTitle) {
+            res = res * 26 + (ch - 'A' + 1);
         }
         return res;
     }

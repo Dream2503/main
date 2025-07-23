@@ -10,19 +10,23 @@ public:
     int firstUniqChar(const std::string& s) {
         static std::array<int, 26> hash;
         const int len = s.length();
-        hash.fill(0);
+        hash.fill(len);
 
         for (int i = 0; i < len; i++) {
-            hash[s[i] - 'a']++;
-        }
-        int res = INT32_MAX;
-
-        for (int i = 0; i < 26; i++) {
-            if (hash[i] == 1) {
-                res = std::min(res, static_cast<int>(s.find(i + 'a')));
+            if (hash[s[i] - 'a'] == len) {
+                hash[s[i] - 'a'] = i;
+            } else {
+                hash[s[i] - 'a'] = -i;
             }
         }
-        return res == INT32_MAX ? -1 : res;
+        int res = len;
+
+        for (int i = 0; i < 26; i++) {
+            if (hash[i] >= 0) {
+                res = std::min(res, hash[i]);
+            }
+        }
+        return res == len ? -1 : res;
     }
 };
 // @lc code=end

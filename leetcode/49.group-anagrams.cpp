@@ -7,18 +7,16 @@
 // @lc code=start
 class Solution {
 public:
-    std::vector<std::vector<std::string>> groupAnagrams(const std::vector<std::string>& strs) {
+    std::vector<std::vector<std::string>> groupAnagrams(std::vector<std::string>& strs) {
         std::unordered_map<std::string, std::vector<std::string>> hash;
-        int size = strs.size();
 
-        for (int i = 0; i < size; i++) {
-            std::string temp(strs[i]);
+        for (std::string& element : strs) {
+            std::string temp(element);
             sort(temp.begin(), temp.end());
-            hash[temp].push_back(std::move(strs[i]));
+            hash[temp].push_back(std::move(element));
         }
-        size = hash.size();
         std::vector<std::vector<std::string>> res;
-        res.reserve(size);
+        res.reserve(hash.size());
 
         for (auto& [key, value] : hash) {
             res.push_back(std::move(value));

@@ -7,28 +7,31 @@
 // @lc code=start
 class Solution {
 public:
-    string addStrings(string num1, string num2) {
+    std::string addStrings(const std::string& num1, const std::string& num2) {
         int i = num1.size() - 1, j = num2.size() - 1, carry = 0, add;
+        std::string res;
+        res.reserve(std::max(i, j) + 2);
 
-        if (i < j) {
-            swap(num1, num2);
-            swap(i, j);
+        while (i != -1 && j != -1) {
+            add = num1[i--] + num2[j--] - '0' - '0' + carry;
+            carry = add / 10;
+            res.push_back((add % 10) + '0');
+        }
+        while (i != -1) {
+            add = num1[i--] + carry - '0';
+            carry = add / 10;
+            res.push_back((add % 10) + '0');
         }
         while (j != -1) {
-            add = num1[i] + num2[j] - 96 + carry;
+            add = num2[j--] + carry - '0';
             carry = add / 10;
-            num1[i] = (add % 10) + 48;
-            i--; j--;
+            res.push_back((add % 10) + '0');
         }
-        while (carry and i != -1) {
-            add = num1[i] + carry - 48;
-            carry = add / 10;
-            num1[i] = (add % 10) + 48;
-            i--;
+        if (carry) {
+            res.push_back(carry + '0');
         }
-        if (carry) num1.insert(num1.begin(), carry + 48);
-        return num1;
+        std::reverse(res.begin(), res.end());
+        return res;
     }
 };
 // @lc code=end
-

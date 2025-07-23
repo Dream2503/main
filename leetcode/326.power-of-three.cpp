@@ -5,13 +5,10 @@
  */
 
 // @lc code=start
+constexpr int INT_POWER_3_MAX = 1162261467;
+
 class Solution {
 public:
-    bool isPowerOfThree(int n) {
-        if (n <= 0) return false;
-        double logResult = log10(n) / log10(3);
-        return floor(logResult) == logResult;
-    }
+    bool isPowerOfThree(const int n) { return n > 0 && INT_POWER_3_MAX % n == 0; }
 };
 // @lc code=end
-

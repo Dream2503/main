@@ -8,16 +8,10 @@
 
 class Solution {
 public:
-    int majorityElement(vector<int>& nums) {
-        unordered_map<int,int> hash;
-
-        for (int element: nums) {
-            if (hash.find(element) != hash.end()) hash[element] += 1;
-            else hash[element] = 1;
-        }
-        for (pair<int,int> element: hash) if (element.second > nums.size() / 2) return element.first;
-        return 0;
+    int majorityElement(std::vector<int>& nums) {
+        const int size = nums.size();
+        std::nth_element(nums.begin(), nums.begin() + (size / 2), nums.end());
+        return nums[size / 2];
     }
 };
 // @lc code=end
-

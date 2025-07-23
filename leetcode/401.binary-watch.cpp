@@ -7,11 +7,17 @@
 // @lc code=start
 class Solution {
 public:
-    vector<string> readBinaryWatch(int turnedOn) {
-        vector<string> res;
-        for (int h = 0; h < 12; h++) for (int m = 0; m < 60; m++) if (__builtin_popcount(h) + __builtin_popcount(m) == turnedOn) res.push_back(to_string(h) + (m < 10 ? ":0" : ":") + to_string(m));
+    std::vector<std::string> readBinaryWatch(const int turnedOn) {
+        std::vector<std::string> res;
+
+        for (int h = 0; h < 12; h++) {
+            for (int m = 0; m < 60; m++) {
+                if (std::__popcount(h) + std::__popcount(m) == turnedOn) {
+                    res.push_back(std::to_string(h) + (m < 10 ? ":0" : ":") + std::to_string(m));
+                }
+            }
+        }
         return res;
     }
 };
 // @lc code=end
-

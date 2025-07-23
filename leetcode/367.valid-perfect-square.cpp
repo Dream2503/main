@@ -7,11 +7,22 @@
 // @lc code=start
 class Solution {
 public:
-    bool isPerfectSquare(int num) {
-        if (num == 100000001) return false;
-        float res = sqrtf(num);
-        return floor(res) == res;
+    bool isPerfectSquare(const int num) {
+        int low = 1, high = num;
+
+        while (low <= high) {
+            const int mid = low + (high - low) / 2, div = num / mid;
+
+            if (mid == div && num % mid == 0) {
+                return true;
+            }
+            if (mid > div) {
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+        }
+        return false;
     }
 };
 // @lc code=end
-

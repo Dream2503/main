@@ -7,15 +7,7 @@
 // @lc code=start
 class Solution {
 public:
-    int arrangeCoins(int n) {
-        int i = 0;
-
-        while (n >= 0) {
-            i++;
-            n -= i;
-        }
-        return i - 1;
-    }
+    int arrangeCoins(const int n) { return static_cast<int>((-1 + std::sqrt(1.0 + 8.0 * n)) / 2); }
+    // x * (x + 1) / 2 = n
 };
 // @lc code=end
-

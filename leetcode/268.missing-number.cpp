@@ -7,14 +7,16 @@
 // @lc code=start
 class Solution {
 public:
-    int missingNumber(vector<int>& nums) {
-        sort(nums.begin(), nums.end());
-        if (nums[0]) return 0;
-        int size = nums.size() - 1;
-        for (int i = 0; i < size; i++) if (nums[i] + 1 != nums[i+1]) return nums[i] + 1;
-        if (nums[size] != size + 1) return size + 1;
-        return 0;
+    int missingNumber(const std::vector<int>& nums) {
+        const int size = nums.size();
+        int res = 0, i;
+
+        for (i = 0; i < size; i++) {
+            res ^= i;
+            res ^= nums[i];
+        }
+        res ^= i;
+        return res;
     }
 };
 // @lc code=end
-

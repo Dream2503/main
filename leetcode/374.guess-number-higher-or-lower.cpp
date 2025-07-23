@@ -5,7 +5,7 @@
  */
 
 // @lc code=start
-/** 
+/**
  * Forward declaration of guess API.
  * @param  num   your guess
  * @return 	     -1 if num is higher than the picked number
@@ -16,26 +16,25 @@
 
 class Solution {
 public:
-    int guessNumber(int n) {
-        long low = 1, high = INT_MAX, mid = (low + high) / 2;
+    int guessNumber(const int n) {
+        int low = 1, high = INT32_MAX, mid = low + (high - low) / 2;
 
         while (low <= high) {
             switch (guess(mid)) {
-                case -1:
-                    high = mid - 1;
-                    break;
-                
-                case 1:
-                    low = mid + 1;
-                    break;
-                
-                case 0:
-                    return mid;
+            case -1:
+                high = mid - 1;
+                break;
+
+            case 1:
+                low = mid + 1;
+                break;
+
+            default:
+                return mid;
             }
-            mid = (low + high) / 2;
+            mid = low + (high - low) / 2;
         }
         return 0;
     }
 };
 // @lc code=end
-

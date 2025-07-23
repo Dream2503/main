@@ -7,13 +7,24 @@
 // @lc code=start
 class Solution {
 public:
-    bool isAnagram(string s, string t) {
-        int array[26] = {0};
-        for (char ch: s) array[ch-'a']++;
-        for (char ch: t) array[ch-'a']--;
-        for (int element: array) if (element) return false;
+    bool isAnagram(const std::string& s, const std::string& t) {
+        static std::array<int, 26> array;
+        std::fill(array.begin(), array.end(), 0);
+
+        for (const char ch : s) {
+            array[ch - 'a']++;
+        }
+        for (const char ch : t) {
+            array[ch - 'a']--;
+        }
+        for (const int element : array) {
+            if (element) {
+                return false;
+            }
+        }
         return true;
     }
 };
+time - O(n + m)
+space - O(1)
 // @lc code=end
-

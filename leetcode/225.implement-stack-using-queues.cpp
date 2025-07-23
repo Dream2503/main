@@ -6,21 +6,28 @@
 
 // @lc code=start
 class MyStack {
-    queue<int> stack;
+    std::queue<int> stack;
+
 public:
-    MyStack() {}
-    void push(int x) {stack.push(x);}
-    int pop() {
-        for (int i = 1; i < stack.size(); i++) {
+    MyStack() : stack() {}
+
+    void push(const int x) { stack.push(x); }
+
+    int pop() noexcept {
+        const int size = stack.size();
+
+        for (int i = 1; i < size; i++) {
             stack.push(stack.front());
             stack.pop();
         }
-        int res = stack.front();
+        const int res = stack.front();
         stack.pop();
         return res;
     }
-    int top() {return stack.back();}
-    bool empty() {return stack.empty();}
+
+    int top() const noexcept { return stack.back(); }
+
+    bool empty() const noexcept { return stack.empty(); }
 };
 
 /**
@@ -32,4 +39,3 @@ public:
  * bool param_4 = obj->empty();
  */
 // @lc code=end
-

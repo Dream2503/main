@@ -4,31 +4,29 @@
  * [414] Third Maximum Number
  */
 
+#include <limits.h>
 // @lc code=start
 class Solution {
 public:
-    int thirdMax(std::vector<int>& nums) {
-        const int size = nums.size();
-        static int array[3];
-        int len = 0;
+    int thirdMax(const std::vector<int>& nums) {
+        long first = LONG_MIN, second = LONG_MIN, third = LONG_MIN;
 
-        for (int i = 0; i < size && len < 3; i++) {
-            for (int j = 0; j < size - i - 1; j++) {
-                if (nums[j] > nums[j + 1]) {
-                    std::swap(nums[j], nums[j + 1]);
-                }
+        for (const int num : nums) {
+            if (num == first || num == second || num == third) {
+                continue;
             }
-            if (std::find(array, array + len, nums[size - i - 1]) == array + len) {
-                array[len++] = nums[size - i - 1];
+            if (num > first) {
+                third = second;
+                second = first;
+                first = num;
+            } else if (num > second) {
+                third = second;
+                second = num;
+            } else if (num > third) {
+                third = num;
             }
         }
-        if (len == 1) {
-            return array[0];
-        }
-        if (len == 2) {
-            return std::max(array[0], array[1]);
-        }
-        return array[2];
+        return third == LONG_MIN ? first : third;
     }
 };
 // @lc code=end

@@ -6,16 +6,7 @@
 
 // @lc code=start
 class Solution {
-    int checkBit(int n) {
-        int res = 0;
-        for (int i = 0; i < 32; i++) if ((n >> i) & 1) res += 1;
-        return res;
-    }
 public:
-    bool isPowerOfTwo(int n) {
-        if ((n > 0 and checkBit(n) == 1)) return true;
-        return false;
-    }
+    bool isPowerOfTwo(const int &n) { return n > 0 && (INT32_MAX + 1l) % n == 0; }
 };
 // @lc code=end
-

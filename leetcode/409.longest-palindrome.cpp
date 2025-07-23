@@ -7,22 +7,26 @@
 // @lc code=start
 class Solution {
 public:
-    int longestPalindrome(string s) {
-        unordered_map<char,int> hash;
-        int cnt = 0, check = 0;
-        for (char ch: s) hash[ch]++;
+    int longestPalindrome(const std::string& s) {
+        std::array<int, 52> hash;
+        int res = 0, flag = 0;
 
-        for (auto element: hash) {
-            if (element.second % 2 == 0) cnt += element.second;
-            else if (not check) check = element.second;
-            else {
-                if (max(element.second, check) != check) cnt += --check;
-                else cnt += --element.second;
-                check = max(element.second, check);
+        for (const char ch : s) {
+            if (ch >= 'a') {
+                hash[ch - 'a']++;
+            } else {
+                hash[ch - 'A' + 26]++;
             }
         }
-        return cnt + check;
+        for (const int element : hash) {
+            if (element % 2 == 0) {
+                res += element;
+            } else {
+                flag = true;
+                res += element - 1;
+            }
+        }
+        return res + flag;
     }
 };
 // @lc code=end
-

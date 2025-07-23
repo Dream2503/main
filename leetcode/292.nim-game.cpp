@@ -7,9 +7,6 @@
 // @lc code=start
 class Solution {
 public:
-    bool canWinNim(int n) {
-        return n % 4 != 0;
-    }
+    bool canWinNim(const int n) { return n % 4; }
 };
 // @lc code=end
-

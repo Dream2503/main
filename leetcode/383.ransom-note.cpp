@@ -8,18 +8,20 @@
 class Solution {
 public:
     bool canConstruct(const std::string& ransomNote, const std::string& magazine) {
+        static std::array<int, 26> hash;
+
         if (ransomNote.length() > magazine.length()) {
             return false;
         }
-        int array[26] = {0};
+        hash.fill(0);
 
         for (const char ch : ransomNote) {
-            array[ch - 'a']++;
+            hash[ch - 'a']++;
         }
         for (const char ch : magazine) {
-            array[ch - 'a']--;
+            hash[ch - 'a']--;
         }
-        for (const int element : array) {
+        for (const int element : hash) {
             if (element > 0) {
                 return false;
             }

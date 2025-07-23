@@ -5,24 +5,27 @@
  */
 
 // @lc code=start
+#define IS_VOWEL(ch)                                                                                                   \
+    (ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u' || ch == 'A' || ch == 'E' || ch == 'I' ||           \
+     ch == 'O' || ch == 'U')
+
 class Solution {
-    bool isVowel(char ch) {return ch =='a' or ch =='e' or ch =='i' or ch =='o' or ch =='u' or ch =='A' or ch =='E' or ch =='I' or ch =='O' or ch =='U';}
+
 public:
-    string reverseVowels(string s) {
+    std::string& reverseVowels(std::string& s) {
         int low = 0, high = s.size() - 1;
-        char temp;
-        
-        while (low <= high) {
-            if (not isVowel(s[low])) low++;
-            else if (not isVowel(s[high])) high--;
-            else {
-                temp = s[low];
-                s[low++] = s[high];
-                s[high--] = temp;
+
+        while (low < high) {
+            while (low < high && !IS_VOWEL(s[low])) {
+                low++;
             }
+            while (low < high && !IS_VOWEL(s[high])) {
+                high--;
+            }
+            if (low < high)
+                std::swap(s[low++], s[high--]);
         }
         return s;
     }
 };
 // @lc code=end
-

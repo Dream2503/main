@@ -6,24 +6,30 @@
 
 // @lc code=start
 class MyQueue {
-    stack<int> main, alt;
+    std::stack<int> queue1, queue2;
+
 public:
-    MyQueue() {}
-    void push(int x) {main.push(x);}
-    int pop() {
-        int res = peek();
-        alt.pop();
+    MyQueue() : queue1(), queue2() {}
+
+    void push(const int x) { queue1.push(x); }
+
+    int pop() noexcept {
+        const int res = peek();
+        queue2.pop();
         return res;
     }
-    int peek() {
-        if (alt.empty()) 
-            while (not main.empty()) {
-                alt.push(main.top());
-                main.pop();
+
+    int peek() noexcept {
+        if (queue2.empty()) {
+            while (!queue1.empty()) {
+                queue2.push(queue1.top());
+                queue1.pop();
             }
-        return alt.top();
+        }
+        return queue2.top();
     }
-    bool empty() {return main.empty() and alt.empty();}
+
+    bool empty() const noexcept { return queue1.empty() && queue2.empty(); }
 };
 
 /**
@@ -35,4 +41,3 @@ public:
  * bool param_4 = obj->empty();
  */
 // @lc code=end
-
