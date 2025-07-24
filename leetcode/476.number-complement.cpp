@@ -8,11 +8,14 @@
 class Solution {
 public:
     int findComplement(int num) {
-        int cnt = 1, temp = num;
-        while (temp = temp >> 1) cnt++;
-        num = (~num) << (32 - cnt);
+        int cnt = 0, temp = num;
+
+        while (temp) {
+            cnt++;
+            temp >>= 1;
+        }
+        num = ~num << (32 - cnt);
         return num >> (32 - cnt);
     }
 };
 // @lc code=end
-

@@ -7,28 +7,30 @@
 // @lc code=start
 class Solution {
 public:
-    bool canPlaceFlowers(vector<int>& flowerbed, int n) {
-        int size = flowerbed.size(), i = 2;
+    bool canPlaceFlowers(std::vector<int>& flowerbed, int n) {
+        const int size = flowerbed.size();
+        int i = 0;
 
-        if (not flowerbed[0] and size == 1) return true;
-        if (not (flowerbed[0] or flowerbed[1])) {
-            n--;
+        if (!flowerbed[0] && size == 1) {
+            return true;
+        }
+        if (!flowerbed[0] && !flowerbed[1]) {
             flowerbed[0] = 1;
-        }
-        if (not (flowerbed[size-1] or flowerbed[size-2])) {
             n--;
-            flowerbed[size-1] = 1;
+            i++;
         }
-        size -= 2;
-
-        for (; n and i < size; i++) {
-            if (not flowerbed[i] and not flowerbed[i-1] and not flowerbed[i+1]) {
+        if (!flowerbed[size - 1] && !flowerbed[size - 2]) {
+            n--;
+        }
+        while (i < size - 3) {
+            if (!flowerbed[i] && !flowerbed[i + 1] && !flowerbed[i + 2]) {
                 n--;
                 i++;
             }
+            i++;
         }
+
         return n < 1;
     }
 };
 // @lc code=end
-

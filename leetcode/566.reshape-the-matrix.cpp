@@ -7,22 +7,18 @@
 // @lc code=start
 class Solution {
 public:
-    vector<vector<int>> matrixReshape(vector<vector<int>> mat, int r, int c) {
-        int m = mat.size(), n = mat[0].size(), k = 0, l = 0;
-        if ((r == m and c == n) or (r * c != m * n)) return mat;
-        vector<vector<int>> res(r);
+    std::vector<std::vector<int>> matrixReshape(const std::vector<std::vector<int>>& mat, const int r, const int c) {
+        const int m = mat.size(), n = mat[0].size();
 
-        for (int i = 0; i < m; i++) {
-            for (int j = 0; j < n; j++) {
-                res[k].push_back(mat[i][j]);
-                if (++l == c) {
-                    l = 0;
-                    k++;
-                } 
-            }
+        if (r == m && c == n || r * c != m * n) {
+            return mat;
+        }
+        std::vector res(r, std::vector<int>(c));
+
+        for (int i = 0; i < m * n; i++) {
+            res[i / c][i % c] = mat[i / n][i % n];
         }
         return res;
     }
 };
 // @lc code=end
-

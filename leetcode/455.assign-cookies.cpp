@@ -7,16 +7,19 @@
 // @lc code=start
 class Solution {
 public:
-    int findContentChildren(vector<int>& g, vector<int>& s) {
-        sort(g.begin(), g.end()); sort(s.begin(), s.end());
-        int i = 0, j = 0, gSize = g.size(), sSize = s.size();
+    int findContentChildren(std::vector<int>& g, std::vector<int>& s) {
+        std::sort(g.begin(), g.end());
+        std::sort(s.begin(), s.end());
+        const int g_size = g.size(), s_size = s.size();
+        int i = 0, j = 0;
 
-        while (i < gSize and j < sSize) {
-            if (g[i] <= s[j]) i++;
+        while (i < g_size && j < s_size) {
+            if (g[i] <= s[j]) {
+                i++;
+            }
             j++;
         }
         return i;
     }
 };
 // @lc code=end
-

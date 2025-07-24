@@ -9,10 +9,10 @@
 using namespace std;
 class Solution {
 public:
-    bool repeatedSubstringPattern(string s) {
-        string doubled = s + s;
-        string trimmed = doubled.substr(1, doubled.size() - 2);
-        return trimmed.find(s) != string::npos;
+    bool repeatedSubstringPattern(const std::string& s) {
+        const std::string doubled = s + s;
+        const auto substr = std::string_view(doubled.data() + 1, doubled.size() - 2);
+        return substr.find(s) != std::string_view::npos;
     }
 };
 // @lc code=end

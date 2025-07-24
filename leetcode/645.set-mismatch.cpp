@@ -7,18 +7,27 @@
 // @lc code=start
 class Solution {
 public:
-    vector<int> findErrorNums(vector<int>& nums) {
-        long long int size = nums.size(), sum = 0, expectedSum = size * (size + 1) / 2;
-        long long int sumOfSquares = 0, expectedSumOfSquares = size * (size + 1) * (2 * size + 1) / 6;
-        
-        for (int num : nums) {
-            sum += num;
-            sumOfSquares += num * num;
+    std::vector<int> findErrorNums(const std::vector<int>& nums) {
+        const int size = nums.size();
+        std::vector<int> res(2);
+        std::vector<uint8_t> bits((size + 7) / 8 , 0);
+
+        for (int element : nums) {
+            element--;
+
+            if (!(bits[element / 8] & 1 << (element % 8))) {
+                bits[element / 8] |= 1 << (element % 8);
+            } else {
+                res[0] = element + 1;
+            }
         }
-        long long int diffSum = expectedSum - sum, diffSquareSum = expectedSumOfSquares - sumOfSquares, sumDiff = diffSquareSum / diffSum;
-        int missing = (diffSum + sumDiff) / 2, duplicate = sumDiff - missing;
-        return {duplicate, missing};
+        for (int i = 0; i < size; i++) {
+            if (!(bits[i / 8] & 1 << (i % 8))) {
+                res[1] = i + 1;
+                break;
+            }
+        }
+        return res;
     }
 };
 // @lc code=end
-

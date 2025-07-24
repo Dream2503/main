@@ -7,11 +7,10 @@
 // @lc code=start
 class Solution {
 public:
-    int maxCount(int m, int n, vector<vector<int>>& ops) {
-        if (ops.size() == 0) return m * n;
-        int row = 4 * 10e4, column = 4 * 10e4;
+    int maxCount(const int m, const int n, const std::vector<std::vector<int>>& ops) {
+        int row = m, column = n;
 
-        for (vector<int> &element: ops) {
+        for (const std::vector<int>& element : ops) {
             row = min(row, element[0]);
             column = min(column, element[1]);
         }
@@ -19,4 +18,3 @@ public:
     }
 };
 // @lc code=end
-

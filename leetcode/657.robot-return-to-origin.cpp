@@ -7,10 +7,11 @@
 // @lc code=start
 class Solution {
 public:
-    bool judgeCircle(string moves) {
-        int array[2] = {0, 0};
+    bool judgeCircle(const std::string& moves) {
+        std::array<int, 2> array{0, 0};
 
-        for (char ch: moves) switch (ch) {
+        for (const char ch : moves) {
+            switch (ch) {
             case 'R':
                 array[0]++;
                 break;
@@ -18,7 +19,7 @@ public:
             case 'L':
                 array[0]--;
                 break;
-            
+
             case 'U':
                 array[1]++;
                 break;
@@ -26,9 +27,10 @@ public:
             case 'D':
                 array[1]--;
                 break;
+            default:
+            }
         }
-        return not (array[0] or array[1]);
+        return !array[0] && !array[1];
     }
 };
 // @lc code=end
-

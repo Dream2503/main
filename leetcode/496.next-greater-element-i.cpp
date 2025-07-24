@@ -7,25 +7,31 @@
 // @lc code=start
 class Solution {
 public:
-    vector<int> nextGreaterElement(vector<int> nums1, vector<int> nums2) {
-        int size1 = nums1.size(), i, j, check;
-        bool found = false;
-        vector<int>::iterator it;
+    std::vector<int>& nextGreaterElement(std::vector<int>& nums1, const std::vector<int>& nums2) {
+        const int size = nums2.size();
+        std::unordered_map<int, int> hash;
+        hash.reserve(size);
 
-        for (i = 0; i < size1; i++) {
-            it = find(nums2.begin(), nums2.end(), nums1[i]);
-            check = *it;
+        for (int i = 0; i < size; i++) {
+            bool found = false;
+            int j = i + 1;
 
-            for (it++; it != nums2.end(); it++) if (check < *it) {
-                found = true;
-                break;
+            while (j < size) {
+                if (nums2[j] > nums2[i]) {
+                    hash.emplace(nums2[i], nums2[j]);
+                    found = true;
+                    break;
+                }
+                j++;
             }
-            if (found) nums1[i] = *it;
-            else nums1[i] = -1;
-            found = false;
+            if (!found) {
+                hash.emplace(nums2[i], -1);
+            }
+        }
+        for (int& element : nums1) {
+            element = hash[element];
         }
         return nums1;
     }
 };
 // @lc code=end
-

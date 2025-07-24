@@ -7,19 +7,20 @@
 // @lc code=start
 class Solution {
 public:
-    double findMaxAverage(vector<int>& nums, int k) {
-        double res, sum = 0;
-        for (int i = 0; i < k; i++) sum += nums[i];
-        res = sum;
-        int size = nums.size();
+    double findMaxAverage(const std::vector<int>& nums, const int k) {
+        int sum = 0;
+        for (int i = 0; i < k; i++) {
+            sum += nums[i];
+        }
+        int res = sum;
+        const int size = nums.size();
 
         for (int i = k; i < size; i++) {
             sum += nums[i] - nums[i - k];
             res = max(res, sum);
         }
-        return res / k;
+        return res / static_cast<double>(k);
     }
 };
 
 // @lc code=end
-

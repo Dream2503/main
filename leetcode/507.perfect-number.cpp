@@ -7,9 +7,9 @@
 // @lc code=start
 class Solution {
 public:
-    bool checkPerfectNumber(int num) {
-        return num == 6 or num == 28 or num == 496 or num == 8128 or num == 33550336;
+    bool checkPerfectNumber(const int num) {
+        // all possible perfect number < INT32_MAX
+        return num == 6 || num == 28 || num == 496 || num == 8128 || num == 33550336;
     }
 };
 // @lc code=end
-

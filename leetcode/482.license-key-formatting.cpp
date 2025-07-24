@@ -7,38 +7,48 @@
 // @lc code=start
 class Solution {
 public:
-    string licenseKeyFormatting(string s, int k) {
+    std::string licenseKeyFormatting(const std::string& s, const int k) {
         int size = 0;
-        for (char ch: s) if (ch != '-') size++;
-        int first = size % k, i = 0, j = 0;
-        ostringstream oss;
+
+        for (const char ch : s) {
+            if (ch != '-') {
+                size++;
+            }
+        }
+        const int first = size % k, len = s.length();
+        int i = 0, j = 0;
+        std::string res;
+        res.reserve(size + size / k);
 
         while (j < first) {
             if (s[i] != '-') {
-                oss << (char)toupper(s[i]);
+                res.push_back(toupper(s[i]));
                 j++;
             }
             i++;
         }
-        if (j) oss << '-';
+        if (first) {
+            res.push_back('-');
+        }
 
-        while (s[i]) {
+        while (i < len) {
             j = 0;
 
-            while (j < k) {
-                if (not s[i]) break;
+            while (j < k && i < len) {
                 if (s[i] != '-') {
-                    oss << (char)toupper(s[i]);
+                    res.push_back(toupper(s[i]));
                     j++;
                 }
                 i++;
             }
-            oss << '-';
+            if (i < len) {
+                res.push_back('-');
+            }
         }
-        string res = oss.str();
-        while (*(res.end() - 1) == '-') res.pop_back();
+        while (!res.empty() && res.back() == '-') {
+            res.pop_back();
+        }
         return res;
     }
 };
 // @lc code=end
-

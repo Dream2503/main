@@ -7,18 +7,23 @@
 // @lc code=start
 class Solution {
 public:
-    int findPoisonedDuration(vector<int>& timeSeries, int duration) {
-        int cnt = 0, temp, size = timeSeries.size() - 1;
-        if (not size) return duration;
+    int findPoisonedDuration(const std::vector<int>& timeSeries, const int duration) {
+        const int size = timeSeries.size() - 1;
+        int cnt = 0;
+
+        if (!size) {
+            return duration;
+        }
 
         for (int i = 0; i < size; i++) {
-            temp = timeSeries[i] + duration - 1;
+            const int temp = timeSeries[i] + duration - 1;
             cnt += duration;
-            if (temp >= timeSeries[i+1]) 
-                cnt -= temp - timeSeries[i+1] + 1;  
+
+            if (temp >= timeSeries[i + 1]) {
+                cnt -= temp - timeSeries[i + 1] + 1;
+            }
         }
         return cnt + duration;
     }
 };
 // @lc code=end
-

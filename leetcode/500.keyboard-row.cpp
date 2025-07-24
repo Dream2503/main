@@ -7,38 +7,31 @@
 // @lc code=start
 class Solution {
 public:
-    vector<string> findWords(vector<string> words) {
-        vector<string> res, row({"eiopqrtuwy", "adfghjkls", "bcmnvxz"});
-        string temp;
-        int i, j, size;
+    std::vector<std::string> findWords(const std::vector<std::string>& words) {
+        static const std::vector<std::string> hash{"eiopqrtuwy", "adfghjkls", "bcmnvxz"};
+        std::vector<std::string> res;
 
-        for (string word: words) {
-            i = 1; j = 0;
-            size = word.size();
-            temp = word;
-            transform(word.begin(), word.end(), word.begin(), [](char ch){ return tolower(ch);});
-            sort(word.begin(), word.end());
-                
-            if (find(row[0].begin(), row[0].end(), word[0]) != row[0].end()) {
-                while (i < size and j < 11) {
-                    if (word[i] == row[0][j]) i++;
-                    else j++;
-                }
-            } else if (find(row[1].begin(), row[1].end(), word[0]) != row[1].end()) {
-                while (i < size and j < 10) {
-                    if (word[i] == row[1][j]) i++;
-                    else j++;
-                }
-            } else if (find(row[2].begin(), row[2].end(), word[0]) != row[2].end()) {
-                while (i < size and j < 8) {
-                    if (word[i] == row[2][j]) i++;
-                    else j++;
+        for (const std::string& word : words) {
+            const int size = word.size();
+            const char ch = std::tolower(word[0]);
+            bool broke = false;
+
+            for (int i = 0; i < 3; i++) {
+                if (std::binary_search(hash[i].begin(), hash[i].end(), ch)) {
+                    for (int j = 1; j < size; j++) {
+                        if (!std::binary_search(hash[i].begin(), hash[i].end(), std::tolower(word[j]))) {
+                            broke = true;
+                            break;
+                        }
+                    }
+                    if (!broke) {
+                        res.push_back(std::move(word));
+                    }
+                    break;
                 }
             }
-            if (i == size) res.push_back(temp);
         }
         return res;
     }
 };
 // @lc code=end
-

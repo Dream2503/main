@@ -15,7 +15,7 @@ public:
             while (j < len && s[j] != ' ') {
                 j++;
             }
-            reverse(s.begin() + i, s.begin() + j);
+            std::reverse(s.begin() + i, s.begin() + j);
             i = ++j;
         }
         return s;

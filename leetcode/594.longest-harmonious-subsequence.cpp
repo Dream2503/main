@@ -7,14 +7,22 @@
 // @lc code=start
 class Solution {
 public:
-    int findLHS(vector<int>& nums) {
-        map<int,int> hash;
-        for (int num: nums) hash[num]++;
-        vector<pair<int,int>> vec(hash.begin(), hash.end());
-        int size = vec.size(), res = 0;
-        for (int i = 0; i + 1 < size; i++) if (abs(vec[i].first - vec[i+1].first) == 1) res = max(res, vec[i].second + vec[i+1].second);
+    int findLHS(std::vector<int>& nums) {
+        const int size = nums.size();
+        std::sort(nums.begin(), nums.end());
+        int i = 0, res = 0;
+
+        for (int j = 0; j < size; j++) {
+            while (nums[j] - nums[i] > 1) {
+                i++;
+            }
+
+            if (nums[j] - nums[i] == 1) {
+                res = std::max(res, j - i + 1);
+            }
+        }
         return res;
     }
 };
 // @lc code=end
-
+1 2 2 2 3 3 5 7

@@ -14,8 +14,8 @@ public:
             const int idx = std::abs(nums[i]) - 1;
             nums[idx] = -std::abs(nums[idx]);
         }
-
         std::vector<int> res;
+
         for (int i = 0; i < size; i++) {
             if (nums[i] > 0) {
                 res.push_back(i + 1);

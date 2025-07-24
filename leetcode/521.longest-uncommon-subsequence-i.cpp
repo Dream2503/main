@@ -7,10 +7,8 @@
 // @lc code=start
 class Solution {
 public:
-    int findLUSlength(string a, string b) {
-        if (a == b) return -1;
-        else return max(a.size(), b.size());
+    int findLUSlength(const std::string& a, const std::string& b) {
+        return a == b ? -1 : std::max(a.length(), b.length());
     }
 };
 // @lc code=end
-

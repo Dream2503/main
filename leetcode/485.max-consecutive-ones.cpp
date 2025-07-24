@@ -8,7 +8,8 @@
 class Solution {
 public:
     int findMaxConsecutiveOnes(const std::vector<int>& nums) {
-        int res = 0, current = 0, i = 0, size = nums.size();
+        const int size = nums.size();
+        int res = 0, current = 0, i = 0;
 
         while (i < size) {
             if (nums[i]) {

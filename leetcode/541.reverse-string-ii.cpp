@@ -7,16 +7,19 @@
 // @lc code=start
 class Solution {
 public:
-    string reverseStr(string s, int k) {
-        int i = 0, size = s.size();
+    std::string& reverseStr(std::string& s, const int k) {
+        const int len = s.length();
+        int i = 0;
 
-        while (i < size) {
-            if (i + k - 1 < size) reverse(s.begin()+i, s.begin()+i+k);   
-            else reverse(s.begin()+i, s.end());
+        while (i < len) {
+            if (i + k - 1 < len) {
+                std::reverse(s.begin() + i, s.begin() + i + k);
+            } else {
+                reverse(s.begin() + i, s.end());
+            }
             i += 2 * k;
         }
         return s;
     }
 };
 // @lc code=end
-

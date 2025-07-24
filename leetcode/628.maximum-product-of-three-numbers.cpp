@@ -7,27 +7,12 @@
 // @lc code=start
 class Solution {
 public:
-    int maximumProduct(vector<int>& nums) {
-        int size = nums.size(), i, j, k;
-        bool flag;
-
-        for (i = 0; i < 2; i++) {
-            for (j = i + 1, k = i; j < size; j++) if (nums[j] < nums[k]) k = j;
-            swap(nums[i], nums[k]);
-        }
-        for (int i = 1; i < 4; i++) {
-            flag = false;
-
-            for (j = 0; j < size - i; j++) {
-                if (nums[j] > nums[j+1]) swap(nums[j], nums[j+1]);
-                flag = true;
-            }
-            if (not flag) break;
-        }
-
-        int num1 = nums[size-1] * nums[size-2] * nums[size-3], num2 = nums[0] * nums[1] * nums[size-1];
-        return max(num1, num2);
+    int maximumProduct(std::vector<int>& nums) {
+        std::nth_element(nums.begin(), nums.begin() + 3, nums.end(), std::greater<int>());
+        const int res = nums[0] * nums[1] * nums[2];
+        const int max = *std::max_element(nums.begin(), nums.begin() + 3);
+        std::nth_element(nums.begin(), nums.begin() + 2, nums.end());
+        return std::max(nums[0] * nums[1] * max, res);
     }
 };
 // @lc code=end
-

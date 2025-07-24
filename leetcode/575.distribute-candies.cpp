@@ -7,10 +7,10 @@
 // @lc code=start
 class Solution {
 public:
-    int distributeCandies(vector<int>& candyType) {
-        unordered_set<int> res(candyType.begin(), candyType.end());
-        return min(res.size(), candyType.size() / 2);
+    int distributeCandies(std::vector<int>& candyType) {
+        std::sort(candyType.begin(), candyType.end());
+        const auto itr = std::unique(candyType.begin(), candyType.end());
+        return min<int>(itr - candyType.begin(), candyType.size() / 2);
     }
 };
 // @lc code=end
-
