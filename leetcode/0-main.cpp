@@ -1,40 +1,33 @@
-#include <iostream>       // Standard input and output streams
-#include <iomanip>        // Manipulators for input and output formatting
-#include <string>         // std::string class and related functions
-#include <vector>         // std::vector container
-#include <array>          // std::array container
-#include <list>           // std::list container
-#include <deque>          // std::deque container
-#include <set>            // std::set and std::multiset containers
-#include <map>            // std::map and std::multimap containers
-#include <unordered_set>  // std::unordered_set and std::unordered_multiset containers
-#include <unordered_map>  // std::unordered_map and std::unordered_multimap containers
-#include <algorithm>      // Standard algorithms (e.g., sort, find)
-#include <utility>        // std::pair and std::make_pair
-#include <tuple>          // std::tuple and related functions
-#include <random>         // Random number generation facilities
-#include <cmath>          // Common mathematical functions
-#include <numeric>        // Numeric operations (e.g., std::accumulate)
-#include <stack>
-#include <queue>
+#include <algorithm> // Standard algorithms (e.g., sort, find)
+#include <array> // std::array container
 #include <chrono>
-#include "all_in_one.hpp"
+#include <cmath> // Common mathematical functions
+#include <deque> // std::deque container
+#include <iomanip> // Manipulators for input and output formatting
+#include <iostream> // Standard input and output streams
+#include <list> // std::list container
+#include <map> // std::map and std::multimap containers
+#include <numeric> // Numeric operations (e.g., std::accumulate)
+#include <queue>
+#include <random> // Random number generation facilities
+#include <set> // std::set and std::multiset containers
+#include <stack>
+#include <string> // std::string class and related functions
+#include <tuple> // std::tuple and related functions
+#include <unordered_map> // std::unordered_map and std::unordered_multimap containers
+#include <unordered_set> // std::unordered_set and std::unordered_multiset containers
+#include <utility> // std::pair and std::make_pair
+#include <vector> // std::vector container
 
 struct ListNode {
     int val;
     ListNode* next;
 
-    ListNode():
-        val(0), next(nullptr) {
-    }
+    ListNode() : val(0), next(nullptr) {}
 
-    ListNode(int x):
-        val(x), next(nullptr) {
-    }
+    ListNode(int x) : val(x), next(nullptr) {}
 
-    ListNode(int x, ListNode* next):
-        val(x), next(next) {
-    }
+    ListNode(int x, ListNode* next) : val(x), next(next) {}
 };
 
 struct TreeNode {
@@ -42,17 +35,11 @@ struct TreeNode {
     TreeNode* left;
     TreeNode* right;
 
-    TreeNode() :
-        val(0), left(nullptr), right(nullptr) {
-    }
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
 
-    TreeNode(int x) :
-        val(x), left(nullptr), right(nullptr) {
-    }
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
 
-    TreeNode(int x, TreeNode* left, TreeNode* right) :
-        val(x), left(left), right(right) {
-    }
+    TreeNode(int x, TreeNode* left, TreeNode* right) : val(x), left(left), right(right) {}
 };
 
 class Node {
@@ -91,31 +78,34 @@ public:
 
 class Solution {
 public:
-    int findLucky(std::vector<int> arr) {
-        std::sort(arr.begin(), arr.end());
-        const size_t len = arr.size();
-        int i = 0, res = -1;
+    bool canThreePartsEqualSum(std::vector<int> arr) {
+        const int size = arr.size();
+        int target = std::accumulate(arr.begin(), arr.end(), 0), i = 0, j, sum;
 
-        while (i < len) {
-            if (i + arr[i] - 1 < len && arr[i] == arr[i + arr[i] - 1] && (i + arr[i] < len && arr[i] != arr[i + arr[i]])
-                ||
-                i + arr[i] - 1 < len && arr[i] == arr[i + arr[i] - 1] && (i + arr[i] >= len)) {
-                res = std::max(arr[i], res);
-                i += arr[i] - 1;
-            }
-            while (i + 1 < len && arr[i] == arr[i + 1]) {
-                i++;
-            }
-            i++;
+        if (target % 3 != 0) {
+            return false;
         }
-        return res;
+        target /= 3;
+
+        for (j = 0; j < 3; j++) {
+            sum = 0;
+
+            while (i < size && sum != target) {
+                sum += arr[i++];
+            }
+        }
+        return j == 3 && sum == target;
     }
 };
 
 int main() {
     Solution sol;
     auto start = std::chrono::high_resolution_clock::now();
-    std::cout << sol.findLucky({14, 14, 19, 11, 6, 4, 16, 17, 3, 7, 7, 5, 15, 12, 3, 20, 1, 13, 5, 20, 1, 12, 10, 2});
+
+
+    std::cout << sol.canThreePartsEqualSum({0,2,1,-6,6,-7,9,1,2,0,1});
+
+
     std::chrono::duration<double> time = std::chrono::high_resolution_clock::now() - start;
     std::cout << "Total time taken: " << time.count();
 

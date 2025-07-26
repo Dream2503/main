@@ -5,31 +5,23 @@
  */
 
 // @lc code=start
-#include <vector>
-#include <string>
-
 class Solution {
 public:
-    vector<int> diStringMatch(string s) {
-        vector<int> res;
-        int size = s.size() + 1, low = 0, high = size - 1;
-        res.reserve(size);
-        s.push_back(*(s.end() - 1));
+    std::vector<int> diStringMatch(const std::string& s) {
+        const int len = s.length();
+        int low = 0, high = len;
+        std::vector<int> res;
+        res.reserve(len + 1);
 
-        for (char ch: s) {
+        for (const char ch : s) {
             if (ch == 'I') {
-                res.push_back(low);
-                low = (low + 1) % size;
+                res.push_back(low++);
             } else {
                 res.push_back(high--);
-                
-                if (high == -1) {
-                    high = size;
-                }
             }
         }
+        res.push_back(low);
         return res;
     }
 };
 // @lc code=end
-

@@ -5,13 +5,11 @@
  */
 
 // @lc code=start
-#include <vector>
-#include <string>
-
 class Solution {
 public:
-    int minDeletionSize(vector<string>& strs) {
-        int res = 0, row = strs.size() - 1, column = strs[0].size();
+    int minDeletionSize(const std::vector<std::string>& strs) {
+        const int row = strs.size() - 1, column = strs[0].size();
+        int res = 0;
 
         for (int j = 0; j < column; j++) {
             for (int i = 0; i < row; i++) {
@@ -25,4 +23,3 @@ public:
     }
 };
 // @lc code=end
-

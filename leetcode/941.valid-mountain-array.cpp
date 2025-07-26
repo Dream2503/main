@@ -5,8 +5,6 @@
  */
 
 // @lc code=start
-#include <vector>
-
 class Solution {
 public:
     bool validMountainArray(const std::vector<int>& arr) {
@@ -29,4 +27,3 @@ public:
     }
 };
 // @lc code=end
-

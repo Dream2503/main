@@ -5,42 +5,31 @@
  */
 
 // @lc code=start
-#include <vector>
-#include <string>
-#include <unordered_set>
-
 class Solution {
 public:
-    int numUniqueEmails(vector<string>& emails) {
-        int i;
-        bool on_domain;
-        unordered_set<string> set;
+    int numUniqueEmails(const std::vector<std::string>& emails) {
+        std::unordered_set<std::string> seen;
+        std::string res;
 
-        for (string &email: emails) {
-            string res;
-            res.reserve(email.size());
-            on_domain = false;
-            i = 0;
+        for (const std::string& email : emails) {
+            res.clear();
+            int i = 0;
 
-            while (email[i] != '\0') {
-                if (email[i] == '.' && !on_domain) {
+            while (email[i] != '@') {
+                if (email[i] == '.') {
                     i++;
-                } else if (email[i] == '+' && !on_domain) {
+                } else if (email[i] == '+') {
                     while (email[i] != '@') {
                         i++;
                     }
-                    on_domain = true;
-                } else if (email[i] == '@') {
-                    on_domain = true;
-                    res.push_back(email[i++]);
                 } else {
                     res.push_back(email[i++]);
                 }
             }
-            set.insert(res);
+            std::copy(email.begin() + i, email.end(), std::back_inserter(res));
+            seen.insert(std::move(res));
         }
-        return set.size();
+        return seen.size();
     }
 };
 // @lc code=end
-

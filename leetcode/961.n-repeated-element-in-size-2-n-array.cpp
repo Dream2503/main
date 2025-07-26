@@ -5,23 +5,16 @@
  */
 
 // @lc code=start
-#include <vector>
-#include <algorithm>
-
 class Solution {
 public:
-    int repeatedNTimes(vector<int>& nums) {
-        int size = nums.size(), n = size / 2;
-        sort(nums.begin(), nums.end());
-        nums.push_back(-1);
+    int repeatedNTimes(const std::vector<int>& nums) {
+        const int size = nums.size();
 
-        for (int i = 0; i < size - n + 1; i++) {
-            if (nums[i] == nums[i + n - 1] && nums[i] != nums[i + n]) {
+        for (int i = 0; i < size - 2; ++i) {
+            if (nums[i] == nums[i + 1] || nums[i] == nums[i + 2])
                 return nums[i];
-            }
         }
-        return -1;
+        return nums[nums.size() - 1];
     }
 };
 // @lc code=end
-

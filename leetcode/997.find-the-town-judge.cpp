@@ -5,30 +5,22 @@
  */
 
 // @lc code=start
-#include <vector>
-
 class Solution {
 public:
-    int findJudge(int n, vector<vector<int>>& trust) {
-        vector<pair<bool, int>> trusts;
-        int res = 0;
+    int findJudge(const int n, const std::vector<std::vector<int>>& trust) {
+        std::vector<std::pair<bool, int>> trusts;
         trusts.resize(n + 1);
 
-        for (vector<int> &element: trust) {
+        for (const std::vector<int>& element : trust) {
             trusts[element[0]].first = true;
             trusts[element[1]].second++;
         }
         for (int i = 1; i <= n; i++) {
-            if (!trusts[i].first) {
-                if (res == 0 && trusts[i].second == n - 1) {
-                    res = i;
-                } else {
-                    res = -1;
-                }
+            if (!trusts[i].first && trusts[i].second == n - 1) {
+                return i;
             }
         }
-        return res == 0 ? -1: res;
+        return -1;
     }
 };
 // @lc code=end
-

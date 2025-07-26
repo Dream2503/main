@@ -9,24 +9,22 @@
 
 class Solution {
 public:
-    string reverseOnlyLetters(string s) {
-        int size = s.size(), i = 0, j = size - 1;
+    std::string& reverseOnlyLetters(std::string& s) {
+        const int len = s.size();
+        int i = 0, j = len - 1;
 
         while (i < j) {
-            while (i < size && !isalpha(s[i])) {
+            while (i < j && !isalpha(s[i])) {
                 i++;
             }
-            while (j >= 0 && !isalpha(s[j])) {
+            while (i < j && !isalpha(s[j])) {
                 j--;
             }
-
             if (i < j) {
-                swap(s[i], s[j]);
-                i++; j--;
+                std::swap(s[i++], s[j--]);
             }
         }
         return s;
     }
 };
 // @lc code=end
-

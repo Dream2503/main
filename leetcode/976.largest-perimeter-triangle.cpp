@@ -6,25 +6,17 @@
  */
 
 // @lc code=start
-#include <vector>
-#include <algorithm>
-
 class Solution {
 public:
-    int largestPerimeter(vector<int>& nums) {
-        int i = nums.size() - 3, a, b, c;
-        sort(nums.begin(), nums.end());
+    int largestPerimeter(std::vector<int>& nums) {
+        std::sort(nums.begin(), nums.end());
         
-        while (i >= 0) {
-            a = nums[i], b = nums[i + 1], c = nums[i + 2];
-
-            if (a + b > c && b + c > a && a + c > b) {
-                return a + b + c;
+        for (int i = nums.size() - 1; i >= 2; --i) {
+            if (nums[i - 2] + nums[i - 1] > nums[i]) {
+                return nums[i - 2] + nums[i - 1] + nums[i];
             }
-            i--;
         }
         return 0;
     }
 };
 // @lc code=end
-

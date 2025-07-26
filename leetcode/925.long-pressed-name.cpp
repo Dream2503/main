@@ -9,29 +9,27 @@
 
 class Solution {
 public:
-    bool isLongPressedName(string name, string typed) {
-        int i = 0, j = 0, current_size, typed_size;
-        char current_char;
+    bool isLongPressedName(const std::string& name, const std::string& typed) {
+        const int name_len = name.length(), typed_len = typed.length();
+        int i = 0, j = 0;
 
-        while (name[i] != '\0') {
-            current_char = name[i];
-            current_size = 1;
-            i++;
+        while (i < name_len) {
+            const char current_char = name[i++];
+            int count = 1;
 
-            while (name[i] != '\0' && name[i] == current_char) {
-                current_size++; i++;
+            while (i < name_len && name[i] == current_char) {
+                count++;
+                i++;
             }
-            typed_size = 0;
-
-            while (typed[j] != '\0' && typed[j] == current_char) {
-                typed_size++; j++;
+            while (j < typed_len && typed[j] == current_char) {
+                count--;
+                j++;
             }
-            if (current_size > typed_size) {
+            if (count > 0) {
                 return false;
             }
         }
-        return typed[j] == '\0';
+        return j == typed_len;
     }
 };
 // @lc code=end
-

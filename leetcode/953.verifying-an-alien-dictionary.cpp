@@ -5,40 +5,20 @@
  */
 
 // @lc code=start
-#include <vector>
-#include <string>
-#include <unordered_map>
-
 class Solution {
+    std::array<int, 26> dict{};
+
 public:
-    bool isAlienSorted(vector<string>& words, string order) {
-        unordered_map<char, int> look_up;
-        int size = words.size(), i, j, word1_size, word2_size;
-        string word1, word2;
-        look_up.reserve(26);
-
-        for (i = 0; i < 26; i++) {
-            look_up[order[i]] = i;
+    bool isAlienSorted(const std::vector<std::string>& words, const std::string& order) {
+        for (int i = 0; i < 26; i++) {
+            dict[order[i] - 'a'] = i;
         }
-        for (i = 0; i < size - 1; i++) {
-            word1_size = words[i].size(); word2_size = words[i + 1].size();
-            j = 0;
 
-            while (j < word1_size && j < word2_size && words[i][j] == words[i + 1][j]) {
-                j++;
-            }
-            if (j == word1_size || j == word2_size) {
-                if (words[i] != words[i + 1] && word1_size > word2_size) {
-                    return false;
-                }
-            } else {
-                if (look_up[words[i][j]] > look_up[words[i + 1][j]]) {
-                    return false;
-                }
-            }
-        }
-        return true;
+        return std::is_sorted(words.begin(), words.end(), [this](const std::string& str1, const std::string& str2) {
+            return std::lexicographical_compare(
+                str1.begin(), str1.end(), str2.begin(), str2.end(),
+                [this](const char a, const char b) { return dict[a - 'a'] < dict[b - 'a']; });
+        });
     }
 };
 // @lc code=end
-

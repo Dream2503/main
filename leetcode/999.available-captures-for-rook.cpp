@@ -5,12 +5,10 @@
  */
 
 // @lc code=start
-#include <vector>
-
 class Solution {
 public:
-    int numRookCaptures(vector<vector<char>>& board) {
-        pair<int, int> target;
+    int numRookCaptures(const std::vector<std::vector<char>>& board) {
+        std::pair<int, int> target;
         int i, j, res = 0;
 
         for (i = 0; i < 8; i++) {
@@ -72,4 +70,3 @@ public:
     }
 };
 // @lc code=end
-

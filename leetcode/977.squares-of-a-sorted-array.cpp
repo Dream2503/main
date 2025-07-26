@@ -5,12 +5,9 @@
  */
 
 // @lc code=start
-#include <algorithm>
-#include <vector>
-
 class Solution {
 public:
-    std::vector<int> sortedSquares(const vector<int>& nums) {
+    std::vector<int> sortedSquares(const std::vector<int>& nums) {
         std::vector<int> res;
         const int size = nums.size();
         res.reserve(size);

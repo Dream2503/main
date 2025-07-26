@@ -5,25 +5,24 @@
  */
 
 // @lc code=start
-#include <vector>
-
 class Solution {
 public:
-    vector<int> sortArrayByParityII(vector<int>& nums) {
-        int size = nums.size();
+    std::vector<int>& sortArrayByParityII(std::vector<int>& nums) {
+        const int size = nums.size();
+        int even = 0, odd = 1;
 
-        for (int i = 0; i < size; i++) {
-            if (nums[i] % 2 != i % 2) {
-                for (int j = i + 1; j < size; j++) {
-                    if (nums[j] % 2 != j % 2 && nums[j] % 2 == i % 2) {
-                        swap(nums[i], nums[j]);
-                        break;
-                    }
-                }
+        while (even < size && odd < size) {
+            if (nums[even] % 2 == 0) {
+                even += 2;
+            } else if (nums[odd] % 2 == 1) {
+                odd += 2;
+            } else {
+                std::swap(nums[even], nums[odd]);
+                even += 2;
+                odd += 2;
             }
         }
         return nums;
     }
 };
 // @lc code=end
-

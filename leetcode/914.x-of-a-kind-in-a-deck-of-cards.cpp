@@ -5,30 +5,29 @@
  */
 
 // @lc code=start
-#include <vector>
-#include <algorithm>
-#include <numeric>
-
 class Solution {
 public:
-    bool hasGroupsSizeX(vector<int>& deck) {
-        sort(deck.begin(), deck.end());
-        int size = deck.size(), cnt = 0, i = 0, k, current;
+    bool hasGroupsSizeX(std::vector<int>& deck) {
+        const int size = deck.size();
+        std::sort(deck.begin(), deck.end());
+        int cnt = 0, i = 0;
 
         while (i < size && deck[i] == deck[0]) {
-            cnt++; i++;
+            cnt++;
+            i++;
         }
         if (cnt <= 1) {
             return false;
         }
         while (i < size) {
-            k = i++;
-            current = 1;
+            const int k = i++;
+            int current = 1;
 
             while (i < size && deck[i] == deck[k]) {
-                current++; i++;
+                current++;
+                i++;
             }
-            cnt = gcd(current, cnt);
+            cnt = std::gcd(current, cnt);
 
             if (cnt == 1) {
                 return false;
@@ -38,4 +37,3 @@ public:
     }
 };
 // @lc code=end
-
