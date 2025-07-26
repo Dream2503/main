@@ -21,7 +21,7 @@ public:
         if (!head || !head->next) {
             return head;
         }
-        ListNode *current = head;
+        ListNode* current = head;
 
         while (head && head->next && head->val == head->next->val) {
             while (current && current->val == head->val) {
@@ -47,7 +47,6 @@ public:
                 prev = current;
                 current = current->next;
             }
-
         }
         return head;
     }

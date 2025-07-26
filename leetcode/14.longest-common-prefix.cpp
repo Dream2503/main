@@ -14,7 +14,7 @@ public:
         for (const char ch : strs[0]) {
             for (const std::string& element : strs) {
                 if (ch != element[i]) {
-                    return  res;
+                    return res;
                 }
             }
             res += ch;

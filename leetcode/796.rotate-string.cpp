@@ -7,30 +7,23 @@
 // @lc code=start
 class Solution {
 public:
-    bool rotateString(string s, string goal) {
-        int i = 0, j = 0, k;
-        bool broke = false;
-        if (s.size() != goal.size()) return false;
+    bool rotateString(const std::string& s, const std::string& goal) {
+        const int len = s.size();
 
-        while (true) {
-            while (s[i] and s[i] != goal[j]) i++;
-            if (not s[i]) return false;
-            k = i;
+        if (len != goal.size()) {
+            return false;
+        }
+        for (int shift = 0; shift < len; shift++) {
+            int i = 0;
 
-            while (goal[j]) {
-                if (s[i]) {
-                    if (s[i++] != goal[j++]) {
-                        broke = true;
-                        break;
-                    }
-                } else i = 0;
+            while (i < len && s[(shift + i) % len] == goal[i]) {
+                i++;
             }
-            if (not broke) return true;
-            broke = false;
-            i = k + 1; j = 0;
+            if (i == len) {
+                return true;
+            }
         }
         return false;
     }
 };
 // @lc code=end
-

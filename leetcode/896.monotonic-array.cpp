@@ -5,39 +5,33 @@
  */
 
 // @lc code=start
-#include <vector>
-using namespace std;
-
 class Solution {
 public:
-    bool isMonotonic(vector<int>& nums) {
-        int size = nums.size(), i = 0;
+    bool isMonotonic(const std::vector<int>& nums) {
+        const int size = nums.size();
+        int i = 0;
 
-        if (size == 1) {
-            return true;
-        }
         while (i < size - 1 && nums[i] == nums[i + 1]) {
             i++;
         }
-        if (i == size - 1) {
-            return true;
-        }
-        if (nums[i] - nums[i + 1] > 0) {
-            for (; i < size - 1; i++) {
-                if (nums[i] < nums[i + 1]) {
-                    return false;
+        if (i < size - 1) {
+            if (nums[i] - nums[i + 1] > 0) {
+                while (i < size - 1) {
+                    if (nums[i] < nums[i + 1]) {
+                        return false;
+                    }
+                    i++;
+                }
+            } else {
+                while (i < size - 1) {
+                    if (nums[i] > nums[i + 1]) {
+                        return false;
+                    }
+                    i++;
                 }
             }
-            return true;
-        } else {
-            for (; i < size - 1; i++) {
-                if (nums[i] > nums[i + 1]) {
-                    return false;
-                }
-            }
-            return true;
         }
+        return true;
     }
 };
 // @lc code=end
-

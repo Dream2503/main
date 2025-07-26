@@ -7,10 +7,11 @@
 // @lc code=start
 class Solution {
 public:
-    string toLowerCase(string s) {
-        for (char i = 0, size = s.size(); i < size; i++) s[i] = tolower(s[i]);
+    std::string& toLowerCase(std::string& s) {
+        for (char& ch : s) {
+            ch += (ch >= 'A' && ch <= 'Z') * 32;
+        }
         return s;
     }
 };
 // @lc code=end
-

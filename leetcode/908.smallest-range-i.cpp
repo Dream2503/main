@@ -5,22 +5,11 @@
  */
 
 // @lc code=start
-#include <vector>
-#include <algorithm>
-using namespace std;
-
 class Solution {
 public:
-    int smallestRangeI(vector<int>& nums, int k) {
-        auto min_max = minmax_element(nums.begin(), nums.end());
-        int diff = *min_max.second - *min_max.first - k;
-
-        if (diff <= k) {
-            return 0;
-        } else {
-            return diff - k;
-        }
+    int smallestRangeI(const std::vector<int>& nums, const int k) {
+        const auto [min, max] = minmax_element(nums.begin(), nums.end());
+        return std::max(0, *max - *min - 2 * k); // range -> (max - k) - (min + k)
     }
 };
 // @lc code=end
-

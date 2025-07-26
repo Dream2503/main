@@ -11,8 +11,8 @@ public:
         int row = m, column = n;
 
         for (const std::vector<int>& element : ops) {
-            row = min(row, element[0]);
-            column = min(column, element[1]);
+            row = std::min(row, element[0]);
+            column = std::min(column, element[1]);
         }
         return row * column;
     }

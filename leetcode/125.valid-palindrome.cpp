@@ -21,8 +21,6 @@ public:
                 if (std::tolower(s[i++]) != std::tolower(s[j--])) {
                     return false;
                 }
-            } else {
-                return true;
             }
         }
         return true;

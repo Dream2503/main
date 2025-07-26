@@ -1,4 +1,4 @@
-    /*
+/*
  * @lc app=leetcode id=164 lang=cpp
  *
  * [164] Maximum Gap
@@ -19,4 +19,3 @@ public:
     }
 };
 // @lc code=end
-

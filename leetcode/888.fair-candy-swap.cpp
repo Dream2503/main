@@ -5,25 +5,15 @@
  */
 
 // @lc code=start
-#include <vector>
-#include <algorithm>
-using namespace std;
-
 class Solution {
 public:
-    vector<int> fairCandySwap(vector<int>& aliceSizes, vector<int>& bobSizes) {
-        int sum1 = 0, sum2 = 0, target, i = 0, j = 0;
-
-        for (int element: aliceSizes) {
-            sum1 += element;
-        }
-        for (int element: bobSizes) {
-            sum2 += element;
-        }
-        target = (sum1 - sum2) / 2;
+    std::vector<int> fairCandySwap(std::vector<int>& aliceSizes, std::vector<int>& bobSizes) {
+        const int target = (std::accumulate(aliceSizes.begin(), aliceSizes.end(), 0) -
+                            std::accumulate(bobSizes.begin(), bobSizes.end(), 0)) / 2;
+        int i = 0, j = 0;
         sort(aliceSizes.begin(), aliceSizes.end());
         sort(bobSizes.begin(), bobSizes.end());
-        
+
         while (true) {
             if (aliceSizes[i] - bobSizes[j] < target) {
                 i++;
@@ -33,7 +23,6 @@ public:
                 return {aliceSizes[i], bobSizes[j]};
             }
         }
-        return {};
     }
 };
 // @lc code=end

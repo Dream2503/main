@@ -5,48 +5,39 @@
  */
 
 // @lc code=start
-#include <string>
-#include <algorithm>
-using namespace std;
-
 class Solution {
 public:
-    bool buddyStrings(string s, string goal) {
-        int i = 0, k, size = s.size();
-        
-        if (size != goal.size()) {
+    bool buddyStrings(const std::string& s, const std::string& goal) {
+        const int len = s.length();
+        int i = 0;
+
+        if (len != goal.size()) {
             return false;
         }
-        while (i < size && s[i] == goal[i]) {
+        while (i < len && s[i] == goal[i]) {
             i++;
         }
-        k = i++;
+        const int k = i++;
 
-        if (k >= size) {
-            sort(s.begin(), s.end());
-            sort(goal.begin(), goal.end());
-            
-            if (s != goal) {
-                return false;
-            }
-            for (i = 0; i < size; i++) {
-                if (s[i] == s[i+1]) {
+        if (k >= len) {
+            std::array<int, 26> hash{};
+
+            for (const char ch : s) {
+                if (++hash[ch - 'a'] > 1) {
                     return true;
                 }
             }
             return false;
         }
-
-        while (i < size && s[i] == goal[i]) {
+        while (i < len && s[i] == goal[i]) {
             i++;
         }
-        if (i < size) {
-            swap(s[k], s[i]);
-            return s == goal;
-        } else {
-            return false;
+        if (i < len) {
+            return s[k] == goal[i] && s[i] == goal[k] &&
+                std::string_view(s).substr(i + 1) == std::string_view(goal).substr(i + 1) &&
+                std::string_view(s).substr(0, k) == std::string_view(goal).substr(0, k);
         }
+        return false;
     }
 };
 // @lc code=end
-

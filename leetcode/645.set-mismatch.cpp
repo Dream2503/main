@@ -10,7 +10,7 @@ public:
     std::vector<int> findErrorNums(const std::vector<int>& nums) {
         const int size = nums.size();
         std::vector<int> res(2);
-        std::vector<uint8_t> bits((size + 7) / 8 , 0);
+        std::vector<uint8_t> bits((size + 7) / 8, 0);
 
         for (int element : nums) {
             element--;

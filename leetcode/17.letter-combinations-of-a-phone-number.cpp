@@ -8,7 +8,7 @@
 class Solution {
 public:
     std::vector<std::string> letterCombinations(const std::string& digits) {
-        static const std::vector<std::string> codes = {"abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+        static constexpr std::array<std::string, 8> codes = {"abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
         std::vector res(1, std::string(digits.size(), 'K'));
         int i = 0;
 

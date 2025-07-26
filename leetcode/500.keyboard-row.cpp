@@ -8,7 +8,7 @@
 class Solution {
 public:
     std::vector<std::string> findWords(const std::vector<std::string>& words) {
-        static const std::vector<std::string> hash{"eiopqrtuwy", "adfghjkls", "bcmnvxz"};
+        static constexpr std::array<std::string, 3> hash{"eiopqrtuwy", "adfghjkls", "bcmnvxz"};
         std::vector<std::string> res;
 
         for (const std::string& word : words) {

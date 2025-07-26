@@ -12,7 +12,9 @@ public:
         n >>= 1;
 
         while (n) {
-            if (bit == (n & 1)) return false;
+            if (bit == (n & 1)) {
+                return false;
+            }
             bit = n & 1;
             n >>= 1;
         }
@@ -20,4 +22,3 @@ public:
     }
 };
 // @lc code=end
-

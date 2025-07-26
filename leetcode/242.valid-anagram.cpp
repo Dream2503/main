@@ -25,6 +25,4 @@ public:
         return true;
     }
 };
-time - O(n + m)
-space - O(1)
 // @lc code=end

@@ -8,29 +8,18 @@
 class Solution {
 public:
     int binaryGap(int n) {
-        int max = 0, current = 0;
-        bool on_pair = false;
+        int max = 0, current = -32;
 
-        while (n != 0) {
+        while (n) {
             if (n & 1) {
-                if (on_pair) {
-                    if (max < current) {
-                        max = current;
-                    }
-                    current = 1;
-                } else {
-                    current++;
-                    on_pair = true;
-                }
+                max = std::max(max, current);
+                current = 1;
             } else {
-                if (on_pair) {
-                    current++;
-                }
+                current++;
             }
-            n = n >> 1;
+            n >>= 1;
         }
         return max;
     }
 };
 // @lc code=end
-

@@ -6,23 +6,28 @@
 
 // @lc code=start
 class KthLargest {
-public:
-    priority_queue<int,vector<int>,greater<int>> queue;
+    std::priority_queue<int, std::vector<int>, std::greater<int>> heap;
     int size;
 
-    KthLargest(int k, vector<int> nums) {
-        this->size = k;
+public:
+    KthLargest(const int k, const std::vector<int>& nums) : size(k) {
+        std::vector<int> temp;
+        temp.reserve(k);
+        heap = std::priority_queue(std::greater<int>(), std::move(temp));
 
-        for (int &num: nums){
-            this->queue.push(num);
-            if (this->queue.size() > k) this->queue.pop();
+        for (const int element : nums) {
+            add(element);
         }
     }
-    
-    int add(int val) {
-        this->queue.push(val);
-        if(this->queue.size() > this->size) this->queue.pop();
-        return this->queue.top();
+
+    int add(const int val) {
+        if (heap.size() < size) {
+            heap.push(val);
+        } else if (val > heap.top()) {
+            heap.pop();
+            heap.push(val);
+        }
+        return heap.top();
     }
 };
 
@@ -32,4 +37,3 @@ public:
  * int param_1 = obj->add(val);
  */
 // @lc code=end
-

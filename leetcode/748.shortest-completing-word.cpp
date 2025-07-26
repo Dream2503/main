@@ -7,31 +7,36 @@
 // @lc code=start
 class Solution {
 public:
-    string shortestCompletingWord(string licensePlate, vector<string> words) {
-        string chs;
-        for (char ch: licensePlate) if (ch >= 'A') chs += tolower(ch);
-        sort(chs.begin(), chs.end());
-        int i = 0, j = 0, cnt = 0, size = words.size(), size1, size2 = chs.size(), minSize = 10e3, res = 0;
-        string temp;
+    const std::string& shortestCompletingWord(const std::string& licensePlate, const std::vector<std::string>& words) {
+        std::array<int, 26> main_hash{}, word_hash;
 
-        for (int k = 0; k < size; k++) {
-            temp = words[k];
-            sort(temp.begin(), temp.end());
-            size1 = temp.size();
-
-            while (i < size1 and j < size2) {
-                if (temp[i] < chs[j]) i++;
-                else if (temp[i] > chs[j]) j++;
-                else {i++; j++; cnt++;}
+        for (const char ch : licensePlate) {
+            if (std::isalpha(ch)) {
+                main_hash[std::tolower(ch) - 'a']++;
             }
-            if (cnt == size2) if (minSize > size1) {
-                res = k;
-                minSize = size1;
-            }
-            i = 0; j = 0; cnt = 0;
         }
-        return words[res];
+        const std::string* res = nullptr;
+        int i;
+
+        for (const std::string& word : words) {
+            std::fill(word_hash.begin(), word_hash.end(), 0);
+
+            for (const char ch : word) {
+                word_hash[ch - 'a']++;
+            }
+            for (i = 0; i < 26; i++) {
+                if (word_hash[i] < main_hash[i]) {
+                    break;
+                }
+            }
+            if (i == 26) {
+                if (res && res->size() <= word.size()) {
+                    continue;
+                }
+                res = &word;
+            }
+        }
+        return *res;
     }
 };
 // @lc code=end
-

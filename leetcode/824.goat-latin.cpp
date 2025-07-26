@@ -7,24 +7,31 @@
 // @lc code=start
 class Solution {
 public:
-    string toGoatLatin(string sentence) {
-        istringstream iss(sentence);
-        string res, word, end = "maa";
-        char x;
-        auto isVowel = [](const char &ch) -> bool {return ch == 'a' or ch == 'e' or ch =='i' or ch == 'o' or ch == 'u';};
+    std::string toGoatLatin(const std::string& sentence) {
+        const int len = sentence.length();
+        std::string res, word, end = "maa";
+        res.reserve(len);
+        int i = 0;
+        auto is_vowel = [](const char ch) { return ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u'; };
 
-        while (not iss.eof()) {
-            iss >> word;
-            x = word[0];
+        while (i < len) {
+            char x = 0;
 
-            if (not isVowel(tolower(x))) {
-                word.push_back(*word.begin());
-                word.erase(word.begin());
+            if (!is_vowel(std::tolower(sentence[i]))) {
+                x = sentence[i++];
+            }
+            while (i < len && sentence[i] != ' ') {
+                word.push_back(sentence[i++]);
+            }
+            if (x) {
+                word.push_back(x);
             }
             word += end;
-            end += 'a';
+            end.push_back('a');
             res += word;
-            res += ' ';
+            res.push_back(' ');
+            word.clear();
+            i++;
         }
         res.pop_back();
         return res;

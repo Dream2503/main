@@ -8,7 +8,7 @@
 class Solution {
 public:
     bool isMatch(const std::string& s, const std::string& p) {
-        const size_t m = s.length(), n = p.length();
+        const int m = s.length(), n = p.length();
         std::vector dp(m + 1, std::vector(n + 1, false));
         dp[0][0] = true;
 

@@ -17,4 +17,3 @@ public:
     }
 };
 // @lc code=end
-

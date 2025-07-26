@@ -7,7 +7,6 @@
 // @lc code=start
 #include <algorithm>
 #include <vector>
-using namespace std;
 
 class Solution {
 public:

@@ -7,9 +7,9 @@
 // @lc code=start
 class Solution {
 public:
-    std::string addBinary(std::string& a, std::string& b) {
+    std::string addBinary(const std::string& a, const std::string& b) {
         int i = a.size() - 1, j = b.size() - 1, k = std::max(i, j) + 2, carry = 0;
-        auto res = new char[k + 1];
+        const auto res = new char[k + 1];
         res[k--] = 0;
 
         while (i >= 0 || j >= 0) {

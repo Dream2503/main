@@ -8,7 +8,7 @@
 class Solution {
 public:
     int strStr(const std::string& haystack, const std::string& needle) {
-        const size_t size1 = haystack.size(), size2 = needle.size();
+        const int size1 = haystack.size(), size2 = needle.size();
         bool found = false;
 
         for (int i = 0; i < size1; i++) {

@@ -17,7 +17,7 @@ public:
 
         for (int i = k; i < size; i++) {
             sum += nums[i] - nums[i - k];
-            res = max(res, sum);
+            res = std::max(res, sum);
         }
         return res / static_cast<double>(k);
     }

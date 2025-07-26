@@ -7,20 +7,22 @@
 // @lc code=start
 class Solution {
 public:
-    int findLengthOfLCIS(vector<int>& nums) {
-        int res = 1, current = 1, size = nums.size(), j;
+    int findLengthOfLCIS(const std::vector<int>& nums) {
+        const int size = nums.size();
+        int res = 1, current = 1, i = 0;
 
-        for (int i = 0; i < size - 1; i++) {
-            for (j = i + 1; j < size; j++) {
-                if (nums[j-1] < nums[j]) current++;
-                else break;
+        while (i < size - 1) {
+            int j = i + 1;
+
+            while (j < size && nums[j - 1] < nums[j]) {
+                current++;
+                j++;
             }
-            i = j - 1;
-            res = max(res, current);
+            i = j;
+            res = std::max(res, current);
             current = 1;
         }
         return res;
     }
 };
 // @lc code=end
-

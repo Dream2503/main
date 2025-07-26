@@ -1,6 +1,5 @@
 ﻿
 #include "0-main.cpp"
-#include "0-test.cpp"
 #include "1.two-sum.cpp"
 #include "10.regular-expression-matching.cpp"
 #include "100.same-tree.cpp"

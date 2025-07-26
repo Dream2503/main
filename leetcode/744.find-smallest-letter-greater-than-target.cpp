@@ -7,24 +7,13 @@
 // @lc code=start
 class Solution {
 public:
-    char nextGreatestLetter(vector<char>& letters, char target) {
-        int size = letters.size(), low = 0, high = size - 1, mid;
-        bool broke = false;
+    char nextGreatestLetter(const std::vector<char>& letters, const char target) {
+        const auto itr = std::upper_bound(letters.begin(), letters.end(), target);
 
-        while (low <= high) {
-            mid = (low + high) / 2;
-            if (letters[mid] < target) low = mid + 1;
-            else if (letters[mid] > target) high = mid - 1;
-            else {
-                broke = true;
-                break;
-            }
+        if (itr == letters.end()) {
+            return letters[0];
         }
-        if (not broke) mid = low;
-        while (mid < size and letters[mid] == target) mid++;
-        if (mid < size) return letters[mid];
-        return letters[0];
+        return *itr;
     }
 };
 // @lc code=end
-

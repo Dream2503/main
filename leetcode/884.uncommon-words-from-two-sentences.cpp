@@ -5,30 +5,39 @@
  */
 
 // @lc code=start
-#include <vector>
-#include <string>
-#include <sstream>
-#include <unordered_map>
-using namespace std;
-
 class Solution {
 public:
-    vector<string> uncommonFromSentences(string s1, string s2) {
-        vector<string> res;
-        unordered_map<string, int> word_count;
-        stringstream ss(s1 + " " + s2);
-        string word;
+    std::vector<std::string> uncommonFromSentences(const std::string& s1, const std::string& s2) {
+        std::vector<std::string> res;
+        std::unordered_map<std::string, int> hash;
+        std::string word;
+        int len = s1.length(), i = 0;
 
-        while (ss >> word) {
-            word_count[word]++;
+        while (i < len) {
+            while (i < len && s1[i] != ' ') {
+                word.push_back(s1[i++]);
+            }
+            hash[std::move(word)]++;
+            word.clear();
+            i++;
         }
-        for (pair<string, int> element: word_count) {
-            if (element.second == 1) {
-                res.push_back(element.first);
+        len = s2.length();
+        i = 0;
+
+        while (i < len) {
+            while (i < len && s2[i] != ' ') {
+                word.push_back(s2[i++]);
+            }
+            hash[std::move(word)]++;
+            word.clear();
+            i++;
+        }
+        for (const auto& [word, count] : hash) {
+            if (count == 1) {
+                res.push_back(word);
             }
         }
         return res;
     }
 };
 // @lc code=end
-

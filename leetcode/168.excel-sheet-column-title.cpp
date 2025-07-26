@@ -9,8 +9,8 @@ class Solution {
 public:
     std::string convertToTitle(int columnNumber) {
         std::string res;
-        
-        while(columnNumber) {
+
+        while (columnNumber) {
             columnNumber--;
             res.push_back((columnNumber % 26) + 'A');
             columnNumber /= 26;
@@ -20,4 +20,3 @@ public:
     }
 };
 // @lc code=end
-

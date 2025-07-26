@@ -21,7 +21,8 @@ public:
         if (!head->next) {
             return true;
         }
-        ListNode *slow = head, *fast = head;
+        ListNode* slow = head;
+        const ListNode* fast = head;
 
         while (fast && fast->next) {
             slow = slow->next;

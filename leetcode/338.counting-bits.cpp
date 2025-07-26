@@ -7,7 +7,7 @@
 // @lc code=start
 class Solution {
 public:
-    vector<int> countBits(const int n) {
+    std::vector<int> countBits(const int n) {
         std::vector<int> res;
         res.reserve(n + 1);
         res.push_back(0);

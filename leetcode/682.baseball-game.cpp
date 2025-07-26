@@ -7,23 +7,28 @@
 // @lc code=start
 class Solution {
 public:
-    int calPoints(vector<string>& operations) {
-        stack<int> stk;
-        int temp, sum;
+    int calPoints(const std::vector<std::string>& operations) {
+        std::stack<int> stk;
+        int sum;
 
-        for (string str: operations) {
-            if (str == "+") {
-                temp = stk.top();
+        for (const std::string& str : operations) {
+            if (str[0] == '+') {
+                int temp = stk.top();
                 stk.pop();
                 sum = stk.top() + temp;
-                stk.push(temp); stk.push(sum);
-            } else if (str == "D") stk.push(2*stk.top());
-            else if (str == "C") stk.pop();
-            else stk.push(stoi(str));
+                stk.push(temp);
+                stk.push(sum);
+            } else if (str[0] == 'D') {
+                stk.push(2 * stk.top());
+            } else if (str[0] == 'C') {
+                stk.pop();
+            } else {
+                stk.push(stoi(str));
+            }
         }
         sum = 0;
 
-        while (not stk.empty()) {
+        while (!stk.empty()) {
             sum += stk.top();
             stk.pop();
         }
@@ -31,4 +36,3 @@ public:
     }
 };
 // @lc code=end
-

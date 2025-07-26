@@ -12,7 +12,7 @@ public:
         nums1.resize(std::unique(nums1.begin(), nums1.end()) - nums1.begin());
         std::sort(nums2.begin(), nums2.end());
         nums2.resize(std::unique(nums2.begin(), nums2.end()) - nums2.begin());
-        vector<int> res;
+        std::vector<int> res;
         std::set_intersection(nums1.begin(), nums1.end(), nums2.begin(), nums2.end(), std::back_inserter(res));
         return res;
 

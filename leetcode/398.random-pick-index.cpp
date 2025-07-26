@@ -18,7 +18,7 @@ public:
     }
 
     int pick(const int target) {
-        const std::vector<int> &temp = hash[target];
+        const std::vector<int>& temp = hash[target];
         return temp[std::rand() % temp.size()];
     }
 };

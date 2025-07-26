@@ -9,7 +9,7 @@ class Solution {
 public:
     int threeSumClosest(std::vector<int>& nums, const int target) {
         std::sort(nums.begin(), nums.end());
-        const size_t size = nums.size();
+        const int size = nums.size();
         int left, right, res = 0, tol = INT32_MAX;
 
         for (int i = 0; i < size; i++) {

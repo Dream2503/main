@@ -7,17 +7,17 @@
 class Solution {
 public:
     bool isValid(const std::string& s) {
-        std::stack<char> stk;
+        std::stack<char> stack;
 
         for (char ch : s) {
             if (ch == '(' || ch == '[' || ch == '{') {
-                stk.push(ch);
+                stack.push(ch);
             } else {
-                if (stk.empty()) {
+                if (stack.empty()) {
                     return false;
                 }
-                const char chr = stk.top();
-                stk.pop();
+                const char chr = stack.top();
+                stack.pop();
 
                 if (chr == ch - 1 || chr == ch - 2) {
                     continue;
@@ -25,7 +25,7 @@ public:
                 return false;
             }
         }
-        return stk.empty();
+        return stack.empty();
     }
 };
 // @lc code=end

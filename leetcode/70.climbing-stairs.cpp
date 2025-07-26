@@ -15,6 +15,7 @@ constexpr std::array<int, 46> get_array() {
     }
     return res;
 }
+
 class Solution {
     constexpr static std::array<int, 46> res = get_array();
 

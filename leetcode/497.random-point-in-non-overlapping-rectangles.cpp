@@ -22,7 +22,7 @@ public:
         }
     }
 
-    vector<int> pick() {
+    std::vector<int> pick() {
         const int rand_area = std::rand() % total_area;
         const std::vector<int>& temp =
             rectangles[std::lower_bound(areas.begin(), areas.end(), rand_area + 1) - areas.begin()];

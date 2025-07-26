@@ -16,7 +16,7 @@
 class Solution {
 public:
     void deleteNode(ListNode* node) {
-        ListNode *next = node->next, *prev;
+        ListNode *next = node->next, *prev = nullptr;
 
         while (next) {
             node->val = next->val;
@@ -28,4 +28,3 @@ public:
     }
 };
 // @lc code=end
-

@@ -17,7 +17,7 @@
  */
 class Solution {
 public:
-    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+    ListNode* addTwoNumbers(const ListNode* l1, const ListNode* l2) {
         int carry = 0;
         ListNode *res = new ListNode, *current = res;
 

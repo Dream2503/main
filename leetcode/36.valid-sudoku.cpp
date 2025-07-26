@@ -8,7 +8,7 @@
 class Solution {
 public:
     bool isValidSudoku(const std::vector<std::vector<char>>& board) {
-        int16_t hash = 0;
+        uint16_t hash = 0;
 
         for (int i = 0; i < 9; i += 3) {
             for (int j = 0; j < 9; j += 3) {

@@ -5,9 +5,6 @@
  */
 
 // @lc code=start
-#include <vector>
-using namespace std;
-
 class Solution {
 public:
     std::vector<int>& sortArrayByParity(std::vector<int>& nums) {
@@ -22,12 +19,10 @@ public:
                 j--;
             }
             if (i < j) {
-                swap(nums[i], nums[j]);
-                i++; j--;
+                std::swap(nums[i++], nums[j--]);
             }
         }
         return nums;
     }
 };
 // @lc code=end
-

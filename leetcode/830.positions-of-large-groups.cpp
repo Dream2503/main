@@ -7,17 +7,22 @@
 // @lc code=start
 class Solution {
 public:
-    vector<vector<int>> largeGroupPositions(string s) {
-        int i = 0, j = 1, size = s.size();
-        vector<vector<int>> res;
+    std::vector<std::vector<int>> largeGroupPositions(const std::string& s) {
+        const int len = s.size();
+        int i = 0, j = 1;
+        std::vector<std::vector<int>> res;
 
-        while (j < size) {
-            while (s[j] and s[j] == s[i]) j++;
-            if (j - i > 2) res.push_back({i, j-1});
-            i = j; j++;
+        while (j < len) {
+            while (j < len && s[j] == s[i]) {
+                j++;
+            }
+            if (j - i >= 3) {
+                res.push_back({i, j - 1});
+            }
+            i = j;
+            j++;
         }
         return res;
     }
 };
 // @lc code=end
-

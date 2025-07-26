@@ -8,7 +8,7 @@
 class Solution {
 public:
     int removeElement(std::vector<int>& nums, const int val) {
-        const size_t len = nums.size();
+        const int len = nums.size();
 
         if (len == 0) {
             return 0;

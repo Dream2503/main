@@ -8,7 +8,7 @@
 class Solution {
 public:
     std::string longestPalindrome(const std::string& s) {
-        const size_t len = s.length();
+        const int len = s.length();
         int start = 0, max_len = 1;
 
         auto expand = [&](int left, int right) -> void {

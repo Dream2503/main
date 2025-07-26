@@ -7,32 +7,35 @@
 // @lc code=start
 class Solution {
 public:
-    string mostCommonWord(string paragraph, vector<string>& banned) {
-        istringstream iss(paragraph);
-        string temp, word;
-        char x;
-        unordered_map<string,int> hash;
-        
-        while (not iss.eof()) {
-            iss >> temp;
-            for (char ch: temp) {
-                if ((x = tolower(ch)) >= 'a' and x <= 'z') word += x;
-                else if (not word.empty()) {
-                    hash[word]++;
-                    word.clear(); 
-                }
+    std::string mostCommonWord(const std::string& paragraph, std::vector<std::string>& banned) {
+        const int len = paragraph.length();
+        std::string word;
+        std::unordered_map<std::string, int> hash;
+        std::unordered_set<std::string> ban;
+        ban.reserve(banned.size());
+        ban.insert(std::make_move_iterator(banned.begin()), std::make_move_iterator(banned.end()));
+        int i = 0;
+
+        while (i < len) {
+            while (i < len && std::isalpha(paragraph[i])) {
+                word.push_back(std::tolower(paragraph[i++]));
             }
-            if (not word.empty()) {
-                hash[word]++;
-                word.clear(); 
+            if (!word.empty()) {
+                hash[std::move(word)]++;
+                word.clear();
+            }
+            i++;
+        }
+        std::string res;
+        int max = 0;
+
+        for (const auto& [word, count] : hash) {
+            if (!ban.count(word) && count > max) {
+                res = word;
+                max = count;
             }
         }
-        auto cmp = [](const pair<string,int>& a, const pair<string,int>& b) -> bool {return a.second > b.second;};
-        multiset<pair<string,int>, decltype(cmp)> list(hash.begin(), hash.end(), cmp);
-        set<string> ban(banned.begin(), banned.end());
-        for (auto &element: list) if (ban.find(element.first) == ban.end()) return element.first;
-        return "";
+        return res;
     }
 };
 // @lc code=end
-

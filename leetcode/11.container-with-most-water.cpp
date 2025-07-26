@@ -11,7 +11,7 @@ public:
         int res = 0, i = 0, j = height.size() - 1;
 
         while (i < j) {
-            int current = std::min(height[i], height[j]) * (j - i);
+            const int current = std::min(height[i], height[j]) * (j - i);
 
             if (current > res) {
                 res = current;

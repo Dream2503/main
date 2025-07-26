@@ -17,7 +17,7 @@ public:
     MyLinkedList() {}
 
     int get(const int index) const noexcept {
-        const Node *current = head;
+        const Node* current = head;
 
         for (int i = 0; i < index && current; i++) {
             current = current->next;

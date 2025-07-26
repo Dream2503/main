@@ -31,7 +31,7 @@ class Solution {
     }
 
 public:
-    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+    ListNode* addTwoNumbers(const ListNode* l1, const ListNode* l2) {
         l1 = this->reverse(l1), l2 = this->reverse(l2);
         int sum = l1->val + l2->val, carry = sum / 10;
         ListNode *res = new ListNode(sum % 10), *current = res;

@@ -5,23 +5,19 @@
  */
 
 // @lc code=start
-#include <vector>
-#include <algorithm>
-using namespace std;
-
 class Solution {
 public:
-    int projectionArea(vector<vector<int>>& grid) {
-        int size = grid.size(), res = 0, max;
+    int projectionArea(const std::vector<std::vector<int>>& grid) {
+        const int size = grid.size();
+        int res = 0;
 
         for (int i = 0; i < size; i++) {
-            max = 0;
-            res += *max_element(grid[i].begin(), grid[i].end());
+            int max = 0;
+            res += *std::max_element(grid[i].begin(), grid[i].end());
 
             for (int j = 0; j < size; j++) {
-                if (max < grid[j][i]) {
-                    max = grid[j][i];
-                }
+                max = std::max(max, grid[j][i]);
+
                 if (grid[j][i]) {
                     res++;
                 }
@@ -32,4 +28,3 @@ public:
     }
 };
 // @lc code=end
-

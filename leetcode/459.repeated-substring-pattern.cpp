@@ -5,8 +5,6 @@
  */
 
 // @lc code=start
-#include <string>
-using namespace std;
 class Solution {
 public:
     bool repeatedSubstringPattern(const std::string& s) {

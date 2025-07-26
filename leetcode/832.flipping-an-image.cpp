@@ -7,13 +7,19 @@
 // @lc code=start
 class Solution {
 public:
-    vector<vector<int>> flipAndInvertImage(vector<vector<int>> image) {
-        for (vector<int> &row: image) {
-            reverse(row.begin(), row.end());
-            transform(row.begin(), row.end(), row.begin(), [](int &num){return not num;});
+    std::vector<std::vector<int>>& flipAndInvertImage(std::vector<std::vector<int>>& image) {
+        for (std::vector<int>& row : image) {
+            for (int i = 0, j = row.size() - 1; i <= j; i++, j--) {
+                if (row[i] == row[j]) {
+                    row[i] = !row[i];
+
+                    if (i != j) {
+                        row[j] = !row[j];
+                    }
+                }
+            }
         }
         return image;
     }
 };
 // @lc code=end
-

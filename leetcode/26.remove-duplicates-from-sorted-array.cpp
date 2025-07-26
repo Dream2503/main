@@ -8,8 +8,8 @@
 class Solution {
 public:
     int removeDuplicates(std::vector<int>& nums) {
+        const int len = nums.size();
         int i = 0;
-        const size_t len = nums.size();
 
         for (int j = 1; j < len; j++) {
             if (nums[i] != nums[j]) {

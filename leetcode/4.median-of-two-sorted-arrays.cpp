@@ -8,8 +8,8 @@
 class Solution {
 public:
     double findMedianSortedArrays(const std::vector<int>& nums1, const std::vector<int>& nums2) {
-        const size_t size1 = nums1.size(), size2 = nums2.size(), total = size1 + size2;
-        const size_t target = total % 2 == 0 ? total / 2 - 1 : total / 2;
+        const int size1 = nums1.size(), size2 = nums2.size(), total = size1 + size2;
+        const int target = total % 2 == 0 ? total / 2 - 1 : total / 2;
         int i = 0, j = 0, value = 0;
 
         if (!total) {

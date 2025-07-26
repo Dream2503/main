@@ -17,7 +17,7 @@
  */
 class Solution {
 public:
-    void reverse(ListNode* end, ListNode* prev, ListNode* current, ListNode* stop) {
+    void reverse(ListNode* end, ListNode* prev, ListNode* current, const ListNode* stop) {
         while (current != stop) {
             prev->next = end;
             end = prev;

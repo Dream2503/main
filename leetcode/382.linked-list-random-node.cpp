@@ -17,7 +17,7 @@
  * };
  */
 class Solution {
-    const ListNode *head;
+    const ListNode* head;
 
 public:
     Solution(const ListNode* head) : head(head) {}

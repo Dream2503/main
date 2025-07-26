@@ -10,7 +10,7 @@ public:
     int distributeCandies(std::vector<int>& candyType) {
         std::sort(candyType.begin(), candyType.end());
         const auto itr = std::unique(candyType.begin(), candyType.end());
-        return min<int>(itr - candyType.begin(), candyType.size() / 2);
+        return std::min<int>(itr - candyType.begin(), candyType.size() / 2);
     }
 };
 // @lc code=end

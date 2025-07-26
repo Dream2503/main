@@ -7,17 +7,21 @@
 // @lc code=start
 class Solution {
 public:
-    int uniqueMorseRepresentations(vector<string>& words) {
-        unordered_set<string> unique;
-        string code, morse[] = {".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..", ".---", "-.-", ".-..", "--", "-.", "---", ".--.", "--.-", ".-.", "...", "-", "..-", "...-", ".--", "-..-", "-.--", "--.."};
+    int uniqueMorseRepresentations(const std::vector<std::string>& words) {
+        static constexpr std::array<std::string, 26> morse{
+            ".-", "-...", "-.-.", "-..",  ".",   "..-.", "--.", "....", "..",   ".---", "-.-",  ".-..", "--",
+            "-.", "---",  ".--.", "--.-", ".-.", "...",  "-",   "..-",  "...-", ".--",  "-..-", "-.--", "--.."};
+        std::unordered_set<std::string> unique;
+        std::string code;
 
-        for (string word: words) {
-            for (char ch: word) code += morse[ch-'a'];
-            unique.insert(code);
+        for (const std::string& word : words) {
+            for (const char ch : word) {
+                code += morse[ch - 'a'];
+            }
+            unique.insert(std::move(code));
             code.clear();
         }
         return unique.size();
     }
 };
 // @lc code=end
-

@@ -5,7 +5,6 @@
  */
 
 // @lc code=start
-#include <string>
 class Solution {
 public:
     int longestValidParentheses(const std::string& s) {
@@ -33,4 +32,3 @@ public:
     }
 };
 // @lc code=end
-

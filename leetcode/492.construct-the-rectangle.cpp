@@ -7,7 +7,7 @@
 // @lc code=start
 class Solution {
 public:
-    vector<int> constructRectangle(const int area) {
+    std::vector<int> constructRectangle(const int area) {
         int w = static_cast<int>(std::sqrt(area));
 
         while (area % w) {
@@ -17,4 +17,3 @@ public:
     }
 };
 // @lc code=end
-

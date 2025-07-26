@@ -7,17 +7,17 @@
 // @lc code=start
 class Solution {
 public:
-    int countPrimeSetBits(int left, int right) {
-        int res = 0, cnt = 0;
-        unordered_set<int> primes({2, 3, 5, 7, 11, 13, 17, 19});
+    int countPrimeSetBits(int left, const int right) {
+        static constexpr uint32_t prime = 0b10100010100010101100; // prime position bits
+        int res = 0;
 
-        for (; left <= right; left++) {
-            for (int i = 0; i < 20; i++) if ((left >> i) & 1) cnt++;
-            if (primes.find(cnt) != primes.end()) res++;
-            cnt = 0;
+        while (left <= right) {
+            if (prime >> std::__popcount(left) & 1) {
+                res++;
+            }
+            left++;
         }
         return res;
     }
 };
 // @lc code=end
-

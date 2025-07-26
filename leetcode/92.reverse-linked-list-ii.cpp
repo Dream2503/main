@@ -21,7 +21,7 @@ public:
         if (!head->next || left == right) {
             return head;
         }
-        ListNode* current = head, *temp;
+        ListNode *current = head, *temp;
 
         for (int i = 2; i < left; i++) {
             current = current->next;

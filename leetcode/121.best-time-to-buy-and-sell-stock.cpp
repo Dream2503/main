@@ -12,7 +12,7 @@ public:
         int buy = prices[0], res = 0;
 
         for (int i = 1; i < size; i++) {
-            if ( prices[i] < buy) {
+            if (prices[i] < buy) {
                 buy = prices[i];
             }
             res = max(res, prices[i] - buy);
@@ -21,4 +21,3 @@ public:
     }
 };
 // @lc code=end
-

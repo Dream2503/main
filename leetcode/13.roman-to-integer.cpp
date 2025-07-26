@@ -9,11 +9,9 @@ class Solution {
 public:
     int romanToInt(const std::string& s) {
         static const std::vector<std::pair<std::string, int>> roman = {
-            {"M", 1000}, {"CM", 900}, {"D", 500}, {"CD", 400},
-            {"C", 100}, {"XC", 90}, {"L", 50}, {"XL", 40},
-            {"X", 10}, {"IX", 9}, {"V", 5}, {"IV", 4}, {"I", 1}
-        };
-        const size_t len = s.length();
+            {"M", 1000}, {"CM", 900}, {"D", 500}, {"CD", 400}, {"C", 100}, {"XC", 90}, {"L", 50},
+            {"XL", 40},  {"X", 10},   {"IX", 9},  {"V", 5},    {"IV", 4},  {"I", 1}};
+        const int len = s.length();
         int res = 0, i = 0;
 
         for (const auto& [symbol, value] : roman) {

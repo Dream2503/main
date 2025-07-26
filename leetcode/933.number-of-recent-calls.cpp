@@ -6,7 +6,6 @@
 
 // @lc code=start
 #include <queue>
-using namespace std;
 
 class RecentCounter {
     queue<int> pings;

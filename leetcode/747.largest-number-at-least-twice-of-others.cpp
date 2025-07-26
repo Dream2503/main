@@ -8,16 +8,10 @@
 class Solution {
 public:
     int dominantIndex(std::vector<int>& nums) {
-        const int size = nums.size(), res = std::max_element(nums.begin(), nums.end()) - nums.begin();
+        const int res = std::max_element(nums.begin(), nums.end()) - nums.begin();
+        std::nth_element(nums.begin(), nums.begin() + 2, nums.end(), std::greater<int>());
 
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < size - i - 1; j++) {
-                if (nums[j] > nums[j + 1]) {
-                    std::swap(nums[j], nums[j + 1]);
-                }
-            }
-        }
-        if (nums[size - 1] >= nums[size - 2] * 2) {
+        if (nums[0] * 2 <= nums[1] || nums[1] * 2 <= nums[0]) {
             return res;
         }
         return -1;

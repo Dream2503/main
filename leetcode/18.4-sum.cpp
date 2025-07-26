@@ -11,7 +11,7 @@ public:
         std::vector<std::vector<int>> result;
         std::sort(nums.begin(), nums.end());
         int left, right;
-        const size_t size = nums.size();
+        const int size = nums.size();
         long tar;
 
         for (int i = 0; i < size; i++) {

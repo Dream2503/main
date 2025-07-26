@@ -7,11 +7,14 @@
 // @lc code=start
 class Solution {
 public:
-    bool isOneBitCharacter(vector<int>& bits) {
-        int i = 0, size = bits.size();
-        while (i < size - 1) i += 1 + bits[i];
+    bool isOneBitCharacter(const std::vector<int>& bits) {
+        const int size = bits.size();
+        int i = 0;
+
+        while (i < size - 1) {
+            i += 1 + bits[i];
+        }
         return i != size;
     }
 };
 // @lc code=end
-
