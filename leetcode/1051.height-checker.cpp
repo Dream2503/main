@@ -7,7 +7,7 @@
 // @lc code=start
 class Solution {
 public:
-    int heightChecker(std::vector<int>& heights) {
+    int heightChecker(const std::vector<int>& heights) {
         std::vector<int> check = heights;
         std::sort(check.begin(), check.end());
         const int size = heights.size();
@@ -22,4 +22,3 @@ public:
     }
 };
 // @lc code=end
-

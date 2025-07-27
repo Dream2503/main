@@ -7,23 +7,29 @@
 // @lc code=start
 class Solution {
 public:
-    bool canThreePartsEqualSum(std::vector<int>& arr) {
-        const int size = arr.size();
-        int target = std::accumulate(arr.begin(), arr.end(), 0), i = 0, j, sum = 0;
+    bool canThreePartsEqualSum(const std::vector<int>& arr) {
+        int target = std::accumulate(arr.begin(), arr.end(), 0);
 
         if (target % 3 != 0) {
             return false;
         }
+        const int size = arr.size();
+        int sum = 0, count = 0;
         target /= 3;
 
-        for (j = 0; j < 3; j++) {
-            sum = 0;
+        for (int i = 0; i < size; i++) {
+            sum += arr[i];
 
-            while (i < size && sum != target) {
-                sum += arr[i++];
+            if (sum == target) {
+                count++;
+                sum = 0;
+
+                if (count == 2 && i < size - 1) {
+                    return true;
+                }
             }
         }
-        return j == 3 && sum == target;
+        return false;
     }
 };
 // @lc code=end

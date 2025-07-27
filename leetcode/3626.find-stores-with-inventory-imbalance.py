@@ -15,7 +15,6 @@ def find_inventory_imbalance(stores: pd.DataFrame, inventory: pd.DataFrame) -> p
             df_max = df[df["price"] == df["price"].max()].iloc[0]
             df_min = df[df["price"] == df["price"].min()].iloc[0]
 
-            # if df_max["quantity"] > 0:
             if df_max["quantity"] < df_min["quantity"]:
                 res.loc[len(res)] = [
                     store_id,
