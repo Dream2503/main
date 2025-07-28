@@ -1,3 +1,0 @@
-#include "all_in_one.hpp"
-
-// $dir="C:\Users\swapn\OneDrive\Desktop\achha\Dream\main\leetcode"; $out="$dir\all_in_one.hpp"; "" | Out-File -Encoding utf8 $out; Get-ChildItem -Path $dir -Recurse -Include *.h, *.hpp, *.cpp | Where-Object { $_.FullName -ne $out } | Sort-Object FullName | ForEach-Object { $relPath=$_.FullName.Substring($dir.Length+1).Replace("\","/"); Add-Content $out "#include `"$relPath`"" }; Write-Host "Includes written to: $out"
