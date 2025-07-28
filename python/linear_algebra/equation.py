@@ -34,13 +34,13 @@ class Variable:
             >>> v1 - v2
             Variable(coefficient=3, variables={'x': Fraction(1, 1)})
 
-        -> multiplication of variables and numeric types
+        -> multiplication of variables and numeric dtypes
             >>> v1 * v2
             Variable(coefficient=10, variables={'x': Fraction(2, 1)})
             >>> v1 * num
             Variable(coefficient=35, variables={'x': Fraction(1, 1)})
 
-        -> division of variables and numeric types
+        -> division of variables and numeric dtypes
             >>> v1 / v2
             Variable(coefficient=5/2, variables={'x': Fraction(0, 1)})
             >>> v1 / num
@@ -67,7 +67,7 @@ class Variable:
             >>> v1
             Variable(coefficient=3, variables={'x': Fraction(1, 1)})
 
-        -> in-place multiplication of variables and numeric types
+        -> in-place multiplication of variables and numeric dtypes
             >>> v1 *= v2
             >>> v1
             Variable(coefficient=10, variables={'x': Fraction(2, 1)})
@@ -75,7 +75,7 @@ class Variable:
             >>> v1
             Variable(coefficient=35, variables={'x': Fraction(1, 1)})
 
-        -> in-place division of variables and numeric types
+        -> in-place division of variables and numeric dtypes
             >>> v1 /= v2
             >>> v1
             Variable(coefficient=5/2, variables={})
@@ -460,25 +460,25 @@ class Polynomial:
         >>> poly2: Polynomial = Polynomial("4x^4 6x^2 -1x 9")
         >>> num: int = 7
 
-        -> addition of polynomials and numeric types
+        -> addition of polynomials and numeric dtypes
             >>> print(poly1 + poly2)
             4x^4 + 3x^3 + x^2 + x + 16
             >>> print(poly1 + num)
             x^3 - 5x^2 + 2x + 14
 
-        -> subtraction of polynomials and numeric types
+        -> subtraction of polynomials and numeric dtypes
             >>> print(poly1 - poly2)
             -4x^4 + 3x^3 - 11x^2 + 3x - 2
             >>> print(poly1 - num)
             x^3 - 5x^2 + 2x - 0
 
-        -> multiplication of polynomials and numeric types
+        -> multiplication of polynomials and numeric dtypes
             >>> print(poly1 * poly2)
             12x^7 - 20x^6 + 26x^5 - 5x^4 + 44x^3 - 5x^2 + 11x + 63
             >>> print(poly1 * num)
             3x^3 - 5x^2 + 2x + 7                            # simplifies the polynomial after multiplying
 
-        -> division of polynomials and numeric types
+        -> division of polynomials and numeric dtypes
             >>> print(poly1 / poly2)
             (3x^3 - 5x^2 + 2x + 7) / (4x^4 + 6x^2 - x + 9)
             >>> print(poly1 / num)
@@ -491,7 +491,7 @@ class Polynomial:
         >>> poly2: Polynomial = Polynomial("4x^4 6x^2 -1x 9")
         >>> num: int = 7
 
-        -> addition of polynomials and numeric types
+        -> addition of polynomials and numeric dtypes
             >>> poly1 += poly2
             >>> print(poly1)
             4x^4 + 3x^3 + x^2 + x + 16
@@ -499,7 +499,7 @@ class Polynomial:
             >>> print(poly1)
             x^3 - 5x^2 + 2x + 14
 
-        -> subtraction of polynomials and numeric types
+        -> subtraction of polynomials and numeric dtypes
             >>> poly1 -= poly2
             >>> print(poly1)
             -4x^4 + 3x^3 - 11x^2 + 3x - 2
@@ -507,7 +507,7 @@ class Polynomial:
             >>> print(poly1)
             x^3 - 5x^2 + 2x - 0
 
-        -> multiplication of polynomials and numeric types
+        -> multiplication of polynomials and numeric dtypes
             >>> poly1 *= poly2
             >>> print(poly1)
             12x^7 - 20x^6 + 26x^5 - 5x^4 + 44x^3 - 5x^2 + 11x + 63
@@ -515,7 +515,7 @@ class Polynomial:
             >>> print(poly1)
             3x^3 - 5x^2 + 2x + 7                            # simplifies the polynomial after multiplying
 
-        -> division of polynomials and numeric types
+        -> division of polynomials and numeric dtypes
             >>> poly1 /= poly2
             >>> print(poly1)
             (3x^3 - 5x^2 + 2x + 7) / (4x^4 + 6x^2 - x + 9)

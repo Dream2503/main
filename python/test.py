@@ -146,16 +146,3 @@
 #         print("Released mouse and stopped.")
 #
 # nether_wart()
-# import numpy as np
-
-FILTERS: tuple[tuple[str, tuple[str, ...]]] = (
-    ("OS", ("iOS/iPadOS",)),
-    ("OS version", ("18.",)),
-    ("Ownership", ("Corporate",)),
-    ("Compliance", ("Compliant", "Noncompliant"))
-    # ("Device state", ("Managed",)),
-)
-
-for row in FILTERS:
-    for check_head, check_value in row:
-        print('oh');

@@ -15,8 +15,8 @@ semester2: dict[str, tuple[int, int]] = {
     "Basic Electronics Engineering": (90, 3),
     "Data Structures & Algorithms": (93.5, 3),
     "Engineering Chemistry": (95, 3),
-    "Engineering Thermodynamics": (87, 2),
-    "Environmental Science & Engineering": (47, 0),
+    "Engineering Thermodynamics": (90, 2),
+    "Environmental Science & Engineering": (60, 0),
     "Probability & Statistics": (96, 3),
 
     "Basic Electronics Engineering Lab": (91, 1),
@@ -24,7 +24,7 @@ semester2: dict[str, tuple[int, int]] = {
     "Data Structures & Algorithms Lab": (97, 2),
     "Engineering Graphics": (91, 1),
 }
-semester3: dict[str, tuple[int, int]] = {
+semester3: dict[str, tuple[int, int]] = {} and {
     "Design & Analysis of Algorithms": (100, 4),
     "Digital Electronics": (100, 3),
     "Discrete Mathematics": (100, 3),
@@ -38,7 +38,7 @@ semester3: dict[str, tuple[int, int]] = {
     "Operating Systems Lab": (100, 1),
     "**Summer Internship - I**": (100, 1)
 }
-semester4: dict[str, tuple[int, int]] = {
+semester4: dict[str, tuple[int, int]] = {} and {
     "**Biology for Engineers**": (100, 3),
     "Computer Organization & Architecture": (100, 3),
     "Database Management Systems": (100, 4),
@@ -84,8 +84,20 @@ def total_score(*semesters: dict[str, tuple[int, int]], zero_credit: bool = True
 
 
 def main() -> None:
-    print("Total marks scored {0} out of {1} -> {2}%".format(*total_score(semester1, semester2, zero_credit=False)))
-    print("Total CGPA:", calculate_cgpa(semester1, semester2))
+    semesters = (semester1, semester2)
+
+    for i, sem in enumerate(semesters):
+        print(f"Semester {i + 1}:")
+        print("Total marks scored {0} out of {1} -> {2}%".format(*total_score(sem, zero_credit=False)))
+        print("Total marks scored {0} out of {1} -> {2}% (including zero credit subject)".format(
+            *total_score(sem, zero_credit=True))) if i in (0, 1) else None
+        print("Total SGPA:", calculate_cgpa(sem))
+        print("=" * 80)
+
+    print("Total marks scored {0} out of {1} -> {2}%".format(*total_score(*semesters, zero_credit=False)))
+    print("Total marks scored {0} out of {1} -> {2}% (including zero credit subject)".format(
+        *total_score(*semesters, zero_credit=True)))
+    print("Total CGPA:", calculate_cgpa(*semesters))
 
 
 if __name__ == "__main__":

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="LeetcodeEditor">
+    <option name="projectConfig">
+      <map>
+        <entry key="$PROJECT_DIR$/editor/en/[1050]Actors and Directors Who Cooperated At Least Three Times.py">
+          <value>
+            <LeetcodeEditor>
+              <option name="contentPath" value="$PROJECT_DIR$/editor/en/doc/content/[1050]Actors and Directors Who Cooperated At Least Three Times.md" />
+              <option name="frontendQuestionId" value="leetcode.com1050" />
+              <option name="host" value="leetcode.com" />
+              <option name="path" value="$PROJECT_DIR$/editor/en/[1050]Actors and Directors Who Cooperated At Least Three Times.py" />
+              <option name="titleSlug" value="actors-and-directors-who-cooperated-at-least-three-times" />
+            </LeetcodeEditor>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/editor/en/[1068]Product Sales Analysis I.py">
+          <value>
+            <LeetcodeEditor>
+              <option name="contentPath" value="$PROJECT_DIR$/editor/en/doc/content/[1068]Product Sales Analysis I.md" />
+              <option name="frontendQuestionId" value="leetcode.com1068" />
+              <option name="host" value="leetcode.com" />
+              <option name="path" value="$PROJECT_DIR$/editor/en/[1068]Product Sales Analysis I.py" />
+              <option name="titleSlug" value="product-sales-analysis-i" />
+            </LeetcodeEditor>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/editor/en/[1075]Project Employees I.py">
+          <value>
+            <LeetcodeEditor>
+              <option name="contentPath" value="$PROJECT_DIR$/editor/en/doc/content/[1075]Project Employees I.md" />
+              <option name="frontendQuestionId" value="leetcode.com1075" />
+              <option name="host" value="leetcode.com" />
+              <option name="path" value="$PROJECT_DIR$/editor/en/[1075]Project Employees I.py" />
+              <option name="titleSlug" value="project-employees-i" />
+            </LeetcodeEditor>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/editor/en/[1084]Sales Analysis III.py">
+          <value>
+            <LeetcodeEditor>
+              <option name="contentPath" value="$PROJECT_DIR$/editor/en/doc/content/[1084]Sales Analysis III.md" />
+              <option name="frontendQuestionId" value="leetcode.com1084" />
+              <option name="host" value="leetcode.com" />
+              <option name="path" value="$PROJECT_DIR$/editor/en/[1084]Sales Analysis III.py" />
+              <option name="titleSlug" value="sales-analysis-iii" />
+            </LeetcodeEditor>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/editor/en/[1141]User Activity for the Past 30 Days I.py">
+          <value>
+            <LeetcodeEditor>
+              <option name="contentPath" value="$PROJECT_DIR$/editor/en/doc/content/[1141]User Activity for the Past 30 Days I.md" />
+              <option name="frontendQuestionId" value="leetcode.com1141" />
+              <option name="host" value="leetcode.com" />
+              <option name="path" value="$PROJECT_DIR$/editor/en/[1141]User Activity for the Past 30 Days I.py" />
+              <option name="titleSlug" value="user-activity-for-the-past-30-days-i" />
+            </LeetcodeEditor>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/editor/en/[1148]Article Views I.py">
+          <value>
+            <LeetcodeEditor>
+              <option name="contentPath" value="$PROJECT_DIR$/editor/en/doc/content/[1148]Article Views I.md" />
+              <option name="frontendQuestionId" value="leetcode.com1148" />
+              <option name="host" value="leetcode.com" />
+              <option name="path" value="$PROJECT_DIR$/editor/en/[1148]Article Views I.py" />
+              <option name="titleSlug" value="article-views-i" />
+            </LeetcodeEditor>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/editor/en/[3626]Find Stores with Inventory Imbalance.py">
+          <value>
+            <LeetcodeEditor>
+              <option name="contentPath" value="$PROJECT_DIR$/editor/en/doc/content/[3626]Find Stores with Inventory Imbalance.md" />
+              <option name="frontendQuestionId" value="leetcode.com3626" />
+              <option name="host" value="leetcode.com" />
+              <option name="path" value="$PROJECT_DIR$/editor/en/[3626]Find Stores with Inventory Imbalance.py" />
+              <option name="titleSlug" value="find-stores-with-inventory-imbalance" />
+            </LeetcodeEditor>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

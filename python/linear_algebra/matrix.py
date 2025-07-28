@@ -72,7 +72,7 @@ class Matrix:
             >>> m1 - m2
             Matrix(rows=2, columns=2, matrix=[[Fraction(-4, 1), Fraction(-4, 1)], [Fraction(-4, 1), Fraction(-4, 1)]])
 
-        -> multiplication of matrices and numeric types
+        -> multiplication of matrices and numeric dtypes
             >>> m1 * m2
             Matrix(rows=2, columns=2, matrix=[[Fraction(19, 1), Fraction(22, 1)], [Fraction(43, 1), Fraction(50, 1)]])
             >>> m1 * num
@@ -95,7 +95,7 @@ class Matrix:
             >>> m1
             Matrix(rows=2, columns=2, matrix=[[Fraction(-4, 1), Fraction(-4, 1)], [Fraction(-4, 1), Fraction(-4, 1)]])
 
-        -> in-place multiplication of matrices and numeric types
+        -> in-place multiplication of matrices and numeric dtypes
             >>> m1 *= m2
             >>> m1
             Matrix(rows=2, columns=2, matrix=[[Fraction(19, 1), Fraction(22, 1)], [Fraction(43, 1), Fraction(50, 1)]])
