@@ -24,7 +24,7 @@ semester2: dict[str, tuple[int, int]] = {
     "Data Structures & Algorithms Lab": (97, 2),
     "Engineering Graphics": (91, 1),
 }
-semester3: dict[str, tuple[int, int]] = {} and {
+semester3: dict[str, tuple[int, int]] = {
     "Design & Analysis of Algorithms": (100, 4),
     "Digital Electronics": (100, 3),
     "Discrete Mathematics": (100, 3),
@@ -36,9 +36,9 @@ semester3: dict[str, tuple[int, int]] = {} and {
     "Digital Electronics Lab": (100, 1),
     "OOP Using Java Lab": (100, 1),
     "Operating Systems Lab": (100, 1),
-    "**Summer Internship - I**": (100, 1)
+    "**Summer Internship - I**": (100, 1),
 }
-semester4: dict[str, tuple[int, int]] = {} and {
+semester4: dict[str, tuple[int, int]] = {
     "**Biology for Engineers**": (100, 3),
     "Computer Organization & Architecture": (100, 3),
     "Database Management Systems": (100, 4),
@@ -52,10 +52,52 @@ semester4: dict[str, tuple[int, int]] = {} and {
     "Internet & Web Technology Lab": (100, 2),
     "Programming in Python Lab": (100, 1),
 }
-semester5: dict[str, tuple[int, int]] = {}
-semester6: dict[str, tuple[int, int]] = {}
-semester7: dict[str, tuple[int, int]] = {}
-semester8: dict[str, tuple[int, int]] = {}
+semester5: dict[str, tuple[int, int]] = {
+    "Computer Networks": (100, 3),
+    "Machine Learning": (100, 4),
+    "Software Engineering": (100, 3),
+    "Formal Languages & Automata Theory": (100, 3),
+    "**Program Elective - II**": (100, 3),
+    "**Program Elective - III**": (100, 3),
+    "**Honours / Minor - II**": (100, 3),
+
+    "Computer Networks Lab": (100, 1),
+    "Machine Learning Lab": (100, 1),
+    "Software Engineering Lab": (100, 1),
+    "Soft Skills & Inter-Personal Skills": (100, 1),
+    "**Summer Internship - II**": (100, 1),
+}
+semester6: dict[str, tuple[int, int]] = {
+    "Internet of Things": (100, 3),
+    "Soft Computing": (100, 3),
+    "Compiler Design": (100, 3),
+    "**Program Elective - IV**": (100, 3),
+    "**Program Elective - V**": (100, 3),
+    "**Program Elective - VI**": (100, 3),
+    "**Honours / Minor - III**": (100, 4),
+
+    "Internet of Things Lab": (100, 3),
+    "Soft Computing Lab": (100, 3),
+    "Emerging Technologies Lab / Entrepreneurship & Innovation": (100, 2),
+    "Professional & Technical Writing": (100, 1),
+    "**Yoga / NSS / NCC / PES / CPA**": (100, 0)
+}
+semester7: dict[str, tuple[int, int]] = {
+    "**Open Elective - I**": (100, 3),
+    "**MOOC - I**": (100, 3),
+    "**Honours / Minor - IV**": (100, 4),
+    "**Honours / Minor - V**": (100, 4),
+
+    "**Skill Lab & Project - I**": (100, 2),
+    "**Summer Internship - III**": (100, 1),
+}
+semester8: dict[str, tuple[int, int]] = {
+    "**Open Elective - II**": (100, 3),
+    "**MOOC - II**": (100, 3),
+    
+    "Presentation Skills & Technical Seminar": (100, 1),
+    "**Project - II**": (100, 8),
+}
 
 
 def calculate_cgpa(*semesters: dict[str, tuple[int, int]]) -> float:
