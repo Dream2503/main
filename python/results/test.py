@@ -116,4 +116,35 @@ async def run():
         print(f"📄 Results saved in {FILENAME}")
 
 
-asyncio.run(run())
+# asyncio.run(run())
+
+target_sics = {
+    "25BCSL56", "25BCSL41", "25BCSL57", "25BCSL61", "24BCSI21",
+    "24BCSF49", "24BCSA04", "24BCSE24", "24BECH09", "24BCSE86",
+    "24BCSB83", "24BCSA49", "24BCSG24", "24BCSI71", "24BCSA06",
+    "24BCSE68", "24BCSA66", "24BCSA13", "24BCSB01", "23BCTB57",
+    "24BCSE70", "24BCSH49", "24BCSJ29", "24BCSA98", "24BCSB75",
+    "24BCSA18", "24BCSA41", "24BCSC80", "24BCSI76", "24BCSI30",
+    "24BCSF13", "24BCSH40", "24BCSF71", "24BCSH30", "24BCSI53",
+    "24BCSG70", "24BECA26", "24BCSH70", "24BCSF24", "24BCSI32",
+    "24BCSH39", "24BCSB69", "24BCSE90", "24BCSH26", "24BCSH75",
+    "24BCSD42", "24BCSG84", "24BCSF70", "24BCSH08", "24BCSG98",
+    "24BCSB94", "24BCSG59", "24BCSI43", "24BCSH62", "24BCSF78",
+    "24BCSI46", "24BCSD03", "24BCSH88", "24BECF91", "24BCSI80",
+    "24BCSI83", "24BCSA68", "24BCSH35", "24BCSH87", "24BCSC90",
+    "24BCSI31", "24BCSA45", "24BEIC84", "24BCSI40"
+}
+
+# open the input CSV
+with open("batch24.csv", "r", newline="") as infile, \
+        open("Sec-A.csv", "w", newline="") as outfile:
+    reader = csv.DictReader(infile)
+    writer = csv.DictWriter(outfile, fieldnames=reader.fieldnames)
+
+    # write header to new file
+    writer.writeheader()
+
+    # loop through rows
+    for row in reader:
+        if row["SIC"] in target_sics:
+            writer.writerow(row)
