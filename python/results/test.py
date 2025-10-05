@@ -41,18 +41,17 @@ def extract_results(filepath: str) -> dict[str, str | float] | None:
     sic_match: Match[str] | None = re.search(r"SIC No\s*:\s*(\S+)", text)
     sic: str | None = sic_match.group(1).strip() if sic_match else None
     sgpas: list[str] = re.findall(r"SGPA\s*=\s*([\d.]+)", text)
-    cgpa_match: Match[str] | None = re.search(r"CGPA\s*=\s*([\d.]+)", text)
 
-    if name and sic and len(sgpas) >= SEM_COUNT and cgpa_match:
-        result: dict[str, str | float] = {
-            "Name": name,
-            "SIC": sic,
-            "CGPA": float(cgpa_match.group(1))
-        }
+    if name and sic and len(sgpas) >= SEM_COUNT:
+        result: dict[str, str | float] = {"Name": name, "SIC": sic}
+        sem_values: list[float] = []
 
         for i in range(SEM_COUNT):
-            result[f"SEM{i + 1}"] = float(sgpas[i])
+            sem_value = float(sgpas[i])
+            result[f"SEM{i + 1}"] = sem_value
+            sem_values.append(sem_value)
 
+        result["CGPA"] = sum(sem_values) / len(sem_values)
         return result
 
     else:
