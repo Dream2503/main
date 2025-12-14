@@ -13,7 +13,7 @@ semester1: dict[str, tuple[int, int]] = {
 }
 semester2: dict[str, tuple[int, int]] = {
     "Basic Electronics Engineering": (90, 3),
-    "Data Structures & Algorithms": (93.5, 3),
+    "Data Structures & Algorithms": (94, 3),
     "Engineering Chemistry": (95, 3),
     "Engineering Thermodynamics": (90, 2),
     "Environmental Science & Engineering": (60, 0),
@@ -25,27 +25,27 @@ semester2: dict[str, tuple[int, int]] = {
     "Engineering Graphics": (91, 1),
 }
 semester3: dict[str, tuple[int, int]] = {
-    "Design & Analysis of Algorithms": (100, 4),
-    "Digital Electronics": (100, 3),
-    "Discrete Mathematics": (100, 3),
-    "**Management & Economics for Engineers**": (100, 3),
-    "OOP Using Java": (100, 3),
-    "Operating Systems": (100, 3),
+    "Design & Analysis of Algorithms": (30 + 0 + 0, 4),
+    "Digital Electronics": (48 + 0, 3),
+    "Discrete Mathematics": (50 + 0, 3),
+    "Management & Economics for Engineers": (50 + 0, 3),
+    "OOP Using Java": (29 + 0 + 0, 3),
+    "Operating Systems": (55 + 0, 3),
 
-    "Design & Analysis of Algorithms Lab": (100, 1),
-    "Digital Electronics Lab": (100, 1),
-    "OOP Using Java Lab": (100, 1),
-    "Operating Systems Lab": (100, 1),
-    "**Summer Internship - I**": (100, 1),
+    "Design & Analysis of Algorithms Lab": (0, 1),
+    "Digital Electronics Lab": (97, 1),
+    "OOP Using Java Lab": (0, 1),
+    "Operating Systems Lab": (0, 1),
+    "Python Programming, Machine Learning, and Deep Learning for Industry [Summer Internship - I]": (0, 1),
 }
 semester4: dict[str, tuple[int, int]] = {
-    "**Biology for Engineers**": (100, 3),
+    "Artificial Intelligence": (100, 3),
+    "Biology for Engineers": (100, 3),
     "Computer Organization & Architecture": (100, 3),
     "Database Management Systems": (100, 4),
     "Optimization Techniques": (100, 3),
     "Programming in Python": (100, 3),
-    "**Program Elective - I**": (100, 3),
-    "**Honours / Minor - I**": (100, 3),
+    "Statistical Inference": (100, 3),
 
     "Computer Organization & Architecture Lab": (100, 1),
     "Database Management Systems Lab": (100, 2),
@@ -94,7 +94,7 @@ semester7: dict[str, tuple[int, int]] = {
 semester8: dict[str, tuple[int, int]] = {
     "**Open Elective - II**": (100, 3),
     "**MOOC - II**": (100, 3),
-    
+
     "Presentation Skills & Technical Seminar": (100, 1),
     "**Project - II**": (100, 8),
 }
@@ -109,12 +109,12 @@ def calculate_cgpa(*semesters: dict[str, tuple[int, int]]) -> float:
             total_marks += (10 if (mark // 10 + 1) > 10 else (mark // 10 + 1)) * credit
             total_credits += credit
 
-    return total_marks / total_credits
+    return round(total_marks / total_credits, 2)
 
 
-def total_score(*semesters: dict[str, tuple[int, int]], zero_credit: bool = True) -> tuple[float, int, float]:
-    res: float = 0.0
+def total_score(*semesters: dict[str, tuple[int, int]], zero_credit: bool = True) -> tuple[int, int, float]:
     total: int = 0
+    res: int = 0
 
     for semester in semesters:
         for mark, credit in semester.values():
@@ -126,19 +126,20 @@ def total_score(*semesters: dict[str, tuple[int, int]], zero_credit: bool = True
 
 
 def main() -> None:
-    semesters = (semester1, semester2)
+    semesters = (semester1, semester2, semester3)
 
     for i, sem in enumerate(semesters):
         print(f"Semester {i + 1}:")
         print("Total marks scored {0} out of {1} -> {2}%".format(*total_score(sem, zero_credit=False)))
-        print("Total marks scored {0} out of {1} -> {2}% (including zero credit subject)".format(
-            *total_score(sem, zero_credit=True))) if i in (0, 1) else None
+
+        if i in (0, 1):
+            print("Total marks scored {0} out of {1} -> {2}% (including zero credit subject)".format(*total_score(sem, zero_credit=True)))
+
         print("Total SGPA:", calculate_cgpa(sem))
         print("=" * 80)
 
     print("Total marks scored {0} out of {1} -> {2}%".format(*total_score(*semesters, zero_credit=False)))
-    print("Total marks scored {0} out of {1} -> {2}% (including zero credit subject)".format(
-        *total_score(*semesters, zero_credit=True)))
+    print("Total marks scored {0} out of {1} -> {2}% (including zero credit subject)".format(*total_score(*semesters, zero_credit=True)))
     print("Total CGPA:", calculate_cgpa(*semesters))
 
 
